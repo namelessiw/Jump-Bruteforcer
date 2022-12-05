@@ -1,0 +1,17 @@
+C:\Users\ziaal\source\repos\Jump Bruteforcer\bin\Debug\net6.0-windows\Jump Bruteforcer.exe
+C:\Users\ziaal\source\repos\Jump Bruteforcer\bin\Debug\net6.0-windows\Jump Bruteforcer.deps.json
+C:\Users\ziaal\source\repos\Jump Bruteforcer\bin\Debug\net6.0-windows\Jump Bruteforcer.runtimeconfig.json
+C:\Users\ziaal\source\repos\Jump Bruteforcer\bin\Debug\net6.0-windows\Jump Bruteforcer.dll
+C:\Users\ziaal\source\repos\Jump Bruteforcer\bin\Debug\net6.0-windows\Jump Bruteforcer.pdb
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.csproj.AssemblyReference.cache
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump_Bruteforcer.Form1.resources
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.csproj.GenerateResource.cache
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.AssemblyInfoInputs.cache
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.AssemblyInfo.cs
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.csproj.CoreCompileInputs.cache
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.dll
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\refint\Jump Bruteforcer.dll
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.pdb
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\Jump Bruteforcer.genruntimeconfig.cache
+C:\Users\ziaal\source\repos\Jump Bruteforcer\obj\Debug\net6.0-windows\ref\Jump Bruteforcer.dll

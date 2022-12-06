@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Jump_Bruteforcer
 {
-    internal class Search
+    public class Search
     {
         private SortedSet<int> covered;
         private List<Player> players;
         private (int x, float y) start;
         private (int x, int y) goal;
-        private int currentFrame;
+        public int currentFrame { get; set; }
         public Search((int, float) start, (int, int) goal) {
             covered= new SortedSet<int>();
             players = new List<Player>();
@@ -24,28 +24,50 @@ namespace Jump_Bruteforcer
         /// <summary>
         /// This method explores the movement space of each player: left, right, and none
         /// </summary>
-        private void move()
+        private void move(Player p)
         {
-
+            Player left = p.moveLeft();
+            Player right = p.moveRight();
+            if (!covered.Contains(left.position.x))
+            {
+                covered.Add(left.position.x);
+                players.Add(left);
+            }
+            if (!covered.Contains(right.position.x))
+            {
+                covered.Add(right.position.x);
+                players.Add(right);
+            }
+            p.moveUp();
         }
-        public void search()
+
+        private bool reachedGoal(Player p)
+        {
+            return p.position.x == goal.x && ((int)p.position.y) == goal.y;
+        }
+        public bool Run()
         {
             
-            players.Add(new Player(start.x, start.y, Input.None));
+            players.Add(new Player(start.x, start.y));
             covered.Add(start.x);
 
             while (currentFrame < 30)
             {
-                foreach (Player p in players)
+                currentFrame++;
+                int numPlayers = players.Count;
+                for (int i = 0; i < numPlayers; i++)
                 {
-                    p.move();
-                    currentFrame++;
+                    move(players[i]);
+                }
+                foreach(Player player in players)
+                {
+                    if (reachedGoal(player))
+                    {
+                        return true;
+                    }
                 }
             }
-
-
-
-
+            return false;
         }
 
     }

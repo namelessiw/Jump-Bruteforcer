@@ -14,23 +14,31 @@ namespace Jump_Bruteforcer
     }
     class Player
     {
-            VSpeed = SJump ? SJUMP_VSPEED : DJUMP_VSPEED;
-        }
 
-        public (int x, float y) position { get; }
-        private Input lastInput;
+        public (int x, float y) position { get; set; }
 
-        public Player(int x, float y, Input lastInput) {
+
+        public Player(int x, float y)
+        {
             position = (x, y);
-            this.lastInput = lastInput;
+
+        }
+        
+
+        public Player moveLeft()
+        {
+            return new Player(position.x - 3, position.y + 1);
         }
 
-            VSpeed += GRAVITY;
-
-            // collision checks here
-            Y += VSpeed;
-
-            Frame++;
+        public Player moveRight()
+        {
+            return new Player(position.x + 3, position.y + 1);
         }
+
+        public void moveUp()
+        {
+            position = (position.x, position.y + 1);
+        }
+
     }
 }

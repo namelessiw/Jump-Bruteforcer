@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ziaal\\source\\repos\\Jump Bruteforcer\\Jump Bruteforcer.csproj": {}
+    "C:\\Users\\David\\source\\repos\\Jump-Bruteforcer\\Jump Bruteforcer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ziaal\\source\\repos\\Jump Bruteforcer\\Jump Bruteforcer.csproj": {
+    "C:\\Users\\David\\source\\repos\\Jump-Bruteforcer\\Jump Bruteforcer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ziaal\\source\\repos\\Jump Bruteforcer\\Jump Bruteforcer.csproj",
+        "projectUniqueName": "C:\\Users\\David\\source\\repos\\Jump-Bruteforcer\\Jump Bruteforcer.csproj",
         "projectName": "Jump Bruteforcer",
-        "projectPath": "C:\\Users\\ziaal\\source\\repos\\Jump Bruteforcer\\Jump Bruteforcer.csproj",
-        "packagesPath": "C:\\Users\\ziaal\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ziaal\\source\\repos\\Jump Bruteforcer\\obj\\",
+        "projectPath": "C:\\Users\\David\\source\\repos\\Jump-Bruteforcer\\Jump Bruteforcer.csproj",
+        "packagesPath": "C:\\Users\\David\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\David\\source\\repos\\Jump-Bruteforcer\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ziaal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\David\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,7 +58,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

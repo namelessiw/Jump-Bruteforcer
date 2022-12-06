@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jump Bruteforcer", "Jump Bruteforcer.csproj", "{6932E558-4BCF-4CAC-9F7B-150D789C9C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jump Bruteforcer", "Jump Bruteforcer.csproj", "{6932E558-4BCF-4CAC-9F7B-150D789C9C3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBrute", "TestBrute\TestBrute.csproj", "{F301391D-38F8-4DD2-AD9C-B7A22D7A056A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{6932E558-4BCF-4CAC-9F7B-150D789C9C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6932E558-4BCF-4CAC-9F7B-150D789C9C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6932E558-4BCF-4CAC-9F7B-150D789C9C3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F301391D-38F8-4DD2-AD9C-B7A22D7A056A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F301391D-38F8-4DD2-AD9C-B7A22D7A056A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F301391D-38F8-4DD2-AD9C-B7A22D7A056A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F301391D-38F8-4DD2-AD9C-B7A22D7A056A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

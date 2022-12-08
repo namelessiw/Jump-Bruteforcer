@@ -40,15 +40,15 @@ namespace Jump_Bruteforcer
             Releases = new List<bool>(vp.Releases);
         }
 
-        public void Jump(bool SingleJump)
+        private void Jump(bool SingleJump)
         {
             VSpeed = SingleJump ? SJUMP_VSPEED : DJUMP_VSPEED;
         }
 
-        public bool CanRelease()
+        private bool CanRelease()
             => VSpeed < 0;
 
-        public bool Advance(bool Release)
+        private bool Advance(bool Release)
         {
             // assuming releases only used when CanRelease true
             if (Release)

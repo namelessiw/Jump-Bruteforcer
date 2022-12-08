@@ -8,7 +8,6 @@ namespace Jump_Bruteforcer
 {
     public class VPlayer
     {
-        const double GRAVITY = 0.4, MAX_VSPEED = 9, RELEASE_MULTIPLIER = 0.45, SJUMP_VSPEED = -8.5, DJUMP_VSPEED = -7;
         double Y, VSpeed;
         bool GoalHeightReached;
 
@@ -42,7 +41,7 @@ namespace Jump_Bruteforcer
 
         private void Jump(bool SingleJump)
         {
-            VSpeed = SingleJump ? SJUMP_VSPEED : DJUMP_VSPEED;
+            VSpeed = SingleJump ? PhysicsParams.SJUMP_VSPEED : PhysicsParams.DJUMP_VSPEED;
         }
 
         private bool CanRelease()
@@ -53,14 +52,14 @@ namespace Jump_Bruteforcer
             // assuming releases only used when CanRelease true
             if (Release)
             {
-                VSpeed *= RELEASE_MULTIPLIER;
+                VSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
             }
-            else if (VSpeed > MAX_VSPEED)
+            else if (VSpeed > PhysicsParams.MAX_VSPEED)
             {
-                VSpeed = MAX_VSPEED;
+                VSpeed = PhysicsParams.MAX_VSPEED;
             }
 
-            VSpeed += GRAVITY;
+            VSpeed += PhysicsParams.GRAVITY;
 
             Y += VSpeed;
 

@@ -11,7 +11,7 @@ namespace Jump_Bruteforcer
         double Y, VSpeed;
         bool GoalHeightReached;
 
-        readonly List<double> VString;
+        public List<double> VString { get; }
         readonly List<bool> Releases;
 
         // could also use int and use rounded position to check if on same pixel

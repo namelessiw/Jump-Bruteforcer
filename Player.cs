@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 
 namespace Jump_Bruteforcer
 {
+    [Flags]
     enum Input
     { 
-        None,
-        Left,
-        Right
+        Neutral = 1,
+        Left = 2,
+        Right = 4,
+        Jump = 8,
+        Release = 16
     }
     class Player
     {
 
-        public (int x, float y) position { get; set; }
+        public (int x, double y) position { get; set; }
 
 
-        public Player(int x, float y)
+        public Player(int x, double y)
         {
             position = (x, y);
 
@@ -35,10 +38,6 @@ namespace Jump_Bruteforcer
             return new Player(position.x + 3, position.y + 1);
         }
 
-        public void moveUp()
-        {
-            position = (position.x, position.y + 1);
-        }
 
     }
 }

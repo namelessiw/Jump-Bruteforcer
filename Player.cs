@@ -28,14 +28,14 @@ namespace Jump_Bruteforcer
         }
         
 
-        public Player moveLeft()
+        public Player moveLeft(double new_y)
         {
-            return new Player(position.x - 3, position.y + 1);
+            return new Player(position.x - 3, new_y);
         }
 
-        public Player moveRight()
+        public Player moveRight(double new_y)
         {
-            return new Player(position.x + 3, position.y + 1);
+            return new Player(position.x + 3, new_y);
         }
 
 

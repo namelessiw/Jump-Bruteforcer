@@ -29,8 +29,8 @@ namespace Jump_Bruteforcer
         /// </summary>
         private void Move(Player p, double new_y)
         {
-            Player left = p.moveLeft();
-            Player right = p.moveRight();
+            Player left = p.moveLeft(new_y);
+            Player right = p.moveRight(new_y);
             if (!covered.Contains(left.position.x))
             {
                 covered.Add(left.position.x);
@@ -51,42 +51,59 @@ namespace Jump_Bruteforcer
         /// <returns></returns>
         private bool reachedGoal(Player p)
         {
-            return p.position.x == goal.x && ((int)p.position.y) == goal.y;
+            return p.position.x == goal.x && ((int)Math.Round(p.position.y)) == goal.y;
         }
+
         public bool Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
-    
+
+            // clean up in case this gets run multiple times
+            // too lazy to do this properly rn
+            players.Clear();
+            covered.Clear();
+            currentFrame = 0;
+
             foreach (VPlayer vs in vstrings)
             {
-                players.Add(new Player(start.x, start.y));
-                covered.Add(start.x);
-
-                while (currentFrame < 30)
+                if (RunVString(vs))
                 {
-                    currentFrame++;
-                    int numPlayers = players.Count;
-                    for (int i = 0; i < numPlayers; i++)
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool RunVString(VPlayer vs)
+        {
+            players.Add(new Player(start.x, start.y));
+            covered.Add(start.x);
+
+            // doing it like this storing the y position in the player is kinda redundant
+            // might aswell only check using player x pos and vstring y
+            while (currentFrame < vs.VString.Count)
+            {
+                int numPlayers = players.Count;
+                for (int i = 0; i < numPlayers; i++)
+                {
+                    Move(players[i], vs.VString[currentFrame]);
+                }
+
+                foreach (Player player in players)
+                {
+                    if (reachedGoal(player))
                     {
-                        if (currentFrame < vs.VString.Count())
-                        {
-                            Move(players[i], vs.VString[currentFrame]);
-                        }
-                        
-                    }
-                    foreach (Player player in players)
-                    {
-                        if (reachedGoal(player))
-                        {
-                            v_string = vs.VString;
-                            return true;
-                        }
+                        v_string = vs.VString;
+                        return true;
                     }
                 }
-                players.Clear(); covered.Clear();
-                currentFrame = 0;
-                
+
+                currentFrame++;
             }
+            players.Clear();
+            covered.Clear();
+            currentFrame = 0;
+
             return false;
         }
 

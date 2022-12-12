@@ -95,7 +95,7 @@ namespace Jump_Bruteforcer
                 {
                     do
                     {
-                        VPlayer NewPlayer = new VPlayer(Player);
+                        VPlayer NewPlayer = new(Player);
                         NewPlayer.Advance(false);
                         Players.Enqueue(NewPlayer);
 

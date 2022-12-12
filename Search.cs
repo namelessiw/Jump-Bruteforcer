@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,11 +13,11 @@ namespace Jump_Bruteforcer
     {
         private SortedSet<int> covered;
         private List<Player> players;
-        private (int x, float y) start;
+        private (int x, double y) start;
         private (int x, int y) goal;
         public int currentFrame { get; set; }
         public List<double> v_string = new();
-        public Search((int, float) start, (int, int) goal) {
+        public Search((int, double) start, (int, int) goal) {
             covered= new SortedSet<int>();
             players = new List<Player>();
             this.start = start;
@@ -56,9 +57,10 @@ namespace Jump_Bruteforcer
         public bool Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
-    
+
             foreach (VPlayer vs in vstrings)
             {
+                
                 players.Add(new Player(start.x, start.y));
                 covered.Add(start.x);
 
@@ -71,21 +73,22 @@ namespace Jump_Bruteforcer
                         if (currentFrame < vs.VString.Count())
                         {
                             Move(players[i], vs.VString[currentFrame]);
+                            if (reachedGoal(players[i]))
+                            {
+                                v_string = vs.VString;
+                                return true;
+                            }
                         }
-                        
-                    }
-                    foreach (Player player in players)
-                    {
-                        if (reachedGoal(player))
-                        {
-                            v_string = vs.VString;
-                            return true;
-                        }
+
                     }
                 }
                 players.Clear(); covered.Clear();
                 currentFrame = 0;
-                
+                /*
+                if (vs.VString.Count > 0) { 
+                    v_string = vs.VString;
+                }*/
+                v_string = vs.VString;
             }
             return false;
         }

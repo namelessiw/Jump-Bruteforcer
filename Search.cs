@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,11 +13,11 @@ namespace Jump_Bruteforcer
     {
         private SortedSet<int> covered;
         private List<Player> players;
-        private (int x, float y) start;
+        private (int x, double y) start;
         private (int x, int y) goal;
         public int currentFrame { get; set; }
         public List<double> v_string = new();
-        public Search((int, float) start, (int, int) goal) {
+        public Search((int, double) start, (int, int) goal) {
             covered= new SortedSet<int>();
             players = new List<Player>();
             this.start = start;

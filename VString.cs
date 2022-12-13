@@ -17,7 +17,7 @@ namespace Jump_Bruteforcer
         // could also use int and use rounded position to check if on same pixel
         public double LowestGoal { get; set; }
 
-        public VPlayer(double Y, double VSpeed, double LowestGoal)
+        private VPlayer(double Y, double VSpeed, double LowestGoal)
         {
             this.Y = Y;
             this.VSpeed = VSpeed;
@@ -29,7 +29,7 @@ namespace Jump_Bruteforcer
             this.LowestGoal = LowestGoal;
         }
 
-        public VPlayer(VPlayer vp)
+        private VPlayer(VPlayer vp)
         {
             Y = vp.Y;
             VSpeed = vp.VSpeed;

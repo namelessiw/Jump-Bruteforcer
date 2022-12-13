@@ -15,7 +15,7 @@ namespace Jump_Bruteforcer
         readonly List<bool> Releases;
 
         // could also use int and use rounded position to check if on same pixel
-        static double LowestGoal;
+        public double LowestGoal { get; set; }
 
         public VPlayer(double Y, double VSpeed, double LowestGoal)
         {
@@ -26,7 +26,7 @@ namespace Jump_Bruteforcer
             VString = new List<double>();
             Releases = new List<bool>();
 
-            VPlayer.LowestGoal = LowestGoal;
+            this.LowestGoal = LowestGoal;
         }
 
         public VPlayer(VPlayer vp)
@@ -34,6 +34,7 @@ namespace Jump_Bruteforcer
             Y = vp.Y;
             VSpeed = vp.VSpeed;
             GoalHeightReached = vp.GoalHeightReached;
+            LowestGoal= vp.LowestGoal;
 
             VString = new List<double>(vp.VString);
             Releases = new List<bool>(vp.Releases);

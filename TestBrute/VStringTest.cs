@@ -19,14 +19,14 @@ namespace TestBrute
 
 
         [Theory]
-        [InlineData(407.4, true, 327.5, 15)]
-        [InlineData(407.4, true, 321.3, 2)]
+        [InlineData(407.4, true, 328, 15)]
+        [InlineData(407.4, true, 321, 3)]
         [InlineData(407.4, true, 320, 0)]
         [InlineData(407.4, false, 340, 0)]
-        [InlineData(407.4, false, 350, 3)]
+        [InlineData(407.4, false, 350, 5)]
         [InlineData(407.4, false, 400, 120)]
         [InlineData(407.4, false, 550, 127)]
-        public void testVstrings(double start_y, bool single_jump, double lowest_goal, int expected_vs_count) {
+        public void testVstrings(double start_y, bool single_jump, int lowest_goal, int expected_vs_count) {
             List<VPlayer> VStrings = VPlayer.GenerateVStrings(start_y, single_jump, lowest_goal);
             if (VStrings.Count > 0) { 
                 String vs = string.Join(";", VStrings[0].VString);

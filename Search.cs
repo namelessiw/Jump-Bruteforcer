@@ -78,13 +78,25 @@ namespace Jump_Bruteforcer
             while (currentFrame < vs.VString.Count)
             {
                 int numPlayers = players.Count;
+                
+                // perform horizontal movement
                 for (int i = 0; i < numPlayers; i++)
                 {
                     Move(players[i], vs.VString[currentFrame]);
-                    if (reachedGoal(players[i]))
+                }
+
+                // check if any of the resulting positions are the same as the goal
+                if (Math.Round(vs.VString[currentFrame]) == goal.y)
+                {
+                    for (int i = 0; i < players.Count; i++)
                     {
-                        v_string = vs.VString;
-                        return true;
+                        // can be simplified to only check matching x
+                        // since y has been checked outside of the loop
+                        if (reachedGoal(players[i]))
+                        {
+                            v_string = vs.VString;
+                            return true;
+                        }
                     }
                 }
                 currentFrame++;

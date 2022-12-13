@@ -41,7 +41,6 @@ namespace TestBrute
         [Fact]
         public void GoalReachable1()
         {
-            // still works at 569 but fails at 572, it should work up to 575 and fail at 578 (see GoalUnreachable1)
             Search s = new Search((452, 407.4f), (575, 403));
             Assert.True(s.Run());
         }

@@ -77,20 +77,13 @@ namespace Jump_Bruteforcer
                 {
                     Move(players[i]);
                 }
+                
 
                 // check if any of the resulting positions are the same as the goal
-                if (Math.Round(vs.VString[currentFrame]) == goal.y)
+                if (Math.Round(vs.VString[currentFrame]) == goal.y && covered.Contains(goal.x))
                 {
-                    for (int i = 0; i < players.Count; i++)
-                    {
-                        // can be simplified to only check matching x
-                        // since y has been checked outside of the loop
-                        if (players[i].x_position == goal.x)
-                        {
-                            v_string = vs.VString;
-                            return true;
-                        }
-                    }
+                    v_string = vs.VString;
+                    return true;
                 }
                 currentFrame++;
             }

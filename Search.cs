@@ -65,14 +65,7 @@ namespace Jump_Bruteforcer
             covered.Clear();
             currentFrame = 0;
 
-            foreach (VPlayer vs in vstrings)
-            {
-                if (RunVString(vs))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return vstrings.Exists(RunVString);
         }
 
         bool RunVString(VPlayer vs)
@@ -88,17 +81,12 @@ namespace Jump_Bruteforcer
                 for (int i = 0; i < numPlayers; i++)
                 {
                     Move(players[i], vs.VString[currentFrame]);
-                }
-
-                foreach (Player player in players)
-                {
-                    if (reachedGoal(player))
+                    if (reachedGoal(players[i]))
                     {
                         v_string = vs.VString;
                         return true;
                     }
                 }
-
                 currentFrame++;
             }
             players.Clear();

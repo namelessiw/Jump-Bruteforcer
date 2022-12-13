@@ -18,24 +18,24 @@ namespace Jump_Bruteforcer
     class Player
     {
 
-        public (int x, double y) position { get; set; }
+        public int x_position { get; set; }
 
 
-        public Player(int x, double y)
+        public Player(int x)
         {
-            position = (x, y);
+            x_position = x;
 
         }
         
 
-        public Player moveLeft(double new_y)
+        public Player moveLeft()
         {
-            return new Player(position.x - 3, new_y);
+            return new Player(x_position - 3);
         }
 
-        public Player moveRight(double new_y)
+        public Player moveRight()
         {
-            return new Player(position.x + 3, new_y);
+            return new Player(x_position + 3);
         }
 
 

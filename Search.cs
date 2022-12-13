@@ -28,53 +28,46 @@ namespace Jump_Bruteforcer
         /// <summary>
         /// This method explores the movement space of each player: left, right, and none
         /// </summary>
-        private void Move(Player p, double new_y)
+        private void Move(Player p)
         {
-            Player left = p.moveLeft(new_y);
-            Player right = p.moveRight(new_y);
-            if (!covered.Contains(left.position.x))
+            Player left = p.moveLeft();
+            Player right = p.moveRight();
+            if (!covered.Contains(left.x_position))
             {
-                covered.Add(left.position.x);
+                covered.Add(left.x_position);
                 players.Add(left);
             }
-            if (!covered.Contains(right.position.x))
+            if (!covered.Contains(right.x_position))
             {
-                covered.Add(right.position.x);
+                covered.Add(right.x_position);
                 players.Add(right);
             }
-            p.position = (p.position.x, new_y);
         }
 
         /// <summary>
-        /// determines if the player 
+        /// resets visited locations and players so that search can be run again.
         /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        private bool reachedGoal(Player p)
+        private void reset()
         {
-            return p.position.x == goal.x && ((int)Math.Round(p.position.y)) == goal.y;
+            players.Clear();
+            covered.Clear();
+            currentFrame = 0;
         }
 
         public bool Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
 
-            // clean up in case this gets run multiple times
-            // too lazy to do this properly rn
-            players.Clear();
-            covered.Clear();
-            currentFrame = 0;
-
-            return vstrings.Exists(RunVString);
+            bool reachedGoal = vstrings.Exists(RunVString);
+            reset();
+            return reachedGoal;
         }
 
         bool RunVString(VPlayer vs)
         {
-            players.Add(new Player(start.x, start.y));
+            players.Add(new Player(start.x));
             covered.Add(start.x);
 
-            // doing it like this storing the y position in the player is kinda redundant
-            // might aswell only check using player x pos and vstring y
             while (currentFrame < vs.VString.Count)
             {
                 int numPlayers = players.Count;
@@ -82,7 +75,7 @@ namespace Jump_Bruteforcer
                 // perform horizontal movement
                 for (int i = 0; i < numPlayers; i++)
                 {
-                    Move(players[i], vs.VString[currentFrame]);
+                    Move(players[i]);
                 }
 
                 // check if any of the resulting positions are the same as the goal
@@ -92,7 +85,7 @@ namespace Jump_Bruteforcer
                     {
                         // can be simplified to only check matching x
                         // since y has been checked outside of the loop
-                        if (reachedGoal(players[i]))
+                        if (players[i].x_position == goal.x)
                         {
                             v_string = vs.VString;
                             return true;
@@ -101,15 +94,7 @@ namespace Jump_Bruteforcer
                 }
                 currentFrame++;
             }
-            players.Clear();
-            covered.Clear();
-            currentFrame = 0;
-
             return false;
         }
-
-
-
-
     }
 }

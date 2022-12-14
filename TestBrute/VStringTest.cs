@@ -17,7 +17,6 @@ namespace TestBrute
             this.output = output;
         }
 
-
         [Theory]
         [InlineData(407.4, true, 328, 15)]
         [InlineData(407.4, true, 321, 3)]
@@ -29,7 +28,7 @@ namespace TestBrute
         public void testVstrings(double start_y, bool single_jump, int lowest_goal, int expected_vs_count) {
             List<VPlayer> VStrings = VPlayer.GenerateVStrings(start_y, single_jump, lowest_goal);
             if (VStrings.Count > 0) { 
-                String vs = string.Join(";", VStrings[0].VString);
+                string vs = string.Join(";", VStrings[0].VString);
                 output.WriteLine(vs);
                 output.WriteLine(VStrings[0].LowestGoal.ToString());
             }

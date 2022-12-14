@@ -30,8 +30,8 @@ namespace Jump_Bruteforcer
         /// </summary>
         private void Move(Player p)
         {
-            Player left = p.moveLeft();
-            Player right = p.moveRight();
+            Player left = p.moveLeft(currentFrame);
+            Player right = p.moveRight(currentFrame);
             if (!covered.Contains(left.x_position))
             {
                 covered.Add(left.x_position);
@@ -42,6 +42,8 @@ namespace Jump_Bruteforcer
                 covered.Add(right.x_position);
                 players.Add(right);
             }
+
+            p.moveNeutral(currentFrame);
         }
 
         /// <summary>
@@ -54,16 +56,28 @@ namespace Jump_Bruteforcer
             currentFrame = 0;
         }
 
-        public bool Run()
+        public (bool, string) Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
 
-            bool reachedGoal = vstrings.Exists(RunVString);
+            int i = 0;
+            while (i < vstrings.Count)
+            {
+                Player p = RunVString(vstrings[i]);
+
+                if (p != null)
+                {
+                    return (true, p.GetInputString());
+                }
+
+                i++;
+            }
+
             reset();
-            return reachedGoal;
+            return (false, string.Empty);
         }
 
-        bool RunVString(VPlayer vs)
+        Player RunVString(VPlayer vs)
         {
             players.Add(new Player(start.x));
             covered.Add(start.x);
@@ -82,12 +96,16 @@ namespace Jump_Bruteforcer
                 // check if any of the resulting positions are the same as the goal
                 if (Math.Round(vs.VString[currentFrame]) == goal.y && covered.Contains(goal.x))
                 {
+                    Player p = players.Find(new(p => p.x_position == goal.x));
+                    p.MergeVStringInputs(vs.Inputs, currentFrame);
+
                     v_string = vs.VString;
-                    return true;
+
+                    return p;
                 }
                 currentFrame++;
             }
-            return false;
+            return null;
         }
     }
 }

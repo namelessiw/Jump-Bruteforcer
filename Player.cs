@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Jump_Bruteforcer
 {
     [Flags]
     public enum Input
-    { 
+    {
         Neutral = 1,
         Left = 2,
         Right = 4,
@@ -18,13 +14,13 @@ namespace Jump_Bruteforcer
 
     class Player
     {
-        public int x_position { get; set; }
+        public int X_position { get; set; }
         Input LastDirection;
         List<(int Frame, Input Input)> Inputs;
 
         public Player(int x)
         {
-            x_position = x;
+            X_position = x;
             LastDirection = Input.Neutral;
 
             Inputs = new List<(int Frame, Input Input)>();
@@ -32,17 +28,17 @@ namespace Jump_Bruteforcer
 
         private Player(int x, Input LastDirection, List<(int Frame, Input Input)> Inputs)
         {
-            x_position = x;
+            X_position = x;
             this.LastDirection = LastDirection;
 
             this.Inputs = new List<(int Frame, Input Input)>(Inputs);
         }
 
-        public Player moveLeft(int Frame)
+        public Player MoveLeft(int Frame)
         {
-            Player p = new(x_position, LastDirection, Inputs);
+            Player p = new(X_position, LastDirection, Inputs);
 
-            p.x_position -= 3;
+            p.X_position -= 3;
 
             if (p.LastDirection != Input.Left)
             {
@@ -53,11 +49,11 @@ namespace Jump_Bruteforcer
             return p;
         }
 
-        public Player moveRight(int Frame)
+        public Player MoveRight(int Frame)
         {
-            Player p = new(x_position, LastDirection, Inputs);
+            Player p = new(X_position, LastDirection, Inputs);
 
-            p.x_position += 3;
+            p.X_position += 3;
 
             if (p.LastDirection != Input.Right)
             {
@@ -68,7 +64,7 @@ namespace Jump_Bruteforcer
             return p;
         }
 
-        public void moveNeutral(int Frame)
+        public void MoveNeutral(int Frame)
         {
             if (LastDirection != Input.Neutral)
             {
@@ -116,7 +112,7 @@ namespace Jump_Bruteforcer
 
         public string GetInputString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach ((int Frame, Input Input) in Inputs)
             {
                 sb.AppendLine($"({Frame}) {Input}");

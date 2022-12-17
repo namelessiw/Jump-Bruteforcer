@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Jump_Bruteforcer
+﻿namespace Jump_Bruteforcer
 {
-    enum ObjectType
+    public enum ObjectType
     {
         Block,
         MiniBlock,
@@ -37,7 +31,7 @@ namespace Jump_Bruteforcer
         Unknown
     }
 
-    enum CollisionType
+    public enum CollisionType
     {
         None,
         Solid,
@@ -52,7 +46,7 @@ namespace Jump_Bruteforcer
     {
         public double X, Y;
         public ObjectType Type;
-        public Dictionary<string, string> Properties = new Dictionary<string, string>();
+        public Dictionary<string, string> Properties = new();
 
         public Object(double X, double Y, ObjectType Type)
         {

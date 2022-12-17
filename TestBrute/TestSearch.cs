@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using Jump_Bruteforcer;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace TestBrute
@@ -15,9 +13,9 @@ namespace TestBrute
             this.output = output;
         }
 
-      
 
-        
+
+
         [Theory]
         [InlineData(0, -1f, 15, 10)]
         [InlineData(0, -1f, 15, -10)]

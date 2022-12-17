@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-
-namespace Jump_Bruteforcer
+﻿namespace Jump_Bruteforcer
 {
     public class Search
     {
@@ -17,12 +8,13 @@ namespace Jump_Bruteforcer
         private (int x, int y) goal;
         public int currentFrame { get; set; }
         public List<double> v_string = new();
-        public Search((int, double) start, (int, int) goal) {
-            covered= new SortedSet<int>();
+        public Search((int, double) start, (int, int) goal)
+        {
+            covered = new SortedSet<int>();
             players = new List<Player>();
             this.start = start;
             this.goal = goal;
-            currentFrame= 0;
+            currentFrame = 0;
         }
 
         /// <summary>
@@ -30,20 +22,20 @@ namespace Jump_Bruteforcer
         /// </summary>
         private void Move(Player p)
         {
-            Player left = p.moveLeft(currentFrame);
-            Player right = p.moveRight(currentFrame);
-            if (!covered.Contains(left.x_position))
+            Player left = p.MoveLeft(currentFrame);
+            Player right = p.MoveRight(currentFrame);
+            if (!covered.Contains(left.X_position))
             {
-                covered.Add(left.x_position);
+                covered.Add(left.X_position);
                 players.Add(left);
             }
-            if (!covered.Contains(right.x_position))
+            if (!covered.Contains(right.X_position))
             {
-                covered.Add(right.x_position);
+                covered.Add(right.X_position);
                 players.Add(right);
             }
 
-            p.moveNeutral(currentFrame);
+            p.MoveNeutral(currentFrame);
         }
 
         /// <summary>
@@ -85,18 +77,18 @@ namespace Jump_Bruteforcer
             while (currentFrame < vs.VString.Count)
             {
                 int numPlayers = players.Count;
-                
+
                 // perform horizontal movement
                 for (int i = 0; i < numPlayers; i++)
                 {
                     Move(players[i]);
                 }
-                
+
 
                 // check if any of the resulting positions are the same as the goal
                 if (Math.Round(vs.VString[currentFrame]) == goal.y && covered.Contains(goal.x))
                 {
-                    Player p = players.Find(new(p => p.x_position == goal.x));
+                    Player p = players.Find(new(p => p.X_position == goal.x));
                     p.MergeVStringInputs(vs.Inputs, currentFrame);
 
                     v_string = vs.VString;

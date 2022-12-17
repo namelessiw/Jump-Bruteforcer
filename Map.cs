@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Jump_Bruteforcer
 {
     internal class Map
     {
-        public List<Object> Objects;
+        private List<Object> Objects;
         public Dictionary<string, string> Properties = new Dictionary<string, string>();
-        public int SkippedObjects = 0;
+        private int SkippedObjects = 0;
 
         public Map(List<Object> Objects)
         {
@@ -68,7 +64,7 @@ namespace Jump_Bruteforcer
             Objects.Add(Object);
         }
 
-        public static readonly (ObjectType, string)[] Filenames = new (ObjectType, string)[]
+        private static readonly (ObjectType, string)[] Filenames = new (ObjectType, string)[]
         {
             (ObjectType.Block, "block"),
             (ObjectType.KillerBlock, "killerblock"),
@@ -88,9 +84,9 @@ namespace Jump_Bruteforcer
             (ObjectType.Apple, "apple"),
         };
 
-        public static Dictionary<ObjectType, bool[,]> Hitboxes = new Dictionary<ObjectType, bool[,]>();
+        private static Dictionary<ObjectType, bool[,]> Hitboxes = new Dictionary<ObjectType, bool[,]>();
 
-        public void InitHitboxes()
+        private void InitHitboxes()
         {
             // generate dictionary of hitboxes using images
             if (Hitboxes.Count != 0)
@@ -102,9 +98,11 @@ namespace Jump_Bruteforcer
             {
                 Hitboxes.Add(Type, GetHitbox(Filename));
             }
+
+
         }
 
-        public bool[,] GetHitbox(string Filename)
+        private bool[,] GetHitbox(string Filename)
         {
             string Path = @"images\";
             Bitmap b = new Bitmap($"{Path}{Filename}.png");
@@ -239,7 +237,7 @@ namespace Jump_Bruteforcer
             return b;
         }
 
-        public bool Collision(int Relative_X, int Relative_Y, bool[,] PlayerHitbox, bool[,] ObjectHitbox)
+        private bool Collision(int Relative_X, int Relative_Y, bool[,] PlayerHitbox, bool[,] ObjectHitbox)
         {
             for (int hitbox_x = 0; hitbox_x < PlayerHitbox.GetLength(0); hitbox_x++)
             {

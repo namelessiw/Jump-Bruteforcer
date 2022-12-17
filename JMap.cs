@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Jump_Bruteforcer
+﻿namespace Jump_Bruteforcer
 {
     static class JMap
     {
         // https://github.com/patrickgh3/jtool/blob/master/source.gmx/scripts/saveMapName.gml
 
-        public const string BASE32STRING = "0123456789abcdefghijklmnopqrstuv";
+        private const string BASE32STRING = "0123456789abcdefghijklmnopqrstuv";
 
         static JMap()
         {
@@ -34,8 +28,8 @@ namespace Jump_Bruteforcer
 
         public static Map Parse(string Text)
         {
-            List<Object> Objects = new List<Object>();
-            Map Map = new Map(Objects);
+            List<Object> Objects = new();
+            Map Map = new(Objects);
 
             string[] args = Text.Split('\n')[0].Split('|');
             if (args[0] != "jtool")
@@ -74,7 +68,7 @@ namespace Jump_Bruteforcer
                                 if (objectid != -1)
                                 {
                                     long x = Base32StringToLong(value.Substring(j + 1, 2));
-                                    Object o = new Object(x - 128, y - 128, IDToType.ContainsKey(objectid) ? IDToType[objectid] : ObjectType.Unknown);
+                                    Object o = new(x - 128, y - 128, IDToType.ContainsKey(objectid) ? IDToType[objectid] : ObjectType.Unknown);
                                     Map.AddObject(o);
                                 }
                             }
@@ -98,7 +92,7 @@ namespace Jump_Bruteforcer
             return Map;
         }
 
-        public static long Base32StringToLong(string value)
+        private static long Base32StringToLong(string value)
         {
             long result = 0;
             int length = value.Length;
@@ -114,7 +108,7 @@ namespace Jump_Bruteforcer
             return result;
         }
 
-        public static Dictionary<long, ObjectType> IDToType = new Dictionary<long, ObjectType>()
+        private static Dictionary<long, ObjectType> IDToType = new()
         {
             {1, ObjectType.Block},
             {2, ObjectType.MiniBlock},
@@ -144,6 +138,6 @@ namespace Jump_Bruteforcer
             {26, ObjectType.SaveUpsideDown},
         };
 
-        public static Dictionary<ObjectType, long> TypeToID = new Dictionary<ObjectType, long>();
+        private static Dictionary<ObjectType, long> TypeToID = new();
     }
 }

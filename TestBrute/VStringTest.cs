@@ -1,9 +1,4 @@
 ﻿using Jump_Bruteforcer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace TestBrute
@@ -25,9 +20,11 @@ namespace TestBrute
         [InlineData(407.4, false, 350, 5)]
         [InlineData(407.4, false, 400, 120)]
         [InlineData(407.4, false, 550, 127)]
-        public void testVstrings(double start_y, bool single_jump, int lowest_goal, int expected_vs_count) {
+        public void testVstrings(double start_y, bool single_jump, int lowest_goal, int expected_vs_count)
+        {
             List<VPlayer> VStrings = VPlayer.GenerateVStrings(start_y, single_jump, lowest_goal);
-            if (VStrings.Count > 0) { 
+            if (VStrings.Count > 0)
+            {
                 string vs = string.Join(";", VStrings[0].VString);
                 output.WriteLine(vs);
                 output.WriteLine(VStrings[0].LowestGoal.ToString());

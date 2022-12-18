@@ -31,15 +31,16 @@
         Unknown
     }
 
+    //Must be ordered by collision priority
     public enum CollisionType
     {
-        None,
         Solid,
         Killer,
         Warp,
         Water1,
+        Water3,
         Water2,
-        Water3
+        None
     }
 
     class Object
@@ -60,28 +61,10 @@
             this.Properties = Properties;
         }
 
-        static readonly CollisionType[] CollisionOrder = new CollisionType[]
-        {
-            CollisionType.Solid,
-            CollisionType.Killer,
-            CollisionType.Warp,
-            CollisionType.Water1,
-            CollisionType.Water3,
-            CollisionType.Water2,
-        };
 
         public static CollisionType GetHigherCollisionPriority(CollisionType ct1, CollisionType ct2)
         {
-            if (ct1 == ct2)
-                return ct1;
-
-            foreach (CollisionType ct in CollisionOrder)
-            {
-                if (ct1 == ct || ct2 == ct)
-                    return ct;
-            }
-
-            throw new Exception($"No collision order definitions for collision types {ct1} and {ct2}");
+            return ct1 < ct2? ct1: ct2;
         }
     }
 }

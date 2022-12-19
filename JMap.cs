@@ -6,25 +6,8 @@
 
         private const string BASE32STRING = "0123456789abcdefghijklmnopqrstuv";
 
-        static JMap()
-        {
-            foreach (KeyValuePair<long, ObjectType> Entry in IDToType)
-            {
-                TypeToID[Entry.Value] = Entry.Key;
-            }
-        }
-
-        public static bool CheckFormat(string Text)
-        {
-            try
-            {
-                return Text.Split('\n')[0].Split('|')[0] == "jtool";
-            }
-            catch
-            {
-                return false;
-            }
-        }
+  
+   
 
         public static Map Parse(string Text)
         {

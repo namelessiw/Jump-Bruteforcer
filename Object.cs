@@ -1,34 +1,35 @@
 ﻿namespace Jump_Bruteforcer
 {
+    //must be ordered by ID
     public enum ObjectType
     {
+        Unknown,
         Block,
         MiniBlock,
         SpikeUp,
         SpikeRight,
-        SpikeDown,
         SpikeLeft,
+        SpikeDown,
         MiniSpikeUp,
         MiniSpikeRight,
-        MiniSpikeDown,
         MiniSpikeLeft,
+        MiniSpikeDown,
         Apple,
         Save,
         Platform,
         Water1,
         Water2,
-        Water3,
-        Warp,
-        PlayerStart,
+        VineRight,
+        VineLeft,
         KillerBlock,
+        BulletBlocker,
+        PlayerStart,
+        Warp,
         JumpRefresher,
+        Water3,
         GravityArrowUp,
         GravityArrowDown,
-        SaveUpsideDown,
-        VineLeft,
-        VineRight,
-        BulletBlocker,
-        Unknown
+        SaveUpsideDown
     }
 
     //Must be ordered by collision priority
@@ -47,7 +48,6 @@
     {
         public double X, Y;
         public ObjectType Type;
-        public Dictionary<string, string> Properties = new();
 
         public Object(double X, double Y, ObjectType Type)
         {
@@ -56,10 +56,6 @@
             this.Type = Type;
         }
 
-        public Object(double X, double Y, ObjectType Type, Dictionary<string, string> Properties) : this(X, Y, Type)
-        {
-            this.Properties = Properties;
-        }
 
 
         public static CollisionType GetHigherCollisionPriority(CollisionType ct1, CollisionType ct2)

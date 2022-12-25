@@ -5,62 +5,31 @@ namespace Jump_Bruteforcer
     internal class Map
     {
         private List<Object> Objects;
-        public Dictionary<string, string> Properties = new Dictionary<string, string>();
-        private int SkippedObjects = 0;
 
         public Map(List<Object> Objects)
         {
             this.Objects = Objects;
         }
 
-        public Map(List<Object> Objects, Dictionary<string, string> Properties) : this(Objects)
-        {
-            this.Properties = Properties;
-        }
 
         public new string ToString()
         {
-            StringBuilder sb = new StringBuilder("Properties:\n");
+            StringBuilder sb = new("");
 
-            foreach (KeyValuePair<string, string> p in Properties)
-            {
-                sb.AppendLine($"\t{p.Key}: {p.Value}");
-            }
-
-            sb.AppendLine($"\nObjects ({Objects.Count}):");
+            sb.Append($"\nObjects ({Objects.Count}):");
 
             foreach (Object o in Objects)
             {
                 sb.AppendLine($"{o.Type}:\n\tx: {o.X}\n\ty: {o.Y}");
-                foreach (KeyValuePair<string, string> p in o.Properties)
-                {
-                    sb.AppendLine($"\t{p.Key}: {p.Value}");
-                }
                 sb.AppendLine();
             }
-
-            sb.AppendLine($"Skipped objects: {SkippedObjects}\n");
 
             return sb.ToString();
         }
 
-        public void AddObject(double X, double Y, ObjectType Type)
-        {
-            if (Type == ObjectType.Unknown)
-            {
-                SkippedObjects++;
-                return;
-            }
-            Objects.Add(new Object(X, Y, Type));
-        }
 
         public void AddObject(Object Object)
         {
-            if (Object.Type == ObjectType.Unknown)
-            {
-                SkippedObjects++;
-                return;
-            }
             Objects.Add(Object);
         }
 
@@ -84,9 +53,9 @@ namespace Jump_Bruteforcer
             (ObjectType.Apple, "apple"),
         };
 
-        private static Dictionary<ObjectType, bool[,]> Hitboxes = new Dictionary<ObjectType, bool[,]>();
+        private static Dictionary<ObjectType, bool[,]> Hitboxes = new();
 
-        private void InitHitboxes()
+        private static void InitHitboxes()
         {
             // generate dictionary of hitboxes using images
             if (Hitboxes.Count != 0)
@@ -102,10 +71,10 @@ namespace Jump_Bruteforcer
 
         }
 
-        private bool[,] GetHitbox(string Filename)
+        private static bool[,] GetHitbox(string Filename)
         {
             string Path = @"images\";
-            Bitmap b = new Bitmap($"{Path}{Filename}.png");
+            Bitmap b = new($"{Path}{Filename}.png");
             bool[,] Hitbox = new bool[b.Width, b.Height];
 
             for (int x = 0; x < b.Width; x++)
@@ -123,7 +92,7 @@ namespace Jump_Bruteforcer
         {
             InitHitboxes();
 
-            Dictionary<(int X, int Y), CollisionType> CollisionMap = new Dictionary<(int X, int Y), CollisionType>();
+            Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
 
             bool[,] PlayerHitbox = GetHitbox("player");
 
@@ -199,7 +168,7 @@ namespace Jump_Bruteforcer
         public static Bitmap GenerateImage(Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
             int width = 800, height = 608;
-            Bitmap b = new Bitmap(width, height);
+            Bitmap b = new(width, height);
 
             for (int y = 0; y < 608; y++)
             {
@@ -237,7 +206,7 @@ namespace Jump_Bruteforcer
             return b;
         }
 
-        private bool Collision(int Relative_X, int Relative_Y, bool[,] PlayerHitbox, bool[,] ObjectHitbox)
+        private static bool Collision(int Relative_X, int Relative_Y, bool[,] PlayerHitbox, bool[,] ObjectHitbox)
         {
             for (int hitbox_x = 0; hitbox_x < PlayerHitbox.GetLength(0); hitbox_x++)
             {

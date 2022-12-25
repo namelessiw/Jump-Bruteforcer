@@ -15,19 +15,4 @@
     <None Remove="TestBrute\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="sprites.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>sprites.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="sprites.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>sprites.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>

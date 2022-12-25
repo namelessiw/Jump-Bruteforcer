@@ -70,7 +70,7 @@ namespace Jump_Bruteforcer
 
         private static bool[,] GetHitbox(string Filename)
         {
-            string Path = @"images\";
+            string Path = @"..\..\..\images\";
             Bitmap b = new($"{Path}{Filename}.png");
             bool[,] Hitbox = new bool[b.Width, b.Height];
 

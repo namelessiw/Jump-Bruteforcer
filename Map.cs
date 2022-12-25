@@ -53,16 +53,13 @@ namespace Jump_Bruteforcer
             (ObjectType.Apple, "apple"),
         };
 
-        private static Dictionary<ObjectType, bool[,]> Hitboxes = new();
+        private static Dictionary<ObjectType, bool[,]> Hitboxes;
 
-        private static void InitHitboxes()
+         static Map()
         {
             // generate dictionary of hitboxes using images
-            if (Hitboxes.Count != 0)
-            {
-                return;
-            }
 
+            Hitboxes = new();
             foreach ((ObjectType Type, string Filename) in Filenames)
             {
                 Hitboxes.Add(Type, GetHitbox(Filename));
@@ -90,7 +87,6 @@ namespace Jump_Bruteforcer
 
         public Dictionary<(int X, int Y), CollisionType> GetCollisionMap()
         {
-            InitHitboxes();
 
             Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
 
@@ -142,7 +138,7 @@ namespace Jump_Bruteforcer
 
                 for (int p_x = min_x; p_x < ObjectHitbox.GetLength(0) + max_x; p_x++)
                 {
-                    for (int p_y = min_y; p_y < ObjectHitbox.GetLength(0) + max_y; p_y++)
+                    for (int p_y = min_y; p_y < ObjectHitbox.GetLength(1) + max_y; p_y++)
                     {
                         (int x, int y) Position = (p_x + base_x, p_y + base_y);
                         if (Collision(p_x, p_y, PlayerHitbox, ObjectHitbox))

@@ -27,6 +27,12 @@ namespace Jump_Bruteforcer
             Map Map = JMap.Parse(Text);
 
             picJmap.Image = Map.GenerateImage(Map.GetCollisionMap());
+            Clipboard.SetImage(picJmap.Image);
+        }
+
+        private void picJmap_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

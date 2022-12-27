@@ -1,6 +1,7 @@
 ﻿namespace Jump_Bruteforcer
 {
     //must be ordered by ID
+    //names need to correspond to filenames of the images of the objects
     public enum ObjectType
     {
         Unknown,

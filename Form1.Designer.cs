@@ -59,7 +59,7 @@
             this.picJmap.Location = new System.Drawing.Point(34, 131);
             this.picJmap.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.picJmap.Name = "picJmap";
-            this.picJmap.Size = new System.Drawing.Size(2286, 1946);
+            this.picJmap.Size = new System.Drawing.Size(800, 608);
             this.picJmap.TabIndex = 2;
             this.picJmap.TabStop = false;
             this.picJmap.Click += new System.EventHandler(this.picJmap_Click);
@@ -75,6 +75,7 @@
             this.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picJmap)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

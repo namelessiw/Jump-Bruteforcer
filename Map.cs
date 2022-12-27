@@ -33,36 +33,18 @@ namespace Jump_Bruteforcer
             Objects.Add(Object);
         }
 
-        private static readonly (ObjectType, string)[] Filenames = new (ObjectType, string)[]
-        {
-            (ObjectType.Block, "block"),
-            (ObjectType.KillerBlock, "killerblock"),
-            (ObjectType.MiniBlock, "miniblock"),
-            (ObjectType.MiniSpikeDown, "minidown"),
-            (ObjectType.MiniSpikeLeft, "minileft"),
-            (ObjectType.MiniSpikeRight, "miniright"),
-            (ObjectType.MiniSpikeUp, "miniup"),
-            (ObjectType.SpikeDown, "spikedown"),
-            (ObjectType.SpikeRight, "spikeright"),
-            (ObjectType.SpikeLeft, "spikeleft"),
-            (ObjectType.SpikeUp, "spikeup"),
-            (ObjectType.Warp, "warp"),
-            (ObjectType.Water1, "water1"),
-            (ObjectType.Water2, "water2"),
-            (ObjectType.Water3, "water3"),
-            (ObjectType.Apple, "apple"),
-        };
 
         private static Dictionary<ObjectType, bool[,]> Hitboxes;
 
          static Map()
         {
+            
             // generate dictionary of hitboxes using images
 
             Hitboxes = new();
-            foreach ((ObjectType Type, string Filename) in Filenames)
+            foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
-                Hitboxes.Add(Type, GetHitbox(Filename));
+                Hitboxes.Add((ObjectType)Enum.Parse(typeof(ObjectType), e), GetHitbox(e.ToLower()));
             }
 
 
@@ -70,8 +52,18 @@ namespace Jump_Bruteforcer
 
         private static bool[,] GetHitbox(string Filename)
         {
-            string Path = @"..\..\..\images\";
-            Bitmap b = new($"{Path}{Filename}.png");
+            string path = @$"..\..\..\images\{Filename}.png";
+            Bitmap b;
+            if (File.Exists(path))
+            {
+                b = new(path);
+            }
+            else
+            {
+                return new bool[0,0];
+            }
+            
+            
             bool[,] Hitbox = new bool[b.Width, b.Height];
 
             for (int x = 0; x < b.Width; x++)

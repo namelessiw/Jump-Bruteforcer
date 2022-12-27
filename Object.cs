@@ -1,4 +1,7 @@
-﻿namespace Jump_Bruteforcer
+﻿using System;
+using System.Collections.Immutable;
+
+namespace Jump_Bruteforcer
 {
     //must be ordered by ID
     //names need to correspond to filenames of the images of the objects
@@ -37,8 +40,9 @@
     public enum CollisionType
     {
         Solid,
-        Killer,
         Warp,
+        Killer,
+        Platform,
         Water1,
         Water3,
         Water2,
@@ -48,20 +52,45 @@
     class Object
     {
         public double X, Y;
-        public ObjectType Type;
+        public ObjectType ObjectType;
+        public CollisionType CollisionType;
+        private static readonly Dictionary<ObjectType, CollisionType> toCollisionType = new()
+        {
+            {ObjectType.Unknown, CollisionType.None},
+            {ObjectType.Block, CollisionType.Solid },
+            {ObjectType.MiniBlock,CollisionType.Solid },
+            {ObjectType.SpikeUp, CollisionType.Killer },
+            {ObjectType.SpikeRight,CollisionType.Killer },
+            {ObjectType.SpikeLeft,CollisionType.Killer },
+            {ObjectType.SpikeDown,CollisionType.Killer },
+            {ObjectType.MiniSpikeUp,CollisionType.Killer },
+            {ObjectType.MiniSpikeRight,CollisionType.Killer },
+            {ObjectType.MiniSpikeLeft,CollisionType.Killer },
+            {ObjectType.MiniSpikeDown,CollisionType.Killer },
+            {ObjectType.Apple,CollisionType.Killer },
+            {ObjectType.Save,CollisionType.None},
+            {ObjectType.Platform,CollisionType.Platform},
+            {ObjectType.Water1,CollisionType.Water1 },
+            {ObjectType.Water2,CollisionType.Water2 },
+            {ObjectType.VineRight,CollisionType.None },
+            {ObjectType.VineLeft,CollisionType.None },
+            {ObjectType.KillerBlock,CollisionType.Killer },
+            {ObjectType.BulletBlocker,CollisionType.None},
+            {ObjectType.PlayerStart,CollisionType.None },
+            {ObjectType.Warp,CollisionType.Warp },
+            {ObjectType.JumpRefresher,CollisionType.None },
+            {ObjectType.Water3,CollisionType.Water3 },
+            {ObjectType.GravityArrowUp,CollisionType.None },
+            {ObjectType.GravityArrowDown,CollisionType.None },
+            {ObjectType.SaveUpsideDown,CollisionType.None }
+        };
 
-        public Object(double X, double Y, ObjectType Type)
+        public Object(double X, double Y, ObjectType objectType)
         {
             this.X = X;
             this.Y = Y;
-            this.Type = Type;
-        }
-
-
-
-        public static CollisionType GetHigherCollisionPriority(CollisionType ct1, CollisionType ct2)
-        {
-            return ct1 < ct2? ct1: ct2;
+            this.ObjectType = objectType;
+            this.CollisionType = toCollisionType[objectType];
         }
     }
 }

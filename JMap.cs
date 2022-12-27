@@ -7,8 +7,7 @@
         public static Map Parse(string Text)
         {
 
-            List<Object> Objects = new List<Object>();
-            Map Map = new Map(Objects);
+            Map Map = new();
 
             int datalinenum = 5;
             string[] args = Text.Split('\n')[datalinenum - 1].Trim().Split(' ');

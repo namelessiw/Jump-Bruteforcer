@@ -120,5 +120,102 @@ namespace Jump_Bruteforcer
 
             return sb.ToString();
         }
+
+        public (CollisionType Type, int NewX, double NewY, bool VSpeedReset) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        {
+            int RoundedNewY = (int)Math.Round(NewY);
+
+            if (CollisionMap.TryGetValue((NewX, RoundedNewY), out CollisionType Type))
+            {
+                switch (Type)
+                {
+                    case CollisionType.Killer:
+                    case CollisionType.Warp:
+                        return (Type, NewX, NewY, false);
+                    case CollisionType.Solid:
+                        bool VSpeedReset;
+                        (NewX, NewY, VSpeedReset) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
+
+                        if (CollisionMap.TryGetValue((NewX, (int)Math.Round(NewY)), out Type))
+                        {
+                            return (Type, NewX, NewY, VSpeedReset);
+                        }
+                        return (CollisionType.None, NewX, NewY, VSpeedReset);
+
+                    default:
+                        throw new NotImplementedException($"Collision with type {Type} not implemented");
+                }
+            }
+            return (CollisionType.None, NewX, NewY, false);
+        }
+
+        public (int NewX, double NewY, bool VSpeedReset) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        {
+            int CurrentYRounded = (int)Math.Round(CurrentY);
+            int NewYRounded = (int)Math.Round(NewY);
+            bool VSpeedReset = false;
+            CollisionType Type;
+
+            if (CollisionMap.TryGetValue((NewX, CurrentYRounded), out Type) && Type == CollisionType.Solid)
+            {
+                if (CurrentX < NewX) // moving right
+                {
+                    NewX = CurrentX;
+                    CurrentX++;
+                    while (!CollisionMap.TryGetValue((CurrentX, CurrentYRounded), out Type) || Type != CollisionType.Solid)
+                    {
+                        CurrentX++;
+                        NewX++;
+                    }
+                }
+                else // moving left
+                {
+                    NewX = CurrentX;
+                    CurrentX--;
+                    while (!CollisionMap.TryGetValue((CurrentX, CurrentYRounded), out Type) || Type != CollisionType.Solid)
+                    {
+                        CurrentX--;
+                        NewX--;
+                    }
+                }
+            }
+
+            if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
+            {
+                // (re)rounding everytime because otherwise vfpi would lose its parity
+                if (CurrentY < NewY) // moving up
+                {
+                    NewY = CurrentY;
+                    CurrentY++;
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY)), out Type) || Type != CollisionType.Solid)
+                    {
+                        NewY++;
+                        CurrentY++;
+                    }
+                }
+                else // moving down
+                {
+                    NewY = CurrentY;
+                    CurrentY--;
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY)), out Type) || Type != CollisionType.Solid)
+                    {
+                        NewY--;
+                        CurrentY--;
+                    }
+
+                    // djump = true
+                }
+
+                NewYRounded = (int)Math.Round(NewY);
+                VSpeedReset = true;
+            }
+
+            if (CollisionMap.TryGetValue((NewX, NewYRounded), out Type) && Type == CollisionType.Solid)
+            {
+                NewX = CurrentX;
+            }
+
+            return (NewX, NewY, VSpeedReset);
+        }
     }
 }

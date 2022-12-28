@@ -6,11 +6,11 @@ namespace Jump_Bruteforcer
 {
     internal class Map
     {
-        private readonly SortedSet<Object> Objects;
+        private readonly List<Object> Objects;
 
         public Map()
         {
-            Objects = new(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
+            Objects = new();
         }
 
 
@@ -22,7 +22,7 @@ namespace Jump_Bruteforcer
 
             foreach (Object o in Objects)
             {
-                sb.AppendLine($"{o.ObjectType}:\n\tx: {o.X}\n\ty: {o.Y}\n");
+                sb.AppendLine(o.ToString());
             }
 
             return sb.ToString();
@@ -77,21 +77,25 @@ namespace Jump_Bruteforcer
         {
             int width = 800, height = 608;
             Bitmap bmp = new(width, height);
+            
+            //bmp.SetResolution()
+            Objects.Sort(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                foreach(Object o in Objects)
+                
+                foreach (Object o in Objects)
                 {
                     if (o.CollisionType != CollisionType.None)
                     {
-                        
-                        //g.DrawImage(toImage[o], new Point(o.X, o.Y));
+                        Image img = toImage[o.ObjectType];
+                        g.DrawImage(img, o.X - 5, o.Y - 8, img.Width, img.Height);
 
                     }
                     
                 }
             }
-
+            
             return bmp;
         }
 

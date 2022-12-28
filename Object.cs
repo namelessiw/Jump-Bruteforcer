@@ -36,22 +36,22 @@ namespace Jump_Bruteforcer
         SaveUpsideDown
     }
 
-    //Must be ordered by collision priority
+    //Must be ordered by ascending collision priority
     public enum CollisionType
     {
-        Solid,
-        Warp,
-        Killer,
-        Platform,
-        Water1,
-        Water3,
+        None,
         Water2,
-        None
+        Water3,
+        Water1,
+        Platform,
+        Killer,
+        Warp,
+        Solid
     }
 
     class Object
     {
-        public double X, Y;
+        public int X, Y;
         public ObjectType ObjectType;
         public CollisionType CollisionType;
         private static readonly Dictionary<ObjectType, CollisionType> toCollisionType = new()
@@ -85,12 +85,17 @@ namespace Jump_Bruteforcer
             {ObjectType.SaveUpsideDown,CollisionType.None }
         };
 
-        public Object(double X, double Y, ObjectType objectType)
+        public Object(int X, int Y, ObjectType objectType)
         {
             this.X = X;
             this.Y = Y;
             this.ObjectType = objectType;
             this.CollisionType = toCollisionType[objectType];
+        }
+
+        public override string ToString()
+        {
+            return $"({ObjectType}, {X}, {Y})";
         }
     }
 }

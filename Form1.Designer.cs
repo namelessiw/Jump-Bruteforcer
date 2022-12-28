@@ -36,10 +36,9 @@
             // 
             // btnSelectJmap
             // 
-            this.btnSelectJmap.Location = new System.Drawing.Point(34, 38);
-            this.btnSelectJmap.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.btnSelectJmap.Location = new System.Drawing.Point(12, 12);
             this.btnSelectJmap.Name = "btnSelectJmap";
-            this.btnSelectJmap.Size = new System.Drawing.Size(226, 74);
+            this.btnSelectJmap.Size = new System.Drawing.Size(79, 23);
             this.btnSelectJmap.TabIndex = 0;
             this.btnSelectJmap.Text = "Select jmap";
             this.btnSelectJmap.UseVisualStyleBackColor = true;
@@ -48,16 +47,14 @@
             // lblFileName
             // 
             this.lblFileName.AutoSize = true;
-            this.lblFileName.Location = new System.Drawing.Point(277, 51);
-            this.lblFileName.Margin = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.lblFileName.Location = new System.Drawing.Point(97, 16);
             this.lblFileName.Name = "lblFileName";
-            this.lblFileName.Size = new System.Drawing.Size(0, 48);
+            this.lblFileName.Size = new System.Drawing.Size(0, 15);
             this.lblFileName.TabIndex = 1;
             // 
             // picJmap
             // 
-            this.picJmap.Location = new System.Drawing.Point(34, 131);
-            this.picJmap.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.picJmap.Location = new System.Drawing.Point(12, 41);
             this.picJmap.Name = "picJmap";
             this.picJmap.Size = new System.Drawing.Size(800, 608);
             this.picJmap.TabIndex = 2;
@@ -66,13 +63,12 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2351, 2097);
+            this.ClientSize = new System.Drawing.Size(817, 656);
             this.Controls.Add(this.picJmap);
             this.Controls.Add(this.lblFileName);
             this.Controls.Add(this.btnSelectJmap);
-            this.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

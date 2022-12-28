@@ -15,9 +15,14 @@
             for (int i = 0; i < args.Length; i+=3)
             {
                 
-                (double x, double y, int objectid) = (double.Parse(args[i]), double.Parse(args[i + 1]), int.Parse(args[i+2]));
+                (int x, int y, int objectid) = (int.Parse(args[i]), int.Parse(args[i + 1]), int.Parse(args[i+2]));
 
                 ObjectType o = Enum.IsDefined(typeof(ObjectType), objectid) ? (ObjectType)objectid : ObjectType.Unknown;
+                if (o == ObjectType.Apple)
+                {
+                    x -= 10;
+                    y -= 12;
+                }
                 Map.AddObject(new(x, y, o));
             }
 

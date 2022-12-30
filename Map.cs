@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -8,16 +9,72 @@ namespace Jump_Bruteforcer
 {
     internal class Map
     {
-        private readonly List<Object> Objects;
-        private Bitmap? image;
+        private readonly IReadOnlyList<Object> Objects;
+        public Bitmap Bmp { get; init; }
+        public Dictionary<(int X, int Y), CollisionType> CollisionMap { get; init; }
 
-        public Map()
+        public Map(List<Object> objects)
         {
-            Objects = new();
+            objects.Sort(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
+            Objects = objects;
+            Bmp = GenerateCollisionImage();
+            CollisionMap = GenerateCollisionMap();
+        }
+        
+        private Bitmap GenerateCollisionImage()
+        {
+            int width = 800, height = 608;
+            Bitmap bmp = new(width, height);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                var query = from o in Objects
+                            where o.CollisionType != CollisionType.None
+                            select o;
+                foreach (Object o in query)
+                {
+                    Image img = toImage[o.ObjectType];
+                    g.DrawImage(img, o.X - 5, o.Y - 8, img.Width, img.Height);
+                }
+            }
+
+            return bmp;
         }
 
+        private Dictionary<(int X, int Y), CollisionType> GenerateCollisionMap()
+        {
+            Dictionary<Color, CollisionType>  toCollision = new() {
+            {Color.FromArgb(128, 24, 24), CollisionType.Killer},
+            {Color.FromArgb(0, 0, 0) , CollisionType.Solid},
+            {Color.FromArgb(124, 252, 0) , CollisionType.Warp},
+            {Color.FromArgb(0, 0, 139) , CollisionType.Water1},
+            {Color.FromArgb(173, 216,230) , CollisionType.Water2},
+            {Color.FromArgb(0, 0, 255) , CollisionType.Water3},
+            {Color.FromArgb(112, 128, 144), CollisionType.Platform}
+            };
+            Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
 
-        public new string ToString()
+            BitmapData bmpData = Bmp.LockBits(
+                new Rectangle(0, 0, Bmp.Width, Bmp.Height), ImageLockMode.ReadOnly, Bmp.PixelFormat);
+            IntPtr firstline = bmpData.Scan0;
+            int[] argbValues = new int[Math.Abs(bmpData.Stride / 4 * Bmp.Height)];
+            Marshal.Copy(firstline, argbValues, 0, argbValues.Length);
+
+            for (int i = 0; i < argbValues.Length; i++)
+            {
+                Color c = Color.FromArgb(argbValues[i]);
+                if (toCollision.ContainsKey(c))
+                {
+                    CollisionMap.Add((i % Bmp.Width, i / Bmp.Width), toCollision[c]);
+                }
+
+            }
+            Bmp.UnlockBits(bmpData);
+
+            return CollisionMap;
+        }
+
+        public override string ToString()
         {
             StringBuilder sb = new("");
 
@@ -31,51 +88,7 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-
-        public void AddObject(Object Object)
-        {
-            Objects.Add(Object);
-        }
-
-        private static readonly Dictionary<Color, CollisionType> toCollision = new()
-        {
-            {Color.FromArgb(128, 24, 24), CollisionType.Killer},
-            {Color.FromArgb(0, 0, 0) , CollisionType.Solid},
-            {Color.FromArgb(124, 252, 0) , CollisionType.Warp},
-            {Color.FromArgb(0, 0, 139) , CollisionType.Water1},
-            {Color.FromArgb(173, 216,230) , CollisionType.Water2},
-            {Color.FromArgb(0, 0, 255) , CollisionType.Water3},
-            {Color.FromArgb(112, 128, 144), CollisionType.Platform}
-        };
-
-        public Dictionary<(int X, int Y), CollisionType> GetCollisionMap()
-        {
-
-            Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
-            Bitmap bmp = GetCollisionImage();
-            BitmapData bmpData = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, bmp.PixelFormat);
-            IntPtr firstline = bmpData.Scan0;
-            int[] argbValues = new int[Math.Abs(bmpData.Stride / 4 * bmp.Height)];
-            Marshal.Copy(firstline, argbValues, 0, argbValues.Length);
-            
-            for(int i = 0; i < argbValues.Length; i++)
-            {
-                Color c = Color.FromArgb(argbValues[i]);
-                if (toCollision.ContainsKey(c))
-                {
-                    CollisionMap.Add((i % bmp.Width, i / bmp.Width), toCollision[c]);
-                }
-                
-            }
-            bmp.UnlockBits(bmpData);
-
-            return CollisionMap;
-        }
-
-       
-
-        private static Dictionary<ObjectType, Image> toImage;
+        private static readonly Dictionary<ObjectType, Image> toImage;
         static Map()
         {
             toImage = new Dictionary<ObjectType, Image>();
@@ -90,31 +103,6 @@ namespace Jump_Bruteforcer
             string path = @$"..\..\..\images\{fileName}.png";
             return File.Exists(path) ? Image.FromFile(path) : new Bitmap(1,1);
             
-        }
-
-        public Bitmap GetCollisionImage()
-        {
-            image ??= GenerateCollisionImage();
-            return image;
-        }
-
-        private Bitmap GenerateCollisionImage()
-        {
-            int width = 800, height = 608;
-            Bitmap bmp = new(width, height);
-            Objects.Sort(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
-
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                
-                foreach (Object o in Objects.FindAll(o=>o.CollisionType != CollisionType.None))
-                {
-                    Image img = toImage[o.ObjectType];
-                    g.DrawImage(img, o.X - 5, o.Y - 8, img.Width, img.Height);
-                }
-            }
-            
-            return bmp;
         }
     }
 }

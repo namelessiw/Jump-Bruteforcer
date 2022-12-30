@@ -7,7 +7,7 @@
         public static Map Parse(string Text)
         {
 
-            Map Map = new();
+            List<Object> objects= new List<Object>();
 
             int datalinenum = 5;
             string[] args = Text.Split('\n')[datalinenum - 1].Trim().Split(' ');
@@ -23,10 +23,11 @@
                     x -= 10;
                     y -= 12;
                 }
-                Map.AddObject(new(x, y, o));
+                objects.Add(new(x, y, o));
             }
 
-            return Map;
+
+            return new Map(objects);
         }
 
         

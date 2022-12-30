@@ -23,11 +23,11 @@ namespace TestBrute
         public void findsGoal(int start_x, double start_y, int goal_x, int goal_y)
         {
             Search s = new Search((start_x, start_y), (goal_x, goal_y));
-            (bool success, string InputString) = s.Run();
+            string InputString = s.Run();
             string vs = string.Join(";", s.v_string);
 
             output.WriteLine(InputString);
-            Assert.True(success, vs);
+            Assert.False(string.IsNullOrEmpty(InputString), vs);
         }
 
         [Fact]
@@ -36,16 +36,15 @@ namespace TestBrute
             Search s = new Search((452, 407.4f), (578, 407));
             s.Run();
             Assert.Equal(0, s.currentFrame);
-            s.Run();
         }
 
         [Fact]
         public void GoalUnreachable1()
         {
             Search s = new Search((452, 407.4f), (578, 407));
-            (bool success, string InputString) = s.Run();
+            string InputString = s.Run();
 
-            Assert.False(success, InputString);
+            Assert.True(string.IsNullOrEmpty(InputString));
         }
 
         // probably overkill but could be a performance test of sorts for now ig
@@ -53,9 +52,9 @@ namespace TestBrute
         public void ExtremeGoalUnreachable1()
         {
             Search s = new Search((0, 0), (1, 10000));
-            (bool success, string InputString) = s.Run();
+            string InputString = s.Run();
 
-            Assert.False(success, InputString);
+            Assert.True(string.IsNullOrEmpty(InputString));
         }
 
         // at this point i realized, you should probably be able to search for djump aswell instead of just sjump
@@ -67,7 +66,7 @@ namespace TestBrute
             string Expected = "(0) Left, Jump\r\n(21) Release\r\n(26) Neutral\r\n";
 
             Search s = new Search((401, 407.4f), (323, 343));
-            (bool success, string InputString) = s.Run();
+            string InputString = s.Run();
 
             Assert.Equal(InputString, Expected);
         }

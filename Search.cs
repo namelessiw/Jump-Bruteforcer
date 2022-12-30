@@ -48,28 +48,17 @@
             currentFrame = 0;
         }
 
-        public (bool, string) Run()
+        public string Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
 
-            int i = 0;
-            while (i < vstrings.Count)
-            {
-                Player p = RunVString(vstrings[i]);
-
-                if (p != null)
-                {
-                    return (true, p.GetInputString());
-                }
-
-                i++;
-            }
+            string solution = vstrings.ConvertAll((vs) => RunVString(vs)).Find(s => !string.IsNullOrEmpty(s)) ?? string.Empty;
 
             reset();
-            return (false, string.Empty);
+            return solution;
         }
 
-        Player RunVString(VPlayer vs)
+        string RunVString(VPlayer vs)
         {
             players.Add(new Player(start.x));
             covered.Add(start.x);
@@ -86,18 +75,20 @@
 
 
                 // check if any of the resulting positions are the same as the goal
-                if (Math.Round(vs.VString[currentFrame]) == goal.y && covered.Contains(goal.x))
+                if (Math.Round(vs.VString[currentFrame]) == goal.y)
                 {
-                    Player p = players.Find(new(p => p.X_position == goal.x));
-                    p.MergeVStringInputs(vs.Inputs, currentFrame);
-
-                    v_string = vs.VString;
-
-                    return p;
+                    Player? p = players.Find(p => p.X_position == goal.x);
+                    if (p != null)
+                    {
+                        p.MergeVStringInputs(vs.Inputs, currentFrame);
+                        v_string = vs.VString;
+                        return p.GetInputString();
+                    }
+                    
                 }
                 currentFrame++;
             }
-            return null;
+            return string.Empty;
         }
     }
 }

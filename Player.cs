@@ -12,7 +12,7 @@ namespace Jump_Bruteforcer
         Release = 16
     }
 
-    class Player
+    public class Player
     {
         public int X_position { get; set; }
         Input LastDirection;

@@ -149,7 +149,7 @@ namespace Jump_Bruteforcer
             return (CollisionType.None, NewX, NewY, false);
         }
 
-        public (int NewX, double NewY, bool VSpeedReset) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        public static (int NewX, double NewY, bool VSpeedReset) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int CurrentYRounded = (int)Math.Round(CurrentY);
             int NewYRounded = (int)Math.Round(NewY);
@@ -183,7 +183,7 @@ namespace Jump_Bruteforcer
             if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
-                if (CurrentY < NewY) // moving up
+                if (CurrentY > NewY) // moving up
                 {
                     NewY = CurrentY;
                     CurrentY++;

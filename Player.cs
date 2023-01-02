@@ -181,26 +181,28 @@ namespace Jump_Bruteforcer
             }else if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
-                if (CurrentY > NewY) // moving up
+                double VSpeed = NewY - CurrentY;
+                if (VSpeed < 0) // moving up
                 {
-                    NewY = CurrentY;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(NewY) - 1), out Type) || Type != CollisionType.Solid)
+                    while (VSpeed <= -1 && (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) - 1), out Type) || Type != CollisionType.Solid))
                     {
-                        NewY--;
+                        CurrentY--;
+                        VSpeed++;
                     }
                 }
-                else if (CurrentY < NewY) // moving down
+                else if (VSpeed > 0) // moving down
                 {
-                    NewY = CurrentY;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(NewY + 1)), out Type) || Type != CollisionType.Solid)
+                    while (VSpeed >= 1 && (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY + 1)), out Type) || Type != CollisionType.Solid))
                     {
-                        NewY++;
+                        CurrentY++;
+                        VSpeed--;
                     }
 
                     // djump = true
                 }
 
-                NewYRounded = (int)Math.Round(NewY);
+                NewYRounded = (int)Math.Round(CurrentY);
+                NewY = CurrentY;
                 VSpeedReset = true;
             }
 

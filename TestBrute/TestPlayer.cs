@@ -70,6 +70,7 @@ namespace TestBrute
         [InlineData(452, 455, 406.95, 410.325, 408, 406.95, true)] // down right
         [InlineData(452, 455, 406.5, 409.875, 408, 406.5, true)] // down right vfpi
         [InlineData(452, 455, 407.5, 410.875, 410, 408.5, true)] // down right vfpi
+        [InlineData(452, 455, 407.5, 410.875, 409, 410.5, true)] // down right vfpi
         [InlineData(452, 455, 408.5, 411.875, 410, 408.5, true)] // down right vfpi
         public void TestDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool vSpeedReset)
         {

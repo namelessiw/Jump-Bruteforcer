@@ -161,46 +161,42 @@ namespace Jump_Bruteforcer
                 if (CurrentX < NewX) // moving right
                 {
                     NewX = CurrentX;
-                    CurrentX++;
-                    while (!CollisionMap.TryGetValue((CurrentX, CurrentYRounded), out Type) || Type != CollisionType.Solid)
+
+                    while (!CollisionMap.TryGetValue((CurrentX + 1, CurrentYRounded), out Type) || Type != CollisionType.Solid)
                     {
                         CurrentX++;
                         NewX++;
                     }
                 }
-                else // moving left
+                else if(CurrentX > NewX) // moving left
                 {
                     NewX = CurrentX;
-                    CurrentX--;
-                    while (!CollisionMap.TryGetValue((CurrentX, CurrentYRounded), out Type) || Type != CollisionType.Solid)
+
+                    while (!CollisionMap.TryGetValue((CurrentX - 1, CurrentYRounded), out Type) || Type != CollisionType.Solid)
                     {
                         CurrentX--;
                         NewX--;
                     }
                 }
-            }
-
-            if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
+            }else if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
                 if (CurrentY > NewY) // moving up
                 {
                     NewY = CurrentY;
-                    CurrentY++;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY)), out Type) || Type != CollisionType.Solid)
-                    {
-                        NewY++;
-                        CurrentY++;
-                    }
-                }
-                else // moving down
-                {
-                    NewY = CurrentY;
-                    CurrentY--;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY)), out Type) || Type != CollisionType.Solid)
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) - 1), out Type) || Type != CollisionType.Solid)
                     {
                         NewY--;
                         CurrentY--;
+                    }
+                }
+                else if (CurrentY < NewY) // moving down
+                {
+                    NewY = CurrentY;
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) + 1), out Type) || Type != CollisionType.Solid)
+                    {
+                        NewY++;
+                        CurrentY++;
                     }
 
                     // djump = true

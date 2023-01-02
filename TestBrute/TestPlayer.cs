@@ -24,12 +24,15 @@ namespace TestBrute
         }
 
         [Theory]
-        //[InlineData(10, 10, 6, 4)] //upwards
-        //[InlineData(10, 10, 4, 6)] //downwards
-        //[InlineData(11, 10, 5, 5)] //leftwards
-        //[InlineData(9, 10, 5, 5)] //rightwards
-        [InlineData(10, 10, 6, 5)]
-        public void TestSolidCollision(int startX, int endX, double startY, double endY)
+        [InlineData(10, 10, 7, 5, 10, 6, true)] //upwards
+        [InlineData(10, 10, 3, 5, 10, 4, true)] //downwards
+        [InlineData(12, 10, 5, 5, 11, 5, false)] //leftwards
+        [InlineData(8, 10, 5, 5, 9, 5, false)] //rightwards
+        [InlineData(10, 10, 7, 4, 10, 4, false)] //upwards pass through
+        [InlineData(10, 10, 3, 6, 10, 6, false)] //downwards pass through
+        [InlineData(12, 9, 5, 5, 9, 5, false)] //leftwards pass through
+        [InlineData(8, 11, 5, 5, 11, 5, false)] //rightwards pass through
+        public void TestSolidCollision(int startX, int targetX, double startY, double targetY, int endX, int endY, bool vSpeedReset)
         {
             Player p = new(10);
             Dictionary<(int, int), CollisionType> collision = new()
@@ -38,7 +41,7 @@ namespace TestBrute
             };
 
             
-            Assert.Equal((p.X_position, 5, true), Player.SolidCollision(collision, startX, endX, startY, endY));
+            Assert.Equal((endX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
 
         }
     }

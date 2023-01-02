@@ -178,7 +178,8 @@ namespace Jump_Bruteforcer
                         NewX--;
                     }
                 }
-            }else if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
+            }
+            if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
                 double VSpeed = NewY - CurrentY;

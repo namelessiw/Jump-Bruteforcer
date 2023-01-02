@@ -88,5 +88,23 @@ namespace TestBrute
 
             Assert.Equal((targetX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
         }
+
+        [Fact]
+        public void TestFallIntoCorner()
+        {
+            int startX = 0, targetX = 2, endX = 1;
+            double startY = 0, targetY = 2, endY = 1;
+            bool vSpeedReset = true;
+            Dictionary<(int, int), CollisionType> collision = new()
+            {
+                { (2, 2), CollisionType.Solid },
+                { (0, 2), CollisionType.Solid },
+                { (2, 0), CollisionType.Solid },
+                { (1, 2), CollisionType.Solid },
+                { (2, 1), CollisionType.Solid },
+            };
+
+            Assert.Equal((endX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
+        }
     }
 }

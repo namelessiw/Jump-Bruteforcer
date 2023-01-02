@@ -184,19 +184,17 @@ namespace Jump_Bruteforcer
                 if (CurrentY > NewY) // moving up
                 {
                     NewY = CurrentY;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) - 1), out Type) || Type != CollisionType.Solid)
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(NewY) - 1), out Type) || Type != CollisionType.Solid)
                     {
                         NewY--;
-                        CurrentY--;
                     }
                 }
                 else if (CurrentY < NewY) // moving down
                 {
                     NewY = CurrentY;
-                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) + 1), out Type) || Type != CollisionType.Solid)
+                    while (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(NewY + 1)), out Type) || Type != CollisionType.Solid)
                     {
                         NewY++;
-                        CurrentY++;
                     }
 
                     // djump = true

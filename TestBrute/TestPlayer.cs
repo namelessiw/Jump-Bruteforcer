@@ -23,6 +23,23 @@ namespace TestBrute
             Assert.Equal("(2) Left\r\n(5) Right\r\n(8) Neutral\r\n", p.GetInputString());
         }
 
+        [Fact]
+        public void TestMergeVStringInputs()
+        {
+            Player p = new(100);
+            p = p.MoveLeft(2);
+            p = p.MoveLeft(3);
+            p = p.MoveRight(5);
+            p.MoveNeutral(8);
+            SortedDictionary<int, Input> vstringInputs = new() { { 2, Input.Jump }, { 4, Input.Release }, { 5, Input.Release }, { 11, Input.Release } };
+            p.MergeVStringInputs(vstringInputs, 10);
+            Assert.Equal("(2) Left, Jump\r\n(4) Release\r\n(5) Right, Release\r\n(8) Neutral\r\n", p.GetInputString());
+
+
+        }
+
+
+
         [Theory]
         [InlineData(10, 10, 7, 5, 10, 6, true)] //upwards
         [InlineData(10, 10, 3, 5, 10, 4, true)] //downwards

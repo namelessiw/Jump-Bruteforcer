@@ -5,10 +5,10 @@
         double Y, VSpeed;
         bool GoalHeightReached;
         int Frame;
-        Input InputBuffer; // the inputs for the current frame
+        Input CurrentInputs; // the inputs for the current frame
 
         public List<double> VString { get; }
-        public readonly List<(int Frame, Input Input)> Inputs;
+        public readonly SortedDictionary<int, Input> InputHistory;
 
         public int LowestGoal { get; set; }
 
@@ -20,7 +20,7 @@
             GoalHeightReached = Y <= LowestGoal;
 
             VString = new List<double>();
-            Inputs = new List<(int, Input)>();
+            InputHistory = new();
 
             this.LowestGoal = LowestGoal;
         }
@@ -33,16 +33,16 @@
             GoalHeightReached = vp.GoalHeightReached;
             LowestGoal = vp.LowestGoal;
 
-            InputBuffer = vp.InputBuffer;
+            CurrentInputs = vp.CurrentInputs;
 
-            VString = new List<double>(vp.VString);
-            Inputs = new List<(int, Input)>(vp.Inputs);
+            VString = new(vp.VString);
+            InputHistory = new(vp.InputHistory);
         }
 
         private void Jump(bool SingleJump)
         {
             VSpeed = SingleJump ? PhysicsParams.SJUMP_VSPEED : PhysicsParams.DJUMP_VSPEED;
-            InputBuffer |= Input.Jump;
+            CurrentInputs |= Input.Jump;
         }
 
         private bool CanRelease()
@@ -75,13 +75,13 @@
             VString.Add(Y);
             if (Release)
             {
-                InputBuffer |= Input.Release;
+                CurrentInputs |= Input.Release;
             }
 
-            if (InputBuffer != 0)
+            if (CurrentInputs != 0)
             {
-                Inputs.Add((Frame, InputBuffer));
-                InputBuffer = 0;
+                InputHistory.Add(Frame, CurrentInputs);
+                CurrentInputs = 0;
             }
 
             GoalHeightReached = GoalHeightReached || AboveGoal;

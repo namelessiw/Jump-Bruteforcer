@@ -2,11 +2,11 @@
 {
     public class Search
     {
-        private SortedSet<int> covered;
-        private List<Player> players;
+        private readonly SortedSet<int> covered;
+        private readonly List<Player> players;
         private (int x, double y) start;
         private (int x, int y) goal;
-        public int currentFrame { get; set; }
+        public int CurrentFrame { get; set; }
         public List<double> v_string = new();
         public Search((int, double) start, (int, int) goal)
         {
@@ -14,7 +14,7 @@
             players = new List<Player>();
             this.start = start;
             this.goal = goal;
-            currentFrame = 0;
+            CurrentFrame = 0;
         }
 
         /// <summary>
@@ -22,8 +22,8 @@
         /// </summary>
         private void Move(Player p)
         {
-            Player left = p.MoveLeft(currentFrame);
-            Player right = p.MoveRight(currentFrame);
+            Player left = p.MoveLeft(CurrentFrame);
+            Player right = p.MoveRight(CurrentFrame);
             if (!covered.Contains(left.X_position))
             {
                 covered.Add(left.X_position);
@@ -35,35 +35,41 @@
                 players.Add(right);
             }
 
-            p.MoveNeutral(currentFrame);
+            p.MoveNeutral(CurrentFrame);
         }
 
         /// <summary>
         /// resets visited locations and players so that search can be run again.
         /// </summary>
-        private void reset()
+        private void Reset()
         {
             players.Clear();
             covered.Clear();
-            currentFrame = 0;
+            CurrentFrame = 0;
         }
 
         public string Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
 
-            string solution = vstrings.ConvertAll((vs) => RunVString(vs)).Find(s => !string.IsNullOrEmpty(s)) ?? string.Empty;
+            var solution = (from vs in vstrings
+                         select RunVString(vs) into s
+                         where !string.IsNullOrEmpty(s)
+                         select s).FirstOrDefault();
 
-            reset();
+                        
+            Reset();
             return solution;
         }
 
         string RunVString(VPlayer vs)
         {
+ 
             players.Add(new Player(start.x));
             covered.Add(start.x);
+            
 
-            while (currentFrame < vs.VString.Count)
+            while (CurrentFrame < vs.VString.Count)
             {
                 int numPlayers = players.Count;
 
@@ -75,19 +81,20 @@
 
 
                 // check if any of the resulting positions are the same as the goal
-                if (Math.Round(vs.VString[currentFrame]) == goal.y)
+                if (Math.Round(vs.VString[CurrentFrame]) == goal.y)
                 {
                     Player? p = players.Find(p => p.X_position == goal.x);
                     if (p != null)
                     {
-                        p.MergeVStringInputs(vs.Inputs, currentFrame);
+                        p.MergeVStringInputs(vs.InputHistory, CurrentFrame);
                         v_string = vs.VString;
                         return p.GetInputString();
                     }
                     
                 }
-                currentFrame++;
+                CurrentFrame++;
             }
+            Reset();
             return string.Empty;
         }
     }

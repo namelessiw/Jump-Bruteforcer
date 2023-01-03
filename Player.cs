@@ -16,33 +16,33 @@ namespace Jump_Bruteforcer
     {
         public int X_position { get; set; }
         Input LastDirection;
-        List<(int Frame, Input Input)> Inputs;
+        readonly SortedDictionary<int, Input> InputHistory;
 
         public Player(int x)
         {
             X_position = x;
             LastDirection = Input.Neutral;
 
-            Inputs = new List<(int Frame, Input Input)>();
+            InputHistory = new();
         }
 
-        private Player(int x, Input LastDirection, List<(int Frame, Input Input)> Inputs)
+        private Player(int x, Input LastDirection, SortedDictionary<int, Input> Inputs)
         {
             X_position = x;
             this.LastDirection = LastDirection;
 
-            this.Inputs = new List<(int Frame, Input Input)>(Inputs);
+            this.InputHistory = new(Inputs);
         }
 
         public Player MoveLeft(int Frame)
         {
-            Player p = new(X_position, LastDirection, Inputs);
+            Player p = new(X_position, LastDirection, InputHistory);
 
             p.X_position -= 3;
 
             if (p.LastDirection != Input.Left)
             {
-                p.Inputs.Add((Frame, Input.Left));
+                p.InputHistory.Add(Frame, Input.Left);
                 p.LastDirection = Input.Left;
             }
 
@@ -51,13 +51,13 @@ namespace Jump_Bruteforcer
 
         public Player MoveRight(int Frame)
         {
-            Player p = new(X_position, LastDirection, Inputs);
+            Player p = new(X_position, LastDirection, InputHistory);
 
             p.X_position += 3;
 
             if (p.LastDirection != Input.Right)
             {
-                p.Inputs.Add((Frame, Input.Right));
+                p.InputHistory.Add(Frame, Input.Right);
                 p.LastDirection = Input.Right;
             }
 
@@ -68,52 +68,55 @@ namespace Jump_Bruteforcer
         {
             if (LastDirection != Input.Neutral)
             {
-                Inputs.Add((Frame, Input.Neutral));
+                InputHistory.Add(Frame, Input.Neutral);
                 LastDirection = Input.Neutral;
             }
         }
 
-        public void MergeVStringInputs(List<(int, Input)> VStringInputs, int Length)
+        public void MergeVStringInputs(SortedDictionary<int, Input> VStringInputs, int Length)
         {
-            foreach ((int Frame, Input Input) Action in VStringInputs)
+            /*foreach ((int Frame, Input Input) Action in VStringInputs)
             {
                 if (Action.Frame >= Length)
                 {
                     break;
                 }
 
-                int i = FindInputIndex(Action.Frame);
+                
 
-                if (i == -1)
+                if (InputHistory.ContainsKey(Action.Frame))
                 {
-                    Inputs.Add(Action);
+                    InputHistory.Add(Action.Frame, Action.Input);
                 }
                 else
                 {
-                    Inputs[i] = (Action.Frame, Inputs[i].Input | Action.Input);
+                    InputHistory[i] = (Action.Frame, InputHistory[i].Input | Action.Input);
                 }
             }
-
-            Inputs.Sort(new Comparison<(int Frame, Input Input)>((a, b) => a.Frame - b.Frame));
-        }
-
-        private int FindInputIndex(int Frame)
-        {
-            for (int i = 0; i < Inputs.Count; i++)
+            */
+            var query = from kvp in VStringInputs
+                        where kvp.Key < Length
+                        select kvp;
+            foreach(KeyValuePair<int, Input> kvp in query)
             {
-                if (Inputs[i].Frame == Frame)
+                if (InputHistory.TryGetValue(kvp.Key, out Input input))
                 {
-                    return i;
+                    InputHistory[kvp.Key] = input | kvp.Value;
+                }
+                else
+                {
+                    InputHistory[kvp.Key] = kvp.Value;
                 }
             }
 
-            return -1;
         }
+
+
 
         public string GetInputString()
         {
             StringBuilder sb = new();
-            foreach ((int Frame, Input Input) in Inputs)
+            foreach ((int Frame, Input Input) in InputHistory)
             {
                 sb.AppendLine($"({Frame}) {Input}");
             }
@@ -121,7 +124,7 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        public (CollisionType Type, int NewX, double NewY, bool VSpeedReset) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int RoundedNewY = (int)Math.Round(NewY);
 

@@ -20,9 +20,9 @@ namespace TestBrute
         [InlineData(0, -1f, 15, 10)]
         [InlineData(0, -1f, 15, -10)]
         [InlineData(452, 407.4f, 575, 403)]
-        public void findsGoal(int start_x, double start_y, int goal_x, int goal_y)
+        public void FindsGoal(int start_x, double start_y, int goal_x, int goal_y)
         {
-            Search s = new Search((start_x, start_y), (goal_x, goal_y));
+            Search s = new((start_x, start_y), (goal_x, goal_y));
             string InputString = s.Run();
             string vs = string.Join(";", s.v_string);
 
@@ -31,17 +31,17 @@ namespace TestBrute
         }
 
         [Fact]
-        public void searchResets()
+        public void SearchResets()
         {
-            Search s = new Search((452, 407.4f), (578, 407));
+            Search s = new((452, 407.4f), (578, 407));
             s.Run();
-            Assert.Equal(0, s.currentFrame);
+            Assert.Equal(0, s.CurrentFrame);
         }
 
         [Fact]
         public void GoalUnreachable1()
         {
-            Search s = new Search((452, 407.4f), (578, 407));
+            Search s = new((452, 407.4f), (578, 407));
             string InputString = s.Run();
 
             Assert.True(string.IsNullOrEmpty(InputString));
@@ -51,7 +51,7 @@ namespace TestBrute
         [Fact]
         public void ExtremeGoalUnreachable1()
         {
-            Search s = new Search((0, 0), (1, 10000));
+            Search s = new((0, 0), (1, 1000));
             string InputString = s.Run();
 
             Assert.True(string.IsNullOrEmpty(InputString));
@@ -65,10 +65,10 @@ namespace TestBrute
             // may change in the future
             string Expected = "(0) Left, Jump\r\n(21) Release\r\n(26) Neutral\r\n";
 
-            Search s = new Search((401, 407.4f), (323, 343));
+            Search s = new((401, 407.4f), (323, 343));
             string InputString = s.Run();
 
-            Assert.Equal(InputString, Expected);
+            Assert.Equal(Expected, InputString);
         }
     }
 }

@@ -61,9 +61,7 @@ namespace TestBrute
         [Fact]
         public void InputTest()
         {
-            // currently it finds the highest sjump with the correct vstring for shift inputs
-            // may change in the future
-            string Expected = "(0) Left, Jump\r\n(21) Release\r\n(26) Neutral\r\n";
+            string Expected = "(0) Left, Jump\r\n(16) Release\r\n(18) Release\r\n(26) Neutral\r\n";
 
             Search s = new((401, 407.4f), (323, 343));
             string InputString = s.Run();

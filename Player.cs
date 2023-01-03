@@ -75,25 +75,6 @@ namespace Jump_Bruteforcer
 
         public void MergeVStringInputs(SortedDictionary<int, Input> VStringInputs, int Length)
         {
-            /*foreach ((int Frame, Input Input) Action in VStringInputs)
-            {
-                if (Action.Frame >= Length)
-                {
-                    break;
-                }
-
-                
-
-                if (InputHistory.ContainsKey(Action.Frame))
-                {
-                    InputHistory.Add(Action.Frame, Action.Input);
-                }
-                else
-                {
-                    InputHistory[i] = (Action.Frame, InputHistory[i].Input | Action.Input);
-                }
-            }
-            */
             var query = from kvp in VStringInputs
                         where kvp.Key < Length
                         select kvp;
@@ -161,49 +142,32 @@ namespace Jump_Bruteforcer
 
             if (CollisionMap.TryGetValue((NewX, CurrentYRounded), out Type) && Type == CollisionType.Solid)
             {
-                if (CurrentX < NewX) // moving right
+                int sign = Math.Sign(NewX - CurrentX);
+                if (sign != 0) 
                 {
-                    NewX = CurrentX;
-
-                    while (!CollisionMap.TryGetValue((CurrentX + 1, CurrentYRounded), out Type) || Type != CollisionType.Solid)
+                    while (!CollisionMap.TryGetValue((CurrentX + sign, CurrentYRounded), out Type) || Type != CollisionType.Solid)
                     {
-                        CurrentX++;
-                        NewX++;
+                        CurrentX += sign;
                     }
                 }
-                else if(CurrentX > NewX) // moving left
-                {
-                    NewX = CurrentX;
-
-                    while (!CollisionMap.TryGetValue((CurrentX - 1, CurrentYRounded), out Type) || Type != CollisionType.Solid)
-                    {
-                        CurrentX--;
-                        NewX--;
-                    }
-                }
+               
             }
             if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
                 double VSpeed = NewY - CurrentY;
-                if (VSpeed < 0) // moving up
+                int sign = Math.Sign(VSpeed);
+                if (sign != 0)
                 {
-                    while (VSpeed <= -1 && (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY) - 1), out Type) || Type != CollisionType.Solid))
+                    int yRounded = sign < 0 ? (int)Math.Round(CurrentY) + sign : (int)Math.Round(CurrentY + sign);
+                    while (Math.Abs(VSpeed) >= 1 && (!CollisionMap.TryGetValue((CurrentX, yRounded), out Type) || Type != CollisionType.Solid))
                     {
-                        CurrentY--;
-                        VSpeed++;
+                        CurrentY += sign;
+                        VSpeed -= sign;
+                        yRounded = sign < 0 ? (int)Math.Round(CurrentY) + sign : (int)Math.Round(CurrentY + sign);
                     }
                 }
-                else if (VSpeed > 0) // moving down
-                {
-                    while (VSpeed >= 1 && (!CollisionMap.TryGetValue((CurrentX, (int)Math.Round(CurrentY + 1)), out Type) || Type != CollisionType.Solid))
-                    {
-                        CurrentY++;
-                        VSpeed--;
-                    }
 
-                    // djump = true
-                }
 
                 NewYRounded = (int)Math.Round(CurrentY);
                 NewY = CurrentY;

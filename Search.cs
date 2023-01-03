@@ -55,7 +55,7 @@
             var solution = (from vs in vstrings
                          select RunVString(vs) into s
                          where !string.IsNullOrEmpty(s)
-                         select s).FirstOrDefault();
+                         select s).FirstOrDefault() ?? string.Empty;
 
                         
             Reset();

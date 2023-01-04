@@ -78,7 +78,7 @@ namespace Jump_Bruteforcer
             var query = from kvp in VStringInputs
                         where kvp.Key < Length
                         select kvp;
-            foreach(KeyValuePair<int, Input> kvp in query)
+            foreach (KeyValuePair<int, Input> kvp in query)
             {
                 if (InputHistory.TryGetValue(kvp.Key, out Input input))
                 {
@@ -91,8 +91,6 @@ namespace Jump_Bruteforcer
             }
 
         }
-
-
 
         public string GetInputString()
         {
@@ -143,14 +141,14 @@ namespace Jump_Bruteforcer
             if (CollisionMap.TryGetValue((NewX, CurrentYRounded), out Type) && Type == CollisionType.Solid)
             {
                 int sign = Math.Sign(NewX - CurrentX);
-                if (sign != 0) 
+                if (sign != 0)
                 {
                     while (!CollisionMap.TryGetValue((CurrentX + sign, CurrentYRounded), out Type) || Type != CollisionType.Solid)
                     {
                         CurrentX += sign;
                     }
                 }
-               
+
             }
             if (CollisionMap.TryGetValue((CurrentX, NewYRounded), out Type) && Type == CollisionType.Solid)
             {

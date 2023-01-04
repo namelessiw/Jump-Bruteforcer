@@ -5,13 +5,6 @@ namespace TestBrute
 {
     public class TestPlayer
     {
-        private readonly ITestOutputHelper output;
-
-        public TestPlayer(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Fact]
         public void TestGetInputString()
         {
@@ -34,10 +27,22 @@ namespace TestBrute
             SortedDictionary<int, Input> vstringInputs = new() { { 2, Input.Jump }, { 4, Input.Release }, { 5, Input.Release }, { 11, Input.Release } };
             p.MergeVStringInputs(vstringInputs, 10);
             Assert.Equal("(2) Left, Jump\r\n(4) Release\r\n(5) Right, Release\r\n(8) Neutral\r\n", p.GetInputString());
-
-
         }
 
+        [Theory]
+        [InlineData(10, 5, CollisionType.Killer, CollisionType.Killer, false)]
+        [InlineData(10, 5, CollisionType.Warp, CollisionType.Warp, false)]
+        [InlineData(7, 5, CollisionType.Solid, CollisionType.None, false)]
+        public void TestCollisionCheck(int endX, double endY, CollisionType type, CollisionType endType, bool vSpeedReset)
+        {
+            (int startX, int targetX, double startY, double targetY) = (7, 10, 3, 5);
+            Dictionary<(int, int), CollisionType> collision = new()
+            {
+                { (10, 5), type }
+            };
+
+            Assert.Equal((endType, endX, endY, vSpeedReset), Player.CollisionCheck(collision, startX, targetX, startY, targetY));
+        }
 
 
         [Theory]
@@ -56,7 +61,7 @@ namespace TestBrute
                 { (10, 5), CollisionType.Solid }
             };
 
-            
+
             Assert.Equal((endX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
 
         }

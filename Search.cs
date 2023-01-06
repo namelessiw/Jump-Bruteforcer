@@ -86,14 +86,15 @@
                     
                 }
 
-                CurrentFrame++;
+                
                 // perform horizontal movement
                 for (int i = 0; i < numPlayers; i++)
                 {
                     Move(players[i]);
                 }
+                CurrentFrame++;
 
-                
+
             }
             Reset();
             return new SearchResult();

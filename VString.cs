@@ -7,7 +7,7 @@
         int Frame;
         Input CurrentInputs; // the inputs for the current frame
 
-        public List<double> VString { get; }
+        public List<double> VString { get; } // does not include initial position
         public readonly SortedDictionary<int, Input> InputHistory;
 
         public int LowestGoal { get; set; }
@@ -19,7 +19,7 @@
             Frame = 0;
             GoalHeightReached = Y <= LowestGoal;
 
-            VString = new List<double>();
+            VString = new List<double>() {Y};
             InputHistory = new();
 
             this.LowestGoal = LowestGoal;

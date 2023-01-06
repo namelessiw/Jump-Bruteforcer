@@ -48,21 +48,21 @@
             CurrentFrame = 0;
         }
 
-        public string Run()
+        public SearchResult Run()
         {
             List<VPlayer> vstrings = VPlayer.GenerateVStrings(start.y, true, goal.y);
 
             var solution = (from vs in vstrings
                          select RunVString(vs) into s
-                         where !string.IsNullOrEmpty(s)
-                         select s).FirstOrDefault() ?? string.Empty;
+                         where s.Success
+                         select s).FirstOrDefault() ?? new SearchResult();
 
                         
             Reset();
             return solution;
         }
 
-        string RunVString(VPlayer vs)
+        SearchResult RunVString(VPlayer vs)
         {
  
             players.Add(new Player(start.x));
@@ -73,13 +73,6 @@
             {
                 int numPlayers = players.Count;
 
-                // perform horizontal movement
-                for (int i = 0; i < numPlayers; i++)
-                {
-                    Move(players[i]);
-                }
-
-
                 // check if any of the resulting positions are the same as the goal
                 if (Math.Round(vs.VString[CurrentFrame]) == goal.y)
                 {
@@ -88,14 +81,38 @@
                     {
                         p.MergeVStringInputs(vs.InputHistory, CurrentFrame);
                         v_string = vs.VString;
-                        return p.GetInputString();
+                        return new SearchResult(p.GetInputString(), true);
                     }
                     
                 }
+
+                // perform horizontal movement
+                for (int i = 0; i < numPlayers; i++)
+                {
+                    Move(players[i]);
+                }
+
                 CurrentFrame++;
             }
             Reset();
-            return string.Empty;
+            return new SearchResult();
+        }
+    }
+
+    public class SearchResult
+    {
+        public string InputString { get; } = string.Empty;
+        public bool Success { get; }
+        
+
+        public SearchResult(string inputString, bool success)
+        {
+            InputString = inputString;
+            Success = success;
+        }
+
+        public SearchResult()
+        {
         }
     }
 }

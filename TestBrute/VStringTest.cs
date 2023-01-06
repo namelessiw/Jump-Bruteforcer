@@ -31,5 +31,15 @@ namespace TestBrute
             }
             Assert.Equal(expected_vs_count, VStrings.Count);
         }
+
+        [Fact]
+        public void TestVstringsIncludeInitialPosition()
+        {
+            (double start_y, bool single_jump, int lowest_goal) = (407.4, true, 321);
+            List<VPlayer> VStrings = VPlayer.GenerateVStrings(start_y, single_jump, lowest_goal);
+            Assert.Contains(start_y ,VStrings[0].VString);
+            Assert.Contains(start_y, VStrings[1].VString);
+            Assert.Contains(start_y, VStrings[2].VString);
+        }
     }
 }

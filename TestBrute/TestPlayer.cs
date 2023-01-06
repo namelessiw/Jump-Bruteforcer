@@ -1,10 +1,45 @@
-﻿using Jump_Bruteforcer;
+﻿using System.Collections.Immutable;
+using System.Drawing;
+using Jump_Bruteforcer;
 using Xunit.Abstractions;
 
 namespace TestBrute
 {
     public class TestPlayer
     {
+        private readonly ITestOutputHelper output;
+
+        public TestPlayer(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+
+        [Fact]
+        public void TestGetTrajectory()
+        {
+            Player p = new(5);
+            List<double> VString = new() { 50.5, 47.3, 43.2, 39.7, 36.3, 32.4, 33.6, 37.3, 41.4 };
+            p.MoveNeutral(1);
+            p = p.MoveLeft(2);
+            p = p.MoveLeft(3);
+            p = p.MoveLeft(4);
+            p = p.MoveRight(5);
+            p = p.MoveRight(6);
+            p = p.MoveRight(7);
+            p.MoveNeutral(8);
+
+            ImmutableArray<Point> trajectory = new List<Point>{ new Point(5, (int)Math.Round(50.5)),
+                new Point(5, (int)Math.Round(47.3)), new Point(2, (int)Math.Round(43.2)), new Point(-1, (int)Math.Round(39.7)),
+                new Point(-4, (int)Math.Round(36.3)), new Point(-1, (int)Math.Round(32.4)), new Point(2, (int)Math.Round(33.6)),
+                new Point(5, (int)Math.Round(37.3)), new Point(5, (int)Math.Round(41.4)) }.ToImmutableArray();
+
+            output.WriteLine(string.Join(";", p.GetTrajectory(VString)));
+            output.WriteLine(string.Join(";", trajectory));
+            Assert.Equal(trajectory.ToArray(), p.GetTrajectory(VString).ToArray());
+        }
+
+
         [Fact]
         public void TestGetInputString()
         {

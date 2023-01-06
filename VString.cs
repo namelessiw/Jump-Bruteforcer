@@ -16,7 +16,7 @@
         {
             this.Y = Y;
             this.VSpeed = VSpeed;
-            Frame = 0;
+            Frame = 1;
             GoalHeightReached = Y <= LowestGoal;
 
             VString = new List<double>() {Y};

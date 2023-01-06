@@ -63,7 +63,7 @@ namespace TestBrute
         [Fact]
         public void InputTest()
         {
-            string Expected = "(0) Left, Jump\r\n(16) Release\r\n(18) Release\r\n(26) Neutral\r\n";
+            string Expected = "(1) Left, Jump\r\n(17) Release\r\n(19) Release\r\n(27) Neutral\r\n";
 
             Search s = new((401, 407.4f), (323, 343));
             string InputString = s.Run().InputString;

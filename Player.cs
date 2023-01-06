@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Text;
 
 namespace Jump_Bruteforcer
 {
@@ -15,6 +16,7 @@ namespace Jump_Bruteforcer
     public class Player
     {
         public int X_position { get; set; }
+        public List<int> XPositionHistory { get; }
         Input LastDirection;
         readonly SortedDictionary<int, Input> InputHistory;
 
@@ -22,23 +24,31 @@ namespace Jump_Bruteforcer
         {
             X_position = x;
             LastDirection = Input.Neutral;
-
             InputHistory = new();
+            XPositionHistory= new() {x};
         }
 
-        private Player(int x, Input LastDirection, SortedDictionary<int, Input> Inputs)
+        private Player(int x, Input LastDirection, SortedDictionary<int, Input> Inputs, List<int> XPositionHistory)
         {
             X_position = x;
             this.LastDirection = LastDirection;
-
             this.InputHistory = new(Inputs);
+            this.XPositionHistory= XPositionHistory;
+            this.XPositionHistory.Add(x);
+        }
+        public ImmutableArray<Point> GetTrajectory(List<double> vString)
+        {
+            var query = from Point p in XPositionHistory.AsQueryable().
+                        Zip(vString, (x, y) => new Point(x, (int)Math.Round(y)))
+                        select p;
+            
+            return query.ToImmutableArray<Point>();
         }
 
         public Player MoveLeft(int Frame)
         {
-            Player p = new(X_position, LastDirection, InputHistory);
+            Player p = new(X_position - 3, LastDirection, InputHistory, XPositionHistory);
 
-            p.X_position -= 3;
 
             if (p.LastDirection != Input.Left)
             {
@@ -51,9 +61,7 @@ namespace Jump_Bruteforcer
 
         public Player MoveRight(int Frame)
         {
-            Player p = new(X_position, LastDirection, InputHistory);
-
-            p.X_position += 3;
+            Player p = new(X_position + 3, LastDirection, InputHistory, XPositionHistory);
 
             if (p.LastDirection != Input.Right)
             {
@@ -66,6 +74,7 @@ namespace Jump_Bruteforcer
 
         public void MoveNeutral(int Frame)
         {
+            XPositionHistory.Add(X_position);
             if (LastDirection != Input.Neutral)
             {
                 InputHistory.Add(Frame, Input.Neutral);

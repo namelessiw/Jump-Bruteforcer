@@ -11,14 +11,14 @@ namespace Jump_Bruteforcer
 {
     internal class Map
     {
-        private readonly IReadOnlyList<Object> Objects;
+        private readonly ImmutableArray<Object> Objects;
         public Bitmap Bmp { get; init; }
         public Dictionary<(int X, int Y), CollisionType> CollisionMap { get; init; }
 
         public Map(List<Object> objects)
         {
             objects.Sort(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
-            Objects = objects;
+            Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
             CollisionMap = GenerateCollisionMap();
         }
@@ -80,7 +80,7 @@ namespace Jump_Bruteforcer
         {
             StringBuilder sb = new("");
 
-            sb.Append($"\nObjects ({Objects.Count}):");
+            sb.Append($"\nObjects ({Objects.Length}):");
 
             foreach (Object o in Objects)
             {

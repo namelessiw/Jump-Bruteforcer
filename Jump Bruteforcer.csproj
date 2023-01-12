@@ -5,14 +5,24 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>Jump_Bruteforcer</RootNamespace>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>False</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>True</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="TestBrute\**" />
     <EmbeddedResource Remove="TestBrute\**" />
     <None Remove="TestBrute\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

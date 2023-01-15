@@ -1,4 +1,5 @@
-﻿using Jump_Bruteforcer;
+﻿using FluentAssertions;
+using Jump_Bruteforcer;
 using Xunit.Abstractions;
 
 namespace TestBrute
@@ -29,7 +30,7 @@ namespace TestBrute
                 output.WriteLine(vs);
                 output.WriteLine(VStrings[0].LowestGoal.ToString());
             }
-            Assert.Equal(expected_vs_count, VStrings.Count);
+            VStrings.Count.Should().Be(expected_vs_count);
         }
 
         [Fact]
@@ -37,9 +38,9 @@ namespace TestBrute
         {
             (double start_y, bool single_jump, int lowest_goal) = (407.4, true, 321);
             List<VPlayer> VStrings = VPlayer.GenerateVStrings(start_y, single_jump, lowest_goal);
-            Assert.Contains(start_y ,VStrings[0].VString);
-            Assert.Contains(start_y, VStrings[1].VString);
-            Assert.Contains(start_y, VStrings[2].VString);
+            VStrings[0].VString.Should().Contain(start_y);
+            VStrings[1].VString.Should().Contain(start_y);
+            VStrings[2].VString.Should().Contain(start_y);
         }
     }
 }

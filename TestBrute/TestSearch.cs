@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Jump_Bruteforcer;
 using Xunit.Abstractions;
 
@@ -28,7 +29,7 @@ namespace TestBrute
             string vs = string.Join(";", s.v_string);
 
             output.WriteLine(r.InputString);
-            Assert.True(r.Success, vs);
+            r.Success.Should().BeTrue(vs);
         }
 
         [Fact]
@@ -36,7 +37,7 @@ namespace TestBrute
         {
             Search s = new((452, 407.4f), (578, 407));
             s.Run();
-            Assert.Equal(0, s.CurrentFrame);
+            s.CurrentFrame.Should().Be(0);
         }
 
         [Fact]
@@ -45,8 +46,8 @@ namespace TestBrute
             Search s = new((452, 407.4f), (578, 407));
             SearchResult r = s.Run();
 
-            Assert.True(string.IsNullOrEmpty(r.InputString));
-            Assert.False(r.Success);
+            r.InputString.Should().BeNullOrEmpty();
+            r.Success.Should().BeFalse();
         }
 
         // probably overkill but could be a performance test of sorts for now ig
@@ -56,8 +57,8 @@ namespace TestBrute
             Search s = new((0, 0), (1, 1000));
             SearchResult r = s.Run();
 
-            Assert.True(string.IsNullOrEmpty(r.InputString));
-            Assert.False(r.Success);
+            r.InputString.Should().BeNullOrEmpty();
+            r.Success.Should().BeFalse();
         }
 
         [Fact]
@@ -68,7 +69,7 @@ namespace TestBrute
             Search s = new((401, 407.4f), (323, 343));
             string InputString = s.Run().InputString;
 
-            Assert.Equal(Expected, InputString);
+            InputString.Should().Be(Expected);
         }
     }
 }

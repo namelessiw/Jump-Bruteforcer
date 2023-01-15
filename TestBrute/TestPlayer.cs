@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Drawing;
+using System.Windows;
+using FluentAssertions;
 using Jump_Bruteforcer;
 using Xunit.Abstractions;
 
@@ -36,7 +37,7 @@ namespace TestBrute
 
             output.WriteLine(string.Join(";", p.GetTrajectory(VString)));
             output.WriteLine(string.Join(";", trajectory));
-            Assert.Equal(trajectory.ToArray(), p.GetTrajectory(VString).ToArray());
+            trajectory.Should().Equal(p.GetTrajectory(VString));
         }
 
 
@@ -48,7 +49,7 @@ namespace TestBrute
             p = p.MoveLeft(3);
             p = p.MoveRight(5);
             p.MoveNeutral(8);
-            Assert.Equal("(2) Left\r\n(5) Right\r\n(8) Neutral\r\n", p.GetInputString());
+            p.GetInputString().Should().Be("(2) Left\r\n(5) Right\r\n(8) Neutral\r\n");
         }
 
         [Fact]
@@ -61,7 +62,7 @@ namespace TestBrute
             p.MoveNeutral(8);
             SortedDictionary<int, Input> vstringInputs = new() { { 2, Input.Jump }, { 4, Input.Release }, { 5, Input.Release }, { 11, Input.Release } };
             p.MergeVStringInputs(vstringInputs, 10);
-            Assert.Equal("(2) Left, Jump\r\n(4) Release\r\n(5) Right, Release\r\n(8) Neutral\r\n", p.GetInputString());
+            p.GetInputString().Should().Be("(2) Left, Jump\r\n(4) Release\r\n(5) Right, Release\r\n(8) Neutral\r\n");
         }
 
         [Theory]
@@ -76,7 +77,7 @@ namespace TestBrute
                 { (10, 5), type }
             };
 
-            Assert.Equal((endType, endX, endY, vSpeedReset), Player.CollisionCheck(collision, startX, targetX, startY, targetY));
+            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endType, endX, endY, vSpeedReset));
         }
 
 
@@ -97,7 +98,7 @@ namespace TestBrute
             };
 
 
-            Assert.Equal((endX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
+            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endX, endY, vSpeedReset));
 
         }
 
@@ -113,7 +114,7 @@ namespace TestBrute
                 { (targetX, (int)Math.Round(targetY)), CollisionType.Solid }
             };
 
-            Assert.Equal((startX, targetY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
+            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((startX, targetY, vSpeedReset));
         }
 
         [Theory]
@@ -143,7 +144,7 @@ namespace TestBrute
                 collision.Add((startX, tY), CollisionType.Solid);
             }
 
-            Assert.Equal((targetX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
+            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((targetX, endY, vSpeedReset));
         }
 
         [Fact]
@@ -161,7 +162,7 @@ namespace TestBrute
                 { (2, 1), CollisionType.Solid },
             };
 
-            Assert.Equal((endX, endY, vSpeedReset), Player.SolidCollision(collision, startX, targetX, startY, targetY));
+            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endX, endY, vSpeedReset));
         }
     }
 }

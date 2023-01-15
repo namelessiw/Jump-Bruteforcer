@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
+using System.Windows;
 
 namespace Jump_Bruteforcer
 {

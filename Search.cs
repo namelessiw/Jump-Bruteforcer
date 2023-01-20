@@ -1,13 +1,32 @@
-﻿namespace Jump_Bruteforcer
+﻿using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
+
+namespace Jump_Bruteforcer
 {
-    public class Search
+    public class Search :INotifyPropertyChanged
     {
         private readonly SortedSet<int> covered;
         private readonly List<Player> players;
-        private (int x, double y) start;
+        public (int x, double y) start;
         private (int x, int y) goal;
         public int CurrentFrame { get; set; }
         public List<double> v_string = new();
+        private PointCollection playerPath  = new();
+        public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
+        public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
+        public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] String propertyName = "")  
+        {  
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }  
+
+
         public Search((int, double) start, (int, int) goal)
         {
             covered = new SortedSet<int>();
@@ -62,7 +81,7 @@
             return solution;
         }
 
-        SearchResult RunVString(VPlayer vs)
+        private SearchResult RunVString(VPlayer vs)
         {
  
             players.Add(new Player(start.x));
@@ -81,6 +100,7 @@
                     {
                         p.MergeVStringInputs(vs.InputHistory, CurrentFrame);
                         v_string = vs.VString;
+                        PlayerPath = p.GetTrajectory(v_string);
                         return new SearchResult(p.GetInputString(), true);
                     }
                     

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Jump_Bruteforcer
 {
@@ -34,16 +35,16 @@ namespace Jump_Bruteforcer
             X_position = x;
             this.LastDirection = LastDirection;
             this.InputHistory = new(Inputs);
-            this.XPositionHistory= XPositionHistory;
+            this.XPositionHistory= new(XPositionHistory);
             this.XPositionHistory.Add(x);
         }
-        public ImmutableArray<Point> GetTrajectory(List<double> vString)
+        public PointCollection GetTrajectory(List<double> vString)
         {
             var query = from Point p in XPositionHistory.AsQueryable().
                         Zip(vString, (x, y) => new Point(x, (int)Math.Round(y)))
                         select p;
             
-            return query.ToImmutableArray<Point>();
+            return new PointCollection(query);
         }
 
         public Player MoveLeft(int Frame)

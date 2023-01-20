@@ -3,13 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Jump_Bruteforcer"
+        xmlns:local="clr-namespace:Jump_Bruteforcer" d:DataContext="{d:DesignInstance Type=local:Search}"
         mc:Ignorable="d"
         Title="Window1" Height="700" Width="900">
     <Canvas>
-        <Button Content="Select jmap"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="13"/>
-        <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" RenderTransformOrigin="1.322,0.429" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button Content="Select jmap"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
+        <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Canvas.Left="517" Canvas.Top="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Start x" />
+        <Label Canvas.Left="665" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
         <Image x:Name="ImageJMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38"/>
+        <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
+        <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="392" Canvas.Top="10" Width="89" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox Height="20" Canvas.Left="565" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Height="20" Canvas.Left="732" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
     </Canvas>
 </Window>

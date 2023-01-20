@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Windows;
+using System.Windows.Media;
 using FluentAssertions;
 using Jump_Bruteforcer;
 using Xunit.Abstractions;
@@ -24,16 +25,17 @@ namespace TestBrute
             p.MoveNeutral(1);
             p = p.MoveLeft(2);
             p = p.MoveLeft(3);
-            p = p.MoveLeft(4);
-            p = p.MoveRight(5);
+            Player left = p.MoveLeft(4);
+            Player right = p.MoveRight(4);
+            p = left.MoveRight(5);
             p = p.MoveRight(6);
             p = p.MoveRight(7);
             p.MoveNeutral(8);
 
-            ImmutableArray<Point> trajectory = new List<Point>{ new Point(5, (int)Math.Round(50.5)),
+            PointCollection trajectory = new PointCollection(){new Point(5, (int)Math.Round(50.5)),
                 new Point(5, (int)Math.Round(47.3)), new Point(2, (int)Math.Round(43.2)), new Point(-1, (int)Math.Round(39.7)),
                 new Point(-4, (int)Math.Round(36.3)), new Point(-1, (int)Math.Round(32.4)), new Point(2, (int)Math.Round(33.6)),
-                new Point(5, (int)Math.Round(37.3)), new Point(5, (int)Math.Round(41.4)) }.ToImmutableArray();
+                new Point(5, (int)Math.Round(37.3)), new Point(5, (int)Math.Round(41.4)) };
 
             output.WriteLine(string.Join(";", p.GetTrajectory(VString)));
             output.WriteLine(string.Join(";", trajectory));

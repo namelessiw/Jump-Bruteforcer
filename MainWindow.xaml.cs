@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,12 @@ namespace Jump_Bruteforcer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Search s;
         public MainWindow()
         {
             InitializeComponent();
+            s = new Search((401, 407.4f), (323, 343));
+            DataContext = s;
         }
 
         private void ButtonSelectJMap_Click(object sender, RoutedEventArgs e)
@@ -50,6 +54,11 @@ namespace Jump_Bruteforcer
             }
 
 
+        }
+
+        private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
+        {
+            s.Run();
         }
     }
 }

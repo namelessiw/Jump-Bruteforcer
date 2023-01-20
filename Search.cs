@@ -12,12 +12,14 @@ namespace Jump_Bruteforcer
         private readonly List<Player> players;
         public (int x, double y) start;
         private (int x, int y) goal;
+        private string _strat = "";
         public int CurrentFrame { get; set; }
         public List<double> v_string = new();
         private PointCollection playerPath  = new();
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
+        public string Strat { get { return _strat; }  set { _strat = value; OnPropertyChanged(); } }
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -101,6 +103,7 @@ namespace Jump_Bruteforcer
                         p.MergeVStringInputs(vs.InputHistory, CurrentFrame);
                         v_string = vs.VString;
                         PlayerPath = p.GetTrajectory(v_string);
+                        Strat = p.GetInputString();
                         return new SearchResult(p.GetInputString(), true);
                     }
                     

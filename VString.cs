@@ -51,14 +51,15 @@
         private bool Advance(bool Release)
         {
             // assuming releases only used when CanRelease true
+            if (VSpeed > PhysicsParams.MAX_VSPEED)
+            {
+                VSpeed = PhysicsParams.MAX_VSPEED;
+            }
             if (Release)
             {
                 VSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
             }
-            else if (VSpeed > PhysicsParams.MAX_VSPEED)
-            {
-                VSpeed = PhysicsParams.MAX_VSPEED;
-            }
+            
 
             VSpeed += PhysicsParams.GRAVITY;
 

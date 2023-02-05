@@ -10,27 +10,54 @@ using Jump_Bruteforcer;
 
 namespace Jump_Bruteforcer
 {
-
-    public class PlayerNode : IEquatable<PlayerNode>
+    public class State :IEquatable<State>
     {
         public int X { get; init; }
-        public double Y { get; init; } 
-        public double VSpeed { get; init; } 
+        public double Y { get; init; }
+        public double VSpeed { get; init; }
         public bool CanDJump { get; init; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
+
+            return ((State)obj).Equals(this);
+        }
+
+        public bool Equals(State? other)
+        {
+            return X == other.X && Y == other.Y && VSpeed == other.VSpeed && CanDJump == other.CanDJump;
+        }
+
+        public override int GetHashCode()
+        {
+            return (X, Y, VSpeed).GetHashCode();
+        }
+    }
+    public class PlayerNode : IEquatable<PlayerNode>
+    {
+        public State State { get; set; }
         public PlayerNode? Parent { get; set; }
         public double PathCost {get; set; }
         public Input? Action { get; set; }
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null) {
-            X = x;
-            Y = y;
-            VSpeed = vSpeed;
-            CanDJump = canDJump;
-            Parent = null;
-            PathCost= 0;
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, int pathCost = 0, PlayerNode? parent = null) {
+            State = new State()
+            {
+                X = x,
+                Y = y,
+                VSpeed = vSpeed,
+                CanDJump = canDJump
+            };
+            Parent = parent;
+            PathCost= pathCost;
             Action= action;
         }
-        
+
+
         public (List<Input>, PointCollection) GetPath()
         {
             throw new NotImplementedException();
@@ -49,7 +76,8 @@ namespace Jump_Bruteforcer
         /// <returns>A new <c>PlayerNode</c> that results from running inputs on the collision map</returns>
         public PlayerNode NewState(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
-            (int targetX, double targetY) = (X, Y);
+            
+            (int targetX, double targetY) = (State.X, State.Y);
             if (input.HasFlag(Input.Left))
             {
                 targetX -= 3;
@@ -58,31 +86,50 @@ namespace Jump_Bruteforcer
             {
                 targetX += 3;
             }
-            double finalVSpeed = CalculateVSpeed(input, VSpeed);
+            double finalVSpeed = CalculateVSpeed(input, CollisionMap);
             targetY += finalVSpeed;
 
-            (int finalX, double finalY, bool reset) = Player.SolidCollision(CollisionMap, X, targetX, Y, targetY);
-            finalVSpeed = reset ? 0 : CalculateVSpeed(input, VSpeed);
-            bool canDJump = CollisionMap.TryGetValue((finalX, (int)Math.Round(finalY) + 1), out CollisionType ctype) && ctype.Equals(CollisionType.Solid);
+            (int finalX, double finalY, bool reset) = Player.SolidCollision(CollisionMap, State.X, targetX, State.Y, targetY);
+            finalVSpeed = reset ? 0 : finalVSpeed;
+
+            bool canDJump = OnGround(CollisionMap) || (State.CanDJump  && ! input.HasFlag(Input.Jump));
+            
             return new PlayerNode(finalX, finalY, finalVSpeed, canDJump, input);
-
-
         }
 
-        public double CalculateVSpeed(Input input, double vspeed)
+        //currently bugged and lets you jump from y positions that are too far from the ground
+        private bool OnGround(Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
-            double finalVSpeed = vspeed;
-            if (vspeed > PhysicsParams.MAX_VSPEED)
-            {
-                vspeed = PhysicsParams.MAX_VSPEED;
-            }
-            if (input.HasFlag(Input.Release))
-            {
-                vspeed *= PhysicsParams.RELEASE_MULTIPLIER;
-            }
+            int sign = Math.Sign(State.VSpeed);
+            int yRounded = sign < 0 ? (int)Math.Round(State.Y) + sign : (int)Math.Round(State.Y + sign);
+
+            return CollisionMap.ContainsKey((State.X, yRounded + 1));
+        }
+
+        private double CalculateVSpeed(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        {
+            double finalVSpeed = State.VSpeed;
+
+            finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
 
 
-            return vspeed + PhysicsParams.GRAVITY;
+            if (input.HasFlag(Input.Jump)) 
+            {
+                if(OnGround(CollisionMap))
+                {
+                    finalVSpeed = PhysicsParams.SJUMP_VSPEED;
+                }else if (State.CanDJump)
+                {
+                    finalVSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
+            }
+            if (input.HasFlag(Input.Release) && finalVSpeed < 0)
+            {
+                finalVSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
+            }
+            finalVSpeed += PhysicsParams.GRAVITY;
+
+            return finalVSpeed;
         }
 
 
@@ -93,12 +140,12 @@ namespace Jump_Bruteforcer
                 return false;
             }
 
-            return this.VSpeed == other.VSpeed && this.X == other.X && this.Y == other.Y && this.CanDJump == other.CanDJump;
+            return State.Equals(other.State);
         }
 
         public override int GetHashCode()
         {
-            return (X, Y, VSpeed).GetHashCode();
+            return (State.X, State.Y, State.VSpeed).GetHashCode();
         }
     }
 }

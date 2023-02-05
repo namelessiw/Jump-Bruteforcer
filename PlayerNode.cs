@@ -41,7 +41,7 @@ namespace Jump_Bruteforcer
     {
         public State State { get; set; }
         public PlayerNode? Parent { get; set; }
-        public double PathCost {get; set; }
+        public int PathCost {get; set; }
         public Input? Action { get; set; }
 
         public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, int pathCost = 0, PlayerNode? parent = null) {
@@ -95,7 +95,7 @@ namespace Jump_Bruteforcer
             bool canDJump = OnGround(targetX, targetY, CollisionMap) ||  OnGround(State.X, State.Y, CollisionMap) || (State.CanDJump && !input.HasFlag(Input.Jump));
 
 
-            return new PlayerNode(finalX, finalY, finalVSpeed, canDJump, input);
+            return new PlayerNode(finalX, finalY, finalVSpeed, canDJump, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         private bool OnGround(int x, double y, Dictionary<(int X, int Y), CollisionType> CollisionMap)

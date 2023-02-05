@@ -44,7 +44,7 @@ namespace TestBrute
             int playerYRounded = (int)Math.Round(playerY);
             var n1 = new PlayerNode(450, playerY, 0);
             
-            Dictionary<(int, int), CollisionType> collision = Enumerable.Range(0, 800 * floor_thickness).ToDictionary(x => (x % 800, x / 800 + playerYRounded + 1), x => CollisionType.Solid);
+            Dictionary<(int, int), CollisionType> collision = Enumerable.Range(0, 100 * floor_thickness).ToDictionary(x => (x % 100 + 400, x / 100 + playerYRounded + 1), x => CollisionType.Solid);
             PlayerNode n2 = n1.NewState(Input.Left | Input.Jump, collision);
             PlayerNode n3 = n1.NewState(Input.Left | Input.Jump | Input.Release, collision);
             PlayerNode n4 = n3.NewState(Input.Right | Input.Jump | Input.Release, collision);
@@ -89,6 +89,26 @@ namespace TestBrute
             n7.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(453, 559.2802500000001, -8.1, true).State);
         }
 
-
+        [Fact]
+        public void TestNewStateCorner()
+        {
+            
+            var n1 = new PlayerNode(0, 0, 2, false);
+            Dictionary<(int, int), CollisionType> collision = new()
+            {
+                { (3, 2), CollisionType.Solid },
+                { (1, 2), CollisionType.Solid },
+                { (3, 0), CollisionType.Solid },
+                { (2, 2), CollisionType.Solid },
+                { (3, 1), CollisionType.Solid },
+            };
+            PlayerNode n2 = n1.NewState(Input.Right, collision);
+            n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, false).State);
+            n2.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(2, -7.1, -8.1, true).State);
+            var n3 = new PlayerNode(5, 4, -2, false);
+            n3.NewState(Input.Left, collision).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, false).State);
+        }
+        
+        
     }
 }

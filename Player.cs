@@ -8,11 +8,11 @@ namespace Jump_Bruteforcer
     [Flags]
     public enum Input
     {
-        Neutral = 1,
-        Left = 2,
-        Right = 4,
-        Jump = 8,
-        Release = 16
+        Neutral = 0,
+        Left = 1,
+        Right = 2,
+        Jump = 4,
+        Release = 8
     }
 
     public class Player

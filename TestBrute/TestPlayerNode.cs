@@ -85,7 +85,8 @@ namespace TestBrute
             }
             n7.State.Should().BeEquivalentTo(new PlayerNode(453, 566.3802500000002, 2.023125, false).State);
             n7.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(453, 567.3802500000002, 0, true).State);
-
+            n7 = n7.NewState(Input.Neutral, collision);
+            n7.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(453, 559.2802500000001, -8.1, true).State);
         }
 
 

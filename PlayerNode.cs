@@ -92,18 +92,17 @@ namespace Jump_Bruteforcer
             (int finalX, double finalY, bool reset) = Player.SolidCollision(CollisionMap, State.X, targetX, State.Y, targetY);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
-            bool canDJump = OnGround(CollisionMap) || (State.CanDJump  && ! input.HasFlag(Input.Jump));
-            
+            bool canDJump = OnGround(targetX, targetY, CollisionMap) ||  OnGround(State.X, State.Y, CollisionMap) || (State.CanDJump && !input.HasFlag(Input.Jump));
+
+
             return new PlayerNode(finalX, finalY, finalVSpeed, canDJump, input);
         }
 
-        //currently bugged and lets you jump from y positions that are too far from the ground
-        private bool OnGround(Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        private bool OnGround(int x, double y, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
-            int sign = Math.Sign(State.VSpeed);
-            int yRounded = sign < 0 ? (int)Math.Round(State.Y) + sign : (int)Math.Round(State.Y + sign);
+            int yRounded = (int)Math.Round(y);
 
-            return CollisionMap.ContainsKey((State.X, yRounded + 1));
+            return CollisionMap.TryGetValue((x, yRounded + 1), out CollisionType ctype) && ctype == CollisionType.Solid;
         }
 
         private double CalculateVSpeed(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
@@ -115,7 +114,7 @@ namespace Jump_Bruteforcer
 
             if (input.HasFlag(Input.Jump)) 
             {
-                if(OnGround(CollisionMap))
+                if(OnGround(State.X, State.Y, CollisionMap))
                 {
                     finalVSpeed = PhysicsParams.SJUMP_VSPEED;
                 }else if (State.CanDJump)

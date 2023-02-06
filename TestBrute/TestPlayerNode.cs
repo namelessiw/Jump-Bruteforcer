@@ -29,10 +29,12 @@ namespace TestBrute
             var n1 = new PlayerNode(0, 0, 0);
             var n2 = new PlayerNode(0, 0, 0);
             var n3 = new PlayerNode(1, 0, 0);
+            var n4 = new PlayerNode(0, 0, 0, false);
             var q = new SimplePriorityQueue<PlayerNode, float>();
             q.Enqueue(n1, 1f);
             q.Contains(n2).Should().BeTrue();
             q.Contains(n3).Should().BeFalse();
+            q.Contains(n4).Should().BeFalse();
 
         }
         
@@ -102,13 +104,64 @@ namespace TestBrute
                 { (2, 2), CollisionType.Solid },
                 { (3, 1), CollisionType.Solid },
             };
+            n1.NewState(Input.Right | Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, true).State);
             PlayerNode n2 = n1.NewState(Input.Right, collision);
-            n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, false).State);
+            n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, true).State);
             n2.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(2, -7.1, -8.1, true).State);
             var n3 = new PlayerNode(5, 4, -2, false);
             n3.NewState(Input.Left, collision).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, false).State);
         }
-        
-        
+
+        [Theory]
+        [InlineData(10, 13, 15, 10, 12, 13, false)] // up right
+        [InlineData(10, 7, 15, 10, 12, 13, false)] // up left
+        [InlineData(10, 13, 15, 20, 18, 17, true)] // down right
+        [InlineData(10, 7, 15, 20, 18, 17, true)] // down left
+        [InlineData(419, 422, 406.9, 416.3, 408, 406.9, true)] // down right
+        [InlineData(419, 422, 406.5, 414.25, 408, 406.5, true)] // down right vfpi
+        [InlineData(419, 422, 407.5, 415.25, 410, 408.5, true)] // down right vfpi
+        [InlineData(452, 455, 406.95, 410.325, 408, 406.95, true)] // down right
+        [InlineData(452, 455, 406.5, 409.875, 408, 406.5, true)] // down right vfpi
+        [InlineData(452, 455, 407.5, 410.875, 410, 408.5, true)] // down right vfpi
+        [InlineData(452, 455, 407.5, 410.875, 409, 410.5, true)] // down right vfpi
+        [InlineData(452, 455, 408.5, 411.875, 410, 408.5, true)] // down right vfpi
+        public void TestNewStateDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool canJump)
+        {
+            int tY = (int)Math.Round(targetY);
+            Dictionary<(int, int), CollisionType> collision = new()
+            {
+                { (targetX, tY), CollisionType.Solid },
+                { (startX, solidY), CollisionType.Solid } // snap to this solid
+            };
+
+            if (solidY != tY)
+            {
+                collision.Add((startX, tY), CollisionType.Solid);
+            }
+
+            double vspeed = targetY - startY - PhysicsParams.GRAVITY;
+            PlayerNode n1 = new(startX, startY, vspeed, canJump:false);
+            Input input = targetX - startX < 0? Input.Left : Input.Right;
+            n1.NewState(input, collision).State.Should().BeEquivalentTo(new PlayerNode(targetX, endY, 0, canJump).State);
+        }
+
+        [Fact]
+        public void TestNewStateBHop()
+        {
+            Dictionary<(int, int), CollisionType> collision = new()
+            {
+                { (0, 568), CollisionType.Solid }
+            };
+            PlayerNode n1 = new(0, 567.1, 0);
+            n1 = n1.NewState(Input.Jump | Input.Release, collision);
+            for (int i = 0; i < 17; i++)
+            {
+                n1 = n1.NewState(Input.Neutral, collision);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(0, 566.6500000000001, 3.374999999999999).State);
+            n1.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(0, 558.5500000000001, -8.1).State);
+        }
+
+
     }
 }

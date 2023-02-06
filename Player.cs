@@ -127,7 +127,7 @@ namespace Jump_Bruteforcer
                         return (Type, NewX, NewY, false);
                     case CollisionType.Solid:
                         bool VSpeedReset;
-                        (NewX, NewY, VSpeedReset) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
+                        (NewX, NewY, VSpeedReset, _) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
 
                         if (CollisionMap.TryGetValue((NewX, (int)Math.Round(NewY)), out Type))
                         {
@@ -142,11 +142,12 @@ namespace Jump_Bruteforcer
             return (CollisionType.None, NewX, NewY, false);
         }
 
-        public static (int NewX, double NewY, bool VSpeedReset) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        public static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int CurrentYRounded = (int)Math.Round(CurrentY);
             int NewYRounded = (int)Math.Round(NewY);
             bool VSpeedReset = false;
+            bool DJumpRefresh = false;
             CollisionType Type;
 
             if (CollisionMap.TryGetValue((NewX, CurrentYRounded), out Type) && Type == CollisionType.Solid)
@@ -168,12 +169,16 @@ namespace Jump_Bruteforcer
                 int sign = Math.Sign(VSpeed);
                 if (sign != 0)
                 {
-                    int yRounded = sign < 0 ? (int)Math.Round(CurrentY) + sign : (int)Math.Round(CurrentY + sign);
+                    if (VSpeed > 0)
+                    {
+                        DJumpRefresh= true;
+                    }
+                    int yRounded = (int)Math.Round(CurrentY + sign);
                     while (Math.Abs(VSpeed) >= 1 && (!CollisionMap.TryGetValue((CurrentX, yRounded), out Type) || Type != CollisionType.Solid))
                     {
                         CurrentY += sign;
                         VSpeed -= sign;
-                        yRounded = sign < 0 ? (int)Math.Round(CurrentY) + sign : (int)Math.Round(CurrentY + sign);
+                        yRounded = (int)Math.Round(CurrentY + sign);
                     }
                 }
 
@@ -188,7 +193,7 @@ namespace Jump_Bruteforcer
                 NewX = CurrentX;
             }
 
-            return (NewX, NewY, VSpeedReset);
+            return (NewX, NewY, VSpeedReset, DJumpRefresh);
         }
     }
 }

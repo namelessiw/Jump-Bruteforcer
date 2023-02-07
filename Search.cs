@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Priority_Queue;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -6,20 +7,24 @@ using System.Windows.Media;
 
 namespace Jump_Bruteforcer
 {
-    public class Search :INotifyPropertyChanged
+    public class Search : INotifyPropertyChanged
     {
         private readonly SortedSet<int> covered;
         private readonly List<Player> players;
         public (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
+        private Dictionary<(int, int), CollisionType> _collisionMap = new();
         public int CurrentFrame { get; set; }
         public List<double> v_string = new();
-        private PointCollection playerPath  = new();
+        private PointCollection playerPath = new();
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
-        public string Strat { get { return _strat; }  set { _strat = value; OnPropertyChanged(); } }
+        public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
+        public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
+        public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
+        public Dictionary<(int, int), CollisionType> CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -36,6 +41,46 @@ namespace Jump_Bruteforcer
             this.start = start;
             this.goal = goal;
             CurrentFrame = 0;
+        }
+        public static float Distance(PlayerNode n, (int x, int y) goal)
+        {
+            return (float)Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 8.1);
+        }
+
+
+
+        public void RunBFS()
+        {
+            PlayerNode root = new PlayerNode(start.x, start.y, 0);
+
+            Queue<PlayerNode> Q = new Queue<PlayerNode>();
+            HashSet<PlayerNode> visited = new HashSet<PlayerNode>() { root };
+            Q.Enqueue(root);
+            while (Q.Count > 0)
+            {
+                PlayerNode v = Q.Dequeue();
+                if (v.IsGoal(goal))
+                {
+
+                    (List<Input> inputs, PointCollection points) = v.GetPath();
+                    Strat = PlayerNode.GetInputString(inputs);
+                    PlayerPath = points;
+                    
+                    return;
+                }
+                foreach(PlayerNode w in v.GetNeighbors(CollisionMap))
+                {
+                    if (!visited.Contains(w))
+                    {
+                        visited.Add(w);
+                        Q.Enqueue(w);
+                    }
+                }
+                
+            }
+
+
+
         }
 
         /// <summary>

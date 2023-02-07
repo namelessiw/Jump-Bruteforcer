@@ -42,7 +42,7 @@ namespace TestBrute
         }
         
         [Fact]
-        public void TestNewState()
+        public void TestNewStateBasic()
         {
             int floor_thickness = 10;
             double playerY = 567.254;
@@ -268,6 +268,17 @@ namespace TestBrute
             (List<Input> Inputs, PointCollection Points)  path = n1.GetPath();
             path.Inputs.Should().Equal(inputs);
             path.Points.Should().Equal(points);
+
+        }
+
+        [Fact]
+        public void TestIsGoal()
+        {
+            (int x, int y) goal = (42, 99);
+            new PlayerNode(43, 99.3, 0).IsGoal(goal).Should().BeTrue();
+            new PlayerNode(43, 98.9, 0).IsGoal(goal).Should().BeTrue();
+
+            new PlayerNode(43, 99.6, 0).IsGoal(goal).Should().BeFalse();
 
         }
 

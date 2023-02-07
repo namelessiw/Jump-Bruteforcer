@@ -31,6 +31,18 @@ namespace TestBrute
             output.WriteLine(r.InputString);
             r.Success.Should().BeTrue(vs);
         }
+        /*
+        [Theory]
+        [InlineData(0, -1f, 15, 10)]
+        public void BFSFindsGoal(int start_x, double start_y, int goal_x, int goal_y)
+        {
+            Search s = new((start_x, start_y), (goal_x, goal_y));
+            SearchResult r = s.RunBFS();
+
+            output.WriteLine(r.InputString);
+            r.Success.Should().BeTrue(vs);
+        }*/
+
 
         [Fact]
         public void SearchResets()

@@ -27,7 +27,11 @@ namespace Jump_Bruteforcer
         public MainWindow()
         {
             InitializeComponent();
-            s = new Search((401, 407.4f), (323, 343));
+            //s = new Search((401, 407.4f), (323, 343));
+            //s = new Search((401, 407.4f), (419, 380));
+            //s = new Search((408, 406.5), (459, 263));
+            //s = new Search((410, 407.4), (476, 343));
+            s = new Search((410, 407.4), (518, 503));
             DataContext = s;
         }
 
@@ -48,9 +52,11 @@ namespace Jump_Bruteforcer
                 string Text = File.ReadAllText(FileName);
 
                 Map Map = JMap.Parse(Text);
-                BitmapSource s = Imaging.CreateBitmapSourceFromHBitmap(Map.Bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); //https://stackoverflow.com/questions/6484357/converting-bitmapimage-to-bitmap-and-vice-versa
-                ImageJMap.Source = s;
-                Clipboard.SetImage(s);
+                BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(Map.Bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); //https://stackoverflow.com/questions/6484357/converting-bitmapimage-to-bitmap-and-vice-versa
+                ImageJMap.Source = source;
+                Clipboard.SetImage(source);
+                s.CollisionMap = Map.CollisionMap;
+                
             }
 
 
@@ -58,7 +64,7 @@ namespace Jump_Bruteforcer
 
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
-            s.Run();
+            s.RunBFS();
         }
     }
 }

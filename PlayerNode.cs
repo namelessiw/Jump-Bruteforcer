@@ -49,7 +49,7 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canJump = true, Input? action = null, int pathCost = 0, PlayerNode? parent = null) {
+        public PlayerNode(int x, double y, double vSpeed, bool canJump = true, Input? action = null, int pathCost = int.MaxValue, PlayerNode? parent = null) {
             State = new State()
             {
                 X = x,
@@ -60,6 +60,21 @@ namespace Jump_Bruteforcer
             Parent = parent;
             PathCost= pathCost;
             Action= action;
+        }
+        public static string GetInputString(List<Input> inputs)
+        {
+            StringBuilder sb = new();
+            foreach ( Input Input in inputs)
+            {
+                sb.AppendLine($"{Input}");
+            }
+
+            return sb.ToString();
+        }
+
+        public bool IsGoal((int x, int y) goal)
+        {
+            return State.X == goal.x && (int)Math.Round(State.Y) == goal.y;
         }
 
         /// <summary>

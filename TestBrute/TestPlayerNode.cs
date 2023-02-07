@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,6 +161,73 @@ namespace TestBrute
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(0, 566.6500000000001, 3.374999999999999).State);
             n1.NewState(Input.Jump, collision).State.Should().BeEquivalentTo(new PlayerNode(0, 558.5500000000001, -8.1).State);
+        }
+
+        [Fact]
+        public void TestGetNeighborsNoCollisionNegativeVSpeed()
+        {
+            Dictionary<(int, int), CollisionType> collision = new();
+            PlayerNode n1 = new(400, 400, -1);
+
+            PlayerNode[] players = new PlayerNode[PlayerNode.inputs.Length];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = n1.NewState(PlayerNode.inputs[i], collision);
+            }
+
+            n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+
+        }
+
+        [Fact]
+        public void TestGetNeighborsNoCollisionPositiveVSpeed()
+        {
+            Dictionary<(int, int), CollisionType> collision = new();
+            PlayerNode n1 = new(400, 400, 1);
+
+            Input[] inputs =  {Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump,
+                Input.Right | Input.Jump, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release };
+            PlayerNode[] players = new PlayerNode[inputs.Length];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = n1.NewState(inputs[i], collision);
+            }
+
+            n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+
+        }
+
+        [Fact]
+        public void TestGetNeighborsCollisionAndKiller()
+        {
+            Dictionary<(int, int), CollisionType> collision = new() { 
+                { (0, 568), CollisionType.Solid },         
+                { (0, 559), CollisionType.Killer },
+            };
+            for(int x = -10; x < 10; x++)
+            {
+                collision[(x, 568)] = CollisionType.Solid;
+                collision[(x, 559)] = CollisionType.Killer;
+            }
+            for (int y = 559; y < 568; y++)
+            {
+                for(int x = -3; x < 0; x++)
+                {
+                    collision[(x, y)] = CollisionType.Solid;
+                }
+            }
+
+            PlayerNode n1 = new(0, 567.1, 0);
+            Input[] inputs = { Input.Neutral, Input.Right, Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release };
+
+            PlayerNode[] players = new PlayerNode[inputs.Length];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = n1.NewState(inputs[i], collision);
+            }
+
+            n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+
         }
 
 

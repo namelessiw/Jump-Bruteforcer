@@ -35,8 +35,10 @@ namespace Jump_Bruteforcer
             X_position = x;
             this.LastDirection = LastDirection;
             this.InputHistory = new(Inputs);
-            this.XPositionHistory= new(XPositionHistory);
-            this.XPositionHistory.Add(x);
+            this.XPositionHistory = new(XPositionHistory)
+            {
+                x
+            };
         }
         public PointCollection GetTrajectory(List<double> vString)
         {

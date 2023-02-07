@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Jump_Bruteforcer;
 using System.Text.Json;
+using System.Collections.Immutable;
 
 namespace Jump_Bruteforcer
 {
@@ -44,6 +45,8 @@ namespace Jump_Bruteforcer
         public PlayerNode? Parent { get; set; }
         public int PathCost {get; set; }
         public Input? Action { get; set; }
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
+                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
         public PlayerNode(int x, double y, double vSpeed, bool canJump = true, Input? action = null, int pathCost = 0, PlayerNode? parent = null) {
             State = new State()
@@ -64,9 +67,27 @@ namespace Jump_Bruteforcer
             throw new NotImplementedException();
         } 
 
-        public HashSet<PlayerNode> GetNeighbors() 
+        /// <summary>
+        /// creates the set of all unique states that can be reached in one frame from the current state with arbitrary inputs.
+        /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
+        /// </summary>
+        /// <returns>a Hashset of playerNodes</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public HashSet<PlayerNode> GetNeighbors(Dictionary<(int X, int Y), CollisionType> CollisionMap) 
         { 
-            throw new NotImplementedException(); 
+            var neighbors =  new HashSet<PlayerNode>();
+            foreach (Input input in inputs)
+            {
+                PlayerNode neighbor = NewState(input, CollisionMap);
+                int yRounded = (int)Math.Round(neighbor.State.Y);
+                CollisionMap.TryGetValue((neighbor.State.X, yRounded), out CollisionType ctype);
+                if (ctype != CollisionType.Killer)
+                {
+                    neighbors.Add(neighbor);
+                }
+            }
+
+            return neighbors; 
         }
 
         /// <summary>

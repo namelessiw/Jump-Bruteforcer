@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Jump_Bruteforcer;
 using System.Text.Json;
 using System.Collections.Immutable;
+using System.Windows;
 
 namespace Jump_Bruteforcer
 {
@@ -61,10 +62,29 @@ namespace Jump_Bruteforcer
             Action= action;
         }
 
-
-        public (List<Input>, PointCollection) GetPath()
+        /// <summary>
+        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
+        /// </summary>
+        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
+        public (List<Input> Inputs, PointCollection Points) GetPath()
         {
-            throw new NotImplementedException();
+            List<Input> inputs = new List<Input>();
+            List<Point> points = new List<Point>();
+            PlayerNode? currentNode = this;
+
+            while (currentNode != null)
+            {
+                if (currentNode.Action != null)
+                {
+                    inputs.Add((Input)currentNode.Action);
+                }
+                points.Add(new Point(currentNode.State.X, (int)Math.Round(currentNode.State.Y)));
+                currentNode = currentNode.Parent;
+            } 
+            inputs.Reverse();
+            points.Reverse();
+
+            return (inputs, new PointCollection(points));
         } 
 
         /// <summary>
@@ -95,7 +115,7 @@ namespace Jump_Bruteforcer
         /// </summary>
         /// <param name="input"></param> the inputs for the next frame
         /// <param name="CollisionMap"></param> the game field
-        /// <returns>A new <c>PlayerNode</c> that results from running inputs on the collision map</returns>
+        /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
         public PlayerNode NewState(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
             

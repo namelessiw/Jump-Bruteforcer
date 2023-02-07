@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using FluentAssertions;
 using Jump_Bruteforcer;
 using Priority_Queue;
@@ -178,6 +180,22 @@ namespace TestBrute
             n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
 
         }
+        [Fact]
+        public void TestGetNeighborsNoCollisionPositiveVSpeedNoJump()
+        {
+            Dictionary<(int, int), CollisionType> collision = new();
+            PlayerNode n1 = new(400, 400, 1, false);
+
+            Input[] inputs =  {Input.Neutral, Input.Left, Input.Right};
+            PlayerNode[] players = new PlayerNode[inputs.Length];
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = n1.NewState(inputs[i], collision);
+            }
+
+            n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+
+        }
 
         [Fact]
         public void TestGetNeighborsNoCollisionPositiveVSpeed()
@@ -227,6 +245,29 @@ namespace TestBrute
             }
 
             n1.GetNeighbors(collision).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+
+        }
+
+        [Fact]
+        public void TestGetPath()
+        {
+            Dictionary<(int, int), CollisionType> collision = new() {
+                { (400, 568), CollisionType.Solid },
+            };
+            PlayerNode n1 = new(400, 567.1, 0);
+            List<Input> inputs  = new List<Input>() {Input.Left | Input.Jump, Input.Left, Input.Left, Input.Left | Input.Release, Input.Left, Input.Neutral, Input.Neutral,
+            Input.Right | Input.Jump | Input.Release, Input.Right | Input.Release, Input.Right | Input.Release, Input.Right, Input.Neutral};
+            PointCollection points = new PointCollection() { new Point(400, 567), new Point(397, 559), new Point(394, 551), new Point(391, 544), new Point(388, 541),
+            new Point(385, 539), new Point(385, 537), new Point(385, 535), new Point(388, 532), new Point(391, 531), new Point(394, 531), new Point(397, 532), new Point(397, 533)};
+
+            foreach(Input input in inputs)
+            {
+                n1 = n1.NewState(input, collision);
+            }
+
+            (List<Input> Inputs, PointCollection Points)  path = n1.GetPath();
+            path.Inputs.Should().Equal(inputs);
+            path.Points.Should().Equal(points);
 
         }
 

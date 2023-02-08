@@ -31,7 +31,7 @@ namespace Jump_Bruteforcer
             //s = new Search((401, 407.4f), (419, 380));
             //s = new Search((408, 406.5), (459, 263));
             //s = new Search((410, 407.4), (476, 343));
-            s = new Search((410, 407.4), (518, 503));
+            s = new Search((410, 407.4), (476, 343));
             DataContext = s;
         }
 
@@ -64,7 +64,7 @@ namespace Jump_Bruteforcer
 
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
-            s.RunBFS();
+            s.RunAStar();
         }
     }
 }

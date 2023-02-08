@@ -44,10 +44,58 @@ namespace Jump_Bruteforcer
         }
         public static float Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 8.1);
+            return (float)(2*Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 8.1));
+        }
+        public static float Distance(PlayerNode n1, PlayerNode n2)
+        {
+            return (float)Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 8.1);
         }
 
 
+        public void RunAStar()
+        {
+            PlayerNode root = new PlayerNode(start.x, start.y, 0);
+            root.PathCost = 0;
+            var openSet = new SimplePriorityQueue<PlayerNode, float>();
+            openSet.Enqueue(root, Distance(root, goal));
+            var closedSet = new HashSet<PlayerNode>();
+
+            while (openSet.Count > 0)
+            {
+                PlayerNode v = openSet.Dequeue();
+                if (v.IsGoal(goal))
+                {
+
+                    (List<Input> inputs, PointCollection points) = v.GetPath();
+                    Strat = PlayerNode.GetInputString(inputs);
+                    PlayerPath = points;
+
+                    return;
+                }
+                closedSet.Add(v);
+                foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
+                {
+                    if (closedSet.Contains(w))
+                    {
+                        continue;
+                    }
+                    float newCost = v.PathCost + Distance(v, w);
+                    if (!openSet.Contains(w) || newCost < w.PathCost)
+                    {
+                        w.Parent = v;
+                        w.PathCost = newCost;
+                        if (openSet.Contains(w)) {
+                            openSet.UpdatePriority(w, newCost + Distance(w, goal));
+                        }else
+                        {
+                            openSet.Enqueue(w, newCost + Distance(w, goal));
+                        }
+                    }
+
+                }
+
+            }
+        }
 
         public void RunBFS()
         {

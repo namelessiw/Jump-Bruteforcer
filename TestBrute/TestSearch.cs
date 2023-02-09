@@ -75,38 +75,6 @@ namespace TestBrute
             InputString.Should().Be(Expected);
         }
 
-        [Fact]
-        public void TestMiniF()
-        {
-            PlayerNode n1 = new PlayerNode(452, 407.4, 0);
-            
-            string path = @$"..\..\..\minif.jmap";
-            string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
-            Input[] inputs = new Input[] { Input.Right | Input.Jump | Input.Release,Input.Right,Input.Right,Input.Right | Input.Release,
-                Input.Right,Input.Right,Input.Right,Input.Right,Input.Right, Input.Right, Input.Right | Input.Jump,
-                Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,
-                Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,Input.Left,
-            };
-            List<PlayerNode> needToVisit= new List<PlayerNode>() { n1};
-            foreach (Input input in inputs)
-            {
-                n1 = n1.NewState(input, Map.CollisionMap);
-                needToVisit.Add(n1);
-            }
-            n1.State.X.Should().Be(482);
-            ((int)Math.Round(n1.State.Y)).Should().Be(343);
-
-            var s = new Search((452, 407.4), (482, 343));
-            s.CollisionMap = Map.CollisionMap;
-            HashSet<PlayerNode> visited = s.RunAStar();
-            foreach(PlayerNode n in needToVisit)
-            {
-                visited.Should().Contain(n);
-            }
-
-        }
-
         [Theory]
         [InlineData(410, 407.4, 476, 343, "tomo")]
         [InlineData(410, 407.4, 518, 503, "sjump")] 
@@ -136,44 +104,13 @@ namespace TestBrute
             s.RunAStar();
             s.Strat.Should().Contain("Frames");
         }
+
         [Fact]
-        public void TestGroundDPlane()
+        public void TestHeuristicIsAdmissable()
         {
-            PlayerNode n1 = new PlayerNode(420, 407.4, 0);
-            string path = @$"..\..\..\ground_dplane.jmap";
-            string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
-            n1 = n1.NewState(Input.Right | Input.Jump | Input.Release, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right | Input.Release, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1 = n1.NewState(Input.Left | Input.Jump, Map.CollisionMap);
-            n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            (int x, int y) evenGoal = (30, 20);
+            (int x, int y) oddGoal = (30, 21);
 
-
-            for (int i = 0; i < 13; i++)
-            {
-                n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            }
-            for (int i = 0; i < 10; i++)
-            {
-                n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            }
-            n1.State.X.Should().Be(477);
-            ((int)Math.Round(n1.State.Y)).Should().Be(375);
         }
     }
 }

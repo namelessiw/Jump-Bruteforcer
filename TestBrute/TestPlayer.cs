@@ -67,32 +67,18 @@ namespace TestBrute
             p.GetInputString().Should().Be("(2) Left, Jump\r\n(4) Release\r\n(5) Right, Release\r\n(8) Neutral\r\n");
         }
 
-        [Theory]
-        [InlineData(10, 5, CollisionType.Killer, CollisionType.Killer, false)]
-        [InlineData(10, 5, CollisionType.Warp, CollisionType.Warp, false)]
-        [InlineData(7, 5, CollisionType.Solid, CollisionType.None, false)]
-        public void TestCollisionCheck(int endX, double endY, CollisionType type, CollisionType endType, bool vSpeedReset)
-        {
-            (int startX, int targetX, double startY, double targetY) = (7, 10, 3, 5);
-            Dictionary<(int, int), CollisionType> collision = new()
-            {
-                { (10, 5), type }
-            };
-
-            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endType, endX, endY, vSpeedReset));
-        }
 
 
         [Theory]
-        [InlineData(10, 10, 7, 5, 10, 6, true)] //upwards
-        [InlineData(10, 10, 3, 5, 10, 4, true)] //downwards
-        [InlineData(12, 10, 5, 5, 11, 5, false)] //leftwards
-        [InlineData(8, 10, 5, 5, 9, 5, false)] //rightwards
-        [InlineData(10, 10, 7, 4, 10, 4, false)] //upwards pass through
-        [InlineData(10, 10, 3, 6, 10, 6, false)] //downwards pass through
-        [InlineData(12, 9, 5, 5, 9, 5, false)] //leftwards pass through
-        [InlineData(8, 11, 5, 5, 11, 5, false)] //rightwards pass through
-        public void TestSolidCollision(int startX, int targetX, double startY, double targetY, int endX, int endY, bool vSpeedReset)
+        [InlineData(CollisionType.Solid, 10, 10, 7, 5, 10, 6, true)] //upwards
+        [InlineData(CollisionType.Solid, 10, 10, 3, 5, 10, 4, true)] //downwards
+        [InlineData(CollisionType.Solid, 12, 10, 5, 5, 11, 5, false)] //leftwards
+        [InlineData(CollisionType.Solid, 8, 10, 5, 5, 9, 5, false)] //rightwards
+        [InlineData(CollisionType.None, 10, 10, 7, 4, 10, 4, false)] //upwards pass through
+        [InlineData(CollisionType.None, 10, 10, 3, 6, 10, 6, false)] //downwards pass through
+        [InlineData(CollisionType.None, 12, 9, 5, 5, 9, 5, false)] //leftwards pass through
+        [InlineData(CollisionType.None, 8, 11, 5, 5, 11, 5, false)] //rightwards pass through
+        public void TestSolidCollision(CollisionType ctype, int startX, int targetX, double startY, double targetY, int endX, int endY, bool vSpeedReset)
         {
             Dictionary<(int, int), CollisionType> collision = new()
             {
@@ -100,7 +86,7 @@ namespace TestBrute
             };
 
 
-            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endX, endY, vSpeedReset));
+            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((ctype, endX, endY, vSpeedReset));
 
         }
 
@@ -116,7 +102,7 @@ namespace TestBrute
                 { (targetX, (int)Math.Round(targetY)), CollisionType.Solid }
             };
 
-            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((startX, targetY, vSpeedReset));
+            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, startX, targetY, vSpeedReset));
         }
 
         [Theory]
@@ -146,7 +132,7 @@ namespace TestBrute
                 collision.Add((startX, tY), CollisionType.Solid);
             }
 
-            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((targetX, endY, vSpeedReset));
+            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, targetX, endY, vSpeedReset));
         }
 
         [Fact]
@@ -164,7 +150,7 @@ namespace TestBrute
                 { (2, 1), CollisionType.Solid },
             };
 
-            Player.SolidCollision(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((endX, endY, vSpeedReset));
+            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, endX, endY, vSpeedReset));
         }
     }
 }

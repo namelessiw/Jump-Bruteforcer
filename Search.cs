@@ -51,6 +51,7 @@ namespace Jump_Bruteforcer
             CollisionMap = collision;
             CurrentFrame = 0;
         }
+        //inadmissable heuristic because of y position rounding
         public static float Distance(PlayerNode n, (int x, int y) goal)
         {
             return (float)Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4)));

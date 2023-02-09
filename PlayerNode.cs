@@ -114,22 +114,26 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        /// <exception cref="NotImplementedException"></exception>
         public HashSet<PlayerNode> GetNeighbors(Dictionary<(int X, int Y), CollisionType> CollisionMap) 
         { 
             var neighbors =  new HashSet<PlayerNode>();
             foreach (Input input in inputs)
             {
                 PlayerNode neighbor = NewState(input, CollisionMap);
-                int yRounded = (int)Math.Round(neighbor.State.Y);
-                CollisionMap.TryGetValue((neighbor.State.X, yRounded), out CollisionType ctype);
-                if (ctype != CollisionType.Killer)
+                if (IsAlive(CollisionMap, neighbor))
                 {
                     neighbors.Add(neighbor);
                 }
             }
 
             return neighbors; 
+        }
+
+        private static bool IsAlive(Dictionary<(int X, int Y), CollisionType> CollisionMap, PlayerNode node)
+        {
+            int yRounded = (int)Math.Round(node.State.Y);
+            CollisionMap.TryGetValue((node.State.X, yRounded), out CollisionType ctype);
+            return ctype != CollisionType.Killer;
         }
 
         /// <summary>
@@ -150,49 +154,17 @@ namespace Jump_Bruteforcer
             {
                 targetX += 3;
             }
-            double finalVSpeed = CalculateVSpeed(input, CollisionMap);
+            double finalVSpeed = Player.CalculateVSpeed(this, input, CollisionMap);
             targetY += finalVSpeed;
 
             (_, int finalX, double finalY, bool reset, bool DJumpRefresh) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
-            bool canJump = DJumpRefresh || OnGround(finalX, finalY, CollisionMap) ||  OnGround(State.X, State.Y, CollisionMap) || (State.CanJump && !input.HasFlag(Input.Jump));
+            bool canJump = DJumpRefresh || Player.OnGround(finalX, finalY, CollisionMap) ||  Player.OnGround(State.X, State.Y, CollisionMap) || (State.CanJump && !input.HasFlag(Input.Jump));
 
 
             return new PlayerNode(finalX, finalY, finalVSpeed, canJump, action: input, pathCost:PathCost + 1, parent:this);
         }
-
-        private bool OnGround(int x, double y, Dictionary<(int X, int Y), CollisionType> CollisionMap)
-        {
-            return CollisionMap.TryGetValue((x, (int)Math.Round(y + 1)), out CollisionType ctype) && ctype == CollisionType.Solid;
-        }
-
-        private double CalculateVSpeed(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
-        {
-            double finalVSpeed = State.VSpeed;
-
-            finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
-
-
-            if (input.HasFlag(Input.Jump)) 
-            {
-                if(OnGround(State.X, State.Y, CollisionMap))
-                {
-                    finalVSpeed = PhysicsParams.SJUMP_VSPEED;
-                }else if (State.CanJump)
-                {
-                    finalVSpeed = PhysicsParams.DJUMP_VSPEED;
-                }
-            }
-            if (input.HasFlag(Input.Release) && finalVSpeed < 0)
-            {
-                finalVSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
-            }
-            finalVSpeed += PhysicsParams.GRAVITY;
-
-            return finalVSpeed;
-        }
-
 
         public bool Equals(PlayerNode? other)
         {

@@ -115,6 +115,37 @@ namespace Jump_Bruteforcer
 
             return sb.ToString();
         }
+        public static bool OnGround(int x, double y, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        {
+            return CollisionMap.TryGetValue((x, (int)Math.Round(y + 1)), out CollisionType ctype) && ctype == CollisionType.Solid;
+        }
+
+        public static double CalculateVSpeed(PlayerNode n, Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        {
+            double finalVSpeed = n.State.VSpeed;
+
+            finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
+
+
+            if (input.HasFlag(Input.Jump))
+            {
+                if (OnGround(n.State.X, n.State.Y, CollisionMap))
+                {
+                    finalVSpeed = PhysicsParams.SJUMP_VSPEED;
+                }
+                else if (n.State.CanJump)
+                {
+                    finalVSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
+            }
+            if (input.HasFlag(Input.Release) && finalVSpeed < 0)
+            {
+                finalVSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
+            }
+            finalVSpeed += PhysicsParams.GRAVITY;
+
+            return finalVSpeed;
+        }
 
         public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
@@ -136,7 +167,7 @@ namespace Jump_Bruteforcer
                         {
                             return (Type, NewX, NewY, VSpeedReset, DJumpRefresh);
                         }
-                        return (CollisionType.None, NewX, NewY, VSpeedReset, DJumpRefresh);
+                        return (CollisionType.Solid, NewX, NewY, VSpeedReset, DJumpRefresh);
 
                     default:
                         throw new NotImplementedException($"Collision with type {Type} not implemented");
@@ -145,7 +176,7 @@ namespace Jump_Bruteforcer
             return (CollisionType.None, NewX, NewY, false, false);
         }
 
-        public static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int CurrentYRounded = (int)Math.Round(CurrentY);
             int NewYRounded = (int)Math.Round(NewY);

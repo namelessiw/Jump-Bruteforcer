@@ -19,6 +19,7 @@ namespace Jump_Bruteforcer
         public double Y { get; init; }
         public double VSpeed { get; init; }
         public bool CanJump { get; init; }
+        const int roundAmount = 1;
 
         public override bool Equals(object? obj)
         {
@@ -32,12 +33,17 @@ namespace Jump_Bruteforcer
 
         public bool Equals(State? other)
         {
-            return JsonSerializer.Serialize(this) == JsonSerializer.Serialize(other);
+            return X == other.X && Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) && Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) && CanJump == other.CanJump;
         }
 
         public override int GetHashCode()
         {
-            return JsonSerializer.Serialize(this).GetHashCode();
+            return (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanJump).GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
     public class PlayerNode : IEquatable<PlayerNode>
@@ -147,20 +153,18 @@ namespace Jump_Bruteforcer
             double finalVSpeed = CalculateVSpeed(input, CollisionMap);
             targetY += finalVSpeed;
 
-            (int finalX, double finalY, bool reset, bool DJumpRefresh) = Player.SolidCollision(CollisionMap, State.X, targetX, State.Y, targetY);
+            (_, int finalX, double finalY, bool reset, bool DJumpRefresh) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
-            bool canDJump = DJumpRefresh || OnGround(targetX, targetY, CollisionMap) ||  OnGround(State.X, State.Y, CollisionMap) || (State.CanJump && !input.HasFlag(Input.Jump));
+            bool canJump = DJumpRefresh || OnGround(finalX, finalY, CollisionMap) ||  OnGround(State.X, State.Y, CollisionMap) || (State.CanJump && !input.HasFlag(Input.Jump));
 
 
-            return new PlayerNode(finalX, finalY, finalVSpeed, canDJump, action: input, pathCost:PathCost + 1, parent:this);
+            return new PlayerNode(finalX, finalY, finalVSpeed, canJump, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         private bool OnGround(int x, double y, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
-            int yRounded = (int)Math.Round(y);
-
-            return CollisionMap.TryGetValue((x, yRounded + 1), out CollisionType ctype) && ctype == CollisionType.Solid;
+            return CollisionMap.TryGetValue((x, (int)Math.Round(y + 1)), out CollisionType ctype) && ctype == CollisionType.Solid;
         }
 
         private double CalculateVSpeed(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
@@ -202,7 +206,12 @@ namespace Jump_Bruteforcer
 
         public override int GetHashCode()
         {
-            return JsonSerializer.Serialize(State).GetHashCode();
+            return State.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return State.ToString();
         }
     }
 }

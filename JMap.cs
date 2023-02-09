@@ -1,6 +1,8 @@
-﻿namespace Jump_Bruteforcer
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Jump_Bruteforcer
 {
-    static class JMap
+    public static class JMap
     {
         // https://github.com/patrickgh3/jtool/blob/master/source.gmx/scripts/saveMapName.gml
 

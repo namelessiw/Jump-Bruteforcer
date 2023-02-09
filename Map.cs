@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Jump_Bruteforcer
 {
-    internal class Map
+    public class Map
     {
         private readonly ImmutableArray<Object> Objects;
         public Bitmap Bmp { get; init; }

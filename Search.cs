@@ -42,17 +42,26 @@ namespace Jump_Bruteforcer
             this.goal = goal;
             CurrentFrame = 0;
         }
+        public Search((int, double) start, (int, int) goal, Dictionary<(int, int), CollisionType> collision)
+        {
+            covered = new SortedSet<int>();
+            players = new List<Player>();
+            this.start = start;
+            this.goal = goal;
+            CollisionMap = collision;
+            CurrentFrame = 0;
+        }
         public static float Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)(2*Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 8.1));
+            return (float)Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4)));
         }
         public static float Distance(PlayerNode n1, PlayerNode n2)
         {
-            return (float)Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 8.1);
+            return (float)Math.Ceiling(Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 9.4));
         }
 
 
-        public void RunAStar()
+        public HashSet<PlayerNode> RunAStar()
         {
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
@@ -70,7 +79,7 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
 
-                    return;
+                    return closedSet;
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -95,6 +104,8 @@ namespace Jump_Bruteforcer
                 }
 
             }
+            Strat = "SEARCH FAILURE";
+            return closedSet;
         }
 
         public void RunBFS()
@@ -126,7 +137,7 @@ namespace Jump_Bruteforcer
                 }
                 
             }
-
+            Strat = "SEARCH FAILURE";
 
 
         }

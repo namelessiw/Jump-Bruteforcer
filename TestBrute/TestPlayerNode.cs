@@ -275,10 +275,52 @@ namespace TestBrute
         public void TestIsGoal()
         {
             (int x, int y) goal = (42, 99);
-            new PlayerNode(43, 99.3, 0).IsGoal(goal).Should().BeTrue();
-            new PlayerNode(43, 98.9, 0).IsGoal(goal).Should().BeTrue();
+            new PlayerNode(42, 99.3, 0).IsGoal(goal).Should().BeTrue();
+            new PlayerNode(42, 98.9, 0).IsGoal(goal).Should().BeTrue();
 
-            new PlayerNode(43, 99.6, 0).IsGoal(goal).Should().BeFalse();
+            new PlayerNode(42, 99.6, 0).IsGoal(goal).Should().BeFalse();
+
+        }
+
+        public void TestNewStateBonk()
+        {
+            Dictionary<(int, int), CollisionType> collision = new() {
+                { (0, 568), CollisionType.Solid },
+                { (0, 560), CollisionType.Solid },
+                { (0, 559), CollisionType.Solid },
+                { (0, 558), CollisionType.Solid },
+                { (0, 557), CollisionType.Solid },
+                { (0, 556), CollisionType.Solid },
+                { (0, 555), CollisionType.Solid },
+                { (0, 554), CollisionType.Solid },
+                { (0, 553), CollisionType.Solid },
+            };
+            PlayerNode n1 = new(0, 567.1, 0);
+            n1 = n1.NewState(Input.Jump, collision);
+            n1.State.CanJump.Should().BeTrue();
+            n1 = n1.NewState(Input.Jump, collision);
+            n1.State.CanJump.Should().BeFalse();
+
+        }
+
+        public void TestCorner()
+        {
+            Dictionary<(int, int), CollisionType> collision = new() {
+                { (0, 568), CollisionType.Solid },
+                { (0, 560), CollisionType.Solid },
+                { (0, 559), CollisionType.Solid },
+                { (0, 558), CollisionType.Solid },
+                { (0, 557), CollisionType.Solid },
+                { (0, 556), CollisionType.Solid },
+                { (0, 555), CollisionType.Solid },
+                { (0, 554), CollisionType.Solid },
+                { (0, 553), CollisionType.Solid },
+            };
+            PlayerNode n1 = new(0, 567.1, 0);
+            n1 = n1.NewState(Input.Jump, collision);
+            n1.State.CanJump.Should().BeTrue();
+            n1 = n1.NewState(Input.Jump, collision);
+            n1.State.CanJump.Should().BeFalse();
 
         }
 

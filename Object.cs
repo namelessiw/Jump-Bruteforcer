@@ -49,7 +49,7 @@ namespace Jump_Bruteforcer
         Solid
     }
 
-    class Object
+    public class Object
     {
         public int X, Y;
         public ObjectType ObjectType;

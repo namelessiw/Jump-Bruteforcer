@@ -27,11 +27,8 @@ namespace Jump_Bruteforcer
         public MainWindow()
         {
             InitializeComponent();
-            //s = new Search((401, 407.4f), (323, 343));
-            //s = new Search((401, 407.4f), (419, 380));
-            //s = new Search((408, 406.5), (459, 263));
-            //s = new Search((410, 407.4), (476, 343));
-            s = new Search((410, 407.4), (476, 343));
+
+            s = new Search((410, 407.4), (450, 311)); //the_stupid
             DataContext = s;
         }
 
@@ -42,7 +39,7 @@ namespace Jump_Bruteforcer
                 DefaultExt = ".jmap"
             };
 
-            Nullable<bool> result = o.ShowDialog();
+            bool? result = o.ShowDialog();
 
             if (result == true)
             {

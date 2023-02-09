@@ -116,32 +116,33 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int RoundedNewY = (int)Math.Round(NewY);
 
             if (CollisionMap.TryGetValue((NewX, RoundedNewY), out CollisionType Type))
             {
+                bool DJumpRefresh;
                 switch (Type)
                 {
                     case CollisionType.Killer:
                     case CollisionType.Warp:
-                        return (Type, NewX, NewY, false);
+                        return (Type, NewX, NewY, false, false);
                     case CollisionType.Solid:
                         bool VSpeedReset;
-                        (NewX, NewY, VSpeedReset, _) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
 
                         if (CollisionMap.TryGetValue((NewX, (int)Math.Round(NewY)), out Type))
                         {
-                            return (Type, NewX, NewY, VSpeedReset);
+                            return (Type, NewX, NewY, VSpeedReset, DJumpRefresh);
                         }
-                        return (CollisionType.None, NewX, NewY, VSpeedReset);
+                        return (CollisionType.None, NewX, NewY, VSpeedReset, DJumpRefresh);
 
                     default:
                         throw new NotImplementedException($"Collision with type {Type} not implemented");
                 }
             }
-            return (CollisionType.None, NewX, NewY, false);
+            return (CollisionType.None, NewX, NewY, false, false);
         }
 
         public static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)

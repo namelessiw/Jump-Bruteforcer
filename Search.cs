@@ -78,6 +78,7 @@ namespace Jump_Bruteforcer
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = PlayerNode.GetInputString(inputs);
+                    Clipboard.SetText(Strat);
                     PlayerPath = points;
 
                     return new SearchResult(Strat, true);

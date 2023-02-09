@@ -87,13 +87,13 @@ namespace Jump_Bruteforcer
                 }
                 else
                 {
-                    sb.AppendLine($"{PreviousInput}{(Count > 1 ? $"x {Count}" : "")}");
+                    sb.AppendLine($"{PreviousInput}{(Count > 1 ? $" x{Count}" : "")}");
                     PreviousInput = inputs[i];
                     Count = 1;
                 }
             }
 
-            sb.AppendLine($"{PreviousInput}{(Count > 1 ? $"x {Count}" : "")}");
+            sb.AppendLine($"{PreviousInput}{(Count > 1 ? $" x{Count}" : "")}");
 
             return sb.ToString();
         }

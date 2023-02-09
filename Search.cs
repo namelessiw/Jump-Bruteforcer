@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
         private (int x, int y) goal;
         private string _strat = "";
         private Dictionary<(int, int), CollisionType> _collisionMap = new();
+        private double _aStarWeight = 1.0;
         public int CurrentFrame { get; set; }
         public List<double> v_string = new();
         private PointCollection playerPath = new();
@@ -24,6 +25,7 @@ namespace Jump_Bruteforcer
         public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
         public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
+        public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
         public Dictionary<(int, int), CollisionType> CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -52,9 +54,9 @@ namespace Jump_Bruteforcer
             CurrentFrame = 0;
         }
         //inadmissable heuristic because of y position rounding
-        public static float Distance(PlayerNode n, (int x, int y) goal)
+        public float Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)(5 *Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
+            return (float)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
         }
         public static float Distance(PlayerNode n1, PlayerNode n2)
         {

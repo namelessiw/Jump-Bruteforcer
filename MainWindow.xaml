@@ -13,6 +13,7 @@
         <Label Canvas.Left="665" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
         <Label Canvas.Left="817" Canvas.Top="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goal x" />
         <Label Canvas.Left="965" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
+        <Label Canvas.Left="870" Canvas.Top="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A* weight"/>
         <Image x:Name="ImageJMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38"/>
         <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
         <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="392" Canvas.Top="10" Width="89" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -20,6 +21,7 @@
         <TextBox Height="20" Canvas.Left="732" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="865" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="1032" TextWrapping="Wrap" Text="{Binding GoalY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <ScrollViewer Canvas.Left="867"  Canvas.Top="38" Height="600"  Width="229" Content="{Binding Strat}"/>
+        <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ScrollViewer Canvas.Left="872"  Canvas.Top="74" Height="600"  Width="229" Content="{Binding Strat}"/>
     </Canvas>
 </Window>

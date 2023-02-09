@@ -54,13 +54,12 @@ namespace Jump_Bruteforcer
         //inadmissable heuristic because of y position rounding
         public static float Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4)));
+            return (float)(5 *Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
         }
         public static float Distance(PlayerNode n1, PlayerNode n2)
         {
             return (float)Math.Ceiling(Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 9.4));
         }
-
 
         public SearchResult RunAStar()
         {
@@ -78,7 +77,6 @@ namespace Jump_Bruteforcer
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = PlayerNode.GetInputString(inputs);
-                    Clipboard.SetText(Strat);
                     PlayerPath = points;
 
                     return new SearchResult(Strat, true);

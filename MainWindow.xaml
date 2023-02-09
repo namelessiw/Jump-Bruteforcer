@@ -20,6 +20,6 @@
         <TextBox Height="20" Canvas.Left="732" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="865" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="1032" TextWrapping="Wrap" Text="{Binding GoalY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Height="600" Canvas.Left="867" TextWrapping="Wrap" Text="{Binding Strat}" Canvas.Top="38" Width="229"/>
+        <ScrollViewer Canvas.Left="867"  Canvas.Top="38" Height="600"  Width="229" Content="{Binding Strat}"/>
     </Canvas>
 </Window>

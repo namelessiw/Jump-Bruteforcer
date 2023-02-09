@@ -62,7 +62,7 @@ namespace Jump_Bruteforcer
         }
 
 
-        public HashSet<PlayerNode> RunAStar()
+        public SearchResult RunAStar()
         {
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
@@ -80,7 +80,7 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
 
-                    return closedSet;
+                    return new SearchResult(Strat, true);
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -106,10 +106,10 @@ namespace Jump_Bruteforcer
 
             }
             Strat = "SEARCH FAILURE";
-            return closedSet;
+            return new SearchResult();
         }
 
-        public void RunBFS()
+        public SearchResult RunBFS()
         {
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
 
@@ -126,7 +126,7 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
                     
-                    return;
+                    return new SearchResult(Strat, true);
                 }
                 foreach(PlayerNode w in v.GetNeighbors(CollisionMap))
                 {
@@ -139,6 +139,7 @@ namespace Jump_Bruteforcer
                 
             }
             Strat = "SEARCH FAILURE";
+            return new SearchResult();
 
 
         }

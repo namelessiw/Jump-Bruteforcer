@@ -4,6 +4,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace TestBrute
 {
@@ -101,8 +102,8 @@ namespace TestBrute
             Map Map = JMap.Parse(Text);
             Search s = new Search((startX, startY), (goalX, goalY), Map.CollisionMap);
             s.CollisionMap.Count.Should().BeGreaterThan(0);
-            s.RunAStar();
-            s.Strat.Should().Contain("Frames");
+            SearchResult result = s.RunAStar();
+            result.Success.Should().BeTrue();
         }
 
         [Fact]
@@ -110,6 +111,7 @@ namespace TestBrute
         {
             (int x, int y) evenGoal = (30, 20);
             (int x, int y) oddGoal = (30, 21);
+            throw new NotImplementedException();
 
         }
     }

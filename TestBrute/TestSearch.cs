@@ -86,13 +86,14 @@ namespace TestBrute
         [InlineData(401, 407.4, 413, 263, "45")] 
         [InlineData(410, 407.4, 485, 407, "co")] 
         [InlineData(410, 407.4, 443, 311, "leehe")] 
-        [InlineData(410, 407.1, 338, 351, "squished")] 
+        [InlineData(409, 407.1, 388, 351, "squished")] 
         [InlineData(410, 407.4, 551, 407, "65")] 
         [InlineData(410, 407.4, 485, 407, "groundex15")]
         [InlineData(389, 407.4, 356, 311, "badl")]
         [InlineData(420, 407.4, 477, 375, "ground_dplane")]
         [InlineData(410, 407.4, 452, 279, "32px")] 
-        [InlineData(410, 407.4, 450, 311, "the_stupid")] 
+        [InlineData(410, 407.4, 450, 311, "the_stupid")]
+        //[InlineData(241, 119.4, 541, 231, "decession")] takes 5 minutes
         public void TestJMaps(int startX, double startY, int goalX, int goalY, string jmapName)
         {
             

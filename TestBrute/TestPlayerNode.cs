@@ -143,7 +143,7 @@ namespace TestBrute
             }
 
             double vspeed = targetY - startY - PhysicsParams.GRAVITY;
-            PlayerNode n1 = new(startX, startY, vspeed, canJump:false);
+            PlayerNode n1 = new(startX, startY, vspeed, canDJump:false);
             Input input = targetX - startX < 0? Input.Left : Input.Right;
             n1.NewState(input, collision).State.Should().BeEquivalentTo(new PlayerNode(targetX, endY, 0, canJump).State);
         }
@@ -297,9 +297,9 @@ namespace TestBrute
             };
             PlayerNode n1 = new(0, 567.1, 0);
             n1 = n1.NewState(Input.Jump, collision);
-            n1.State.CanJump.Should().BeTrue();
+            n1.State.CanDJump.Should().BeTrue();
             n1 = n1.NewState(Input.Jump, collision);
-            n1.State.CanJump.Should().BeFalse();
+            n1.State.CanDJump.Should().BeFalse();
 
         }
 
@@ -318,12 +318,31 @@ namespace TestBrute
             };
             PlayerNode n1 = new(0, 567.1, 0);
             n1 = n1.NewState(Input.Jump, collision);
-            n1.State.CanJump.Should().BeTrue();
+            n1.State.CanDJump.Should().BeTrue();
             n1 = n1.NewState(Input.Jump, collision);
-            n1.State.CanJump.Should().BeFalse();
+            n1.State.CanDJump.Should().BeFalse();
 
         }
+        [Fact]
+        public void TestDJumpDoesNotRefresh()
+        {
 
+            string path = @$"..\..\..\jmaps\dj.jmap";
+            string Text = File.ReadAllText(path);
+            Input[] inputs = new Input[] {Input.Right, Input.Left, Input.Left, Input.Left, Input.Left, Input.Left | Input.Jump, Input.Neutral};
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(452, 407.4, 0);
+
+            foreach (Input input in inputs)
+            {
+                n1 = n1.NewState(input, Map.CollisionMap);
+            }
+            n1.State.CanDJump.Should().BeFalse();
+            
+            
+
+
+        }
 
     }
 }

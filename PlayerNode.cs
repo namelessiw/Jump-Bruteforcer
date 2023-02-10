@@ -18,7 +18,7 @@ namespace Jump_Bruteforcer
         public int X { get; init; }
         public double Y { get; init; }
         public double VSpeed { get; init; }
-        public bool CanJump { get; init; }
+        public bool CanDJump { get; init; }
         const int roundAmount = 1;
 
         public override bool Equals(object? obj)
@@ -33,12 +33,12 @@ namespace Jump_Bruteforcer
 
         public bool Equals(State? other)
         {
-            return X == other.X && Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) && Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) && CanJump == other.CanJump;
+            return X == other.X && Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) && Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) && CanDJump == other.CanDJump;
         }
 
         public override int GetHashCode()
         {
-            return (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanJump).GetHashCode();
+            return (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanDJump).GetHashCode();
         }
 
         public override string ToString()
@@ -55,13 +55,13 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canJump = true, Input? action = null, float pathCost = float.PositiveInfinity, PlayerNode? parent = null) {
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, float pathCost = float.PositiveInfinity, PlayerNode? parent = null) {
             State = new State()
             {
                 X = x,
                 Y = y,
                 VSpeed = vSpeed,
-                CanJump = canJump
+                CanDJump = canDJump
             };
             Parent = parent;
             PathCost= pathCost;
@@ -173,16 +173,15 @@ namespace Jump_Bruteforcer
             {
                 targetX += 3;
             }
-            double finalVSpeed = Player.CalculateVSpeed(this, input, CollisionMap);
+            (double finalVSpeed, bool DJumpRefresh) = Player.CalculateVSpeed(this, input, CollisionMap);
             targetY += finalVSpeed;
 
-            (_, int finalX, double finalY, bool reset, bool DJumpRefresh) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
+            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
-            bool canJump = DJumpRefresh || Player.OnGround(finalX, finalY, CollisionMap) ||  Player.OnGround(State.X, State.Y, CollisionMap) || (State.CanJump && !input.HasFlag(Input.Jump));
+            DJumpRefresh |= DJumpRefresh2 || (State.CanDJump && !input.HasFlag(Input.Jump));
 
-
-            return new PlayerNode(finalX, finalY, finalVSpeed, canJump, action: input, pathCost:PathCost + 1, parent:this);
+            return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         public bool Equals(PlayerNode? other)

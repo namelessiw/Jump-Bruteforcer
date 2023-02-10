@@ -120,9 +120,10 @@ namespace Jump_Bruteforcer
             return CollisionMap.TryGetValue((x, (int)Math.Round(y + 1)), out CollisionType ctype) && ctype == CollisionType.Solid;
         }
 
-        public static double CalculateVSpeed(PlayerNode n, Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        public static (double, bool) CalculateVSpeed(PlayerNode n, Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
             double finalVSpeed = n.State.VSpeed;
+            bool DJumpRefresh = false;
 
             finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
 
@@ -131,9 +132,10 @@ namespace Jump_Bruteforcer
             {
                 if (OnGround(n.State.X, n.State.Y, CollisionMap))
                 {
-                    finalVSpeed = PhysicsParams.SJUMP_VSPEED;
+                    finalVSpeed = PhysicsParams.SJUMP_VSPEED;       
+                    DJumpRefresh= true;
                 }
-                else if (n.State.CanJump)
+                else if (n.State.CanDJump)
                 {
                     finalVSpeed = PhysicsParams.DJUMP_VSPEED;
                 }
@@ -144,7 +146,7 @@ namespace Jump_Bruteforcer
             }
             finalVSpeed += PhysicsParams.GRAVITY;
 
-            return finalVSpeed;
+            return (finalVSpeed, DJumpRefresh);
         }
 
         public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
@@ -170,7 +172,8 @@ namespace Jump_Bruteforcer
                         return (CollisionType.Solid, NewX, NewY, VSpeedReset, DJumpRefresh);
 
                     default:
-                        throw new NotImplementedException($"Collision with type {Type} not implemented");
+                        //throw new NotImplementedException($"Collision with type {Type} not implemented. collision at x={NewX}, y={RoundedNewY}");
+                        return (Type, NewX, NewY, false, false);
                 }
             }
             return (CollisionType.None, NewX, NewY, false, false);

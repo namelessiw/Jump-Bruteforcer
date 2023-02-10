@@ -39,11 +39,15 @@ namespace TestBrute
         //harder ones
         //[InlineData(241, 119.4, 541, 231, "decession")] takes 5 minutes
         //[InlineData(753, 567.4, 743, 119, "1")] takes 5 minutes
+        //[InlineData(379, 566, 115, 147, "needlesatan")] takes like half an hour
+        [InlineData(47, 567.4, 47, 370, "uwu1")]
+        [InlineData(490, 407.4, 490, 50, "just_for_fun")]
         [InlineData(401, 407.4, 687, 211, "gate")]
         [InlineData(127, 342.85055, 738, 247, "exhopetheendof")]
         [InlineData(127, 342.85055, 738, 247, "ex_2")]
         [InlineData(401, 407.4, 476, 343, "tomo_2")]
         
+
         //might not be solvable for the program right now
         //[InlineData(58, 535.4, 677, 567, "winter_king")] 
         //[InlineData(49, 567.4, 765, 567, "winter_king_2")]

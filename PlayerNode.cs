@@ -19,6 +19,7 @@ namespace Jump_Bruteforcer
         public double Y { get; init; }
         public double VSpeed { get; init; }
         public bool CanDJump { get; init; }
+        public int RoundedY { get { return (int)Math.Round(Y); } }
         const int roundAmount = 1;
 
         public override bool Equals(object? obj)
@@ -50,23 +51,14 @@ namespace Jump_Bruteforcer
     {
         public State State { get; set; }
         public PlayerNode? Parent { get; set; }
-        public float PathCost {get; set; }
+        public float PathCost { get; set; }
         public Input? Action { get; set; }
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, float pathCost = float.PositiveInfinity, PlayerNode? parent = null) {
-            State = new State()
-            {
-                X = x,
-                Y = y,
-                VSpeed = vSpeed,
-                CanDJump = canDJump
-            };
-            Parent = parent;
-            PathCost= pathCost;
-            Action= action;
-        }
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, float pathCost = float.PositiveInfinity, PlayerNode? parent = null) =>
+            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump }, parent, pathCost, action);
+
         public static string GetInputString(List<Input> inputs)
         {
             if (inputs.Count == 0)
@@ -100,7 +92,7 @@ namespace Jump_Bruteforcer
 
         public bool IsGoal((int x, int y) goal)
         {
-            return State.X == goal.x && (int)Math.Round(State.Y) == goal.y;
+            return State.X == goal.x & State.RoundedY == goal.y;
         }
 
         /// <summary>
@@ -119,7 +111,7 @@ namespace Jump_Bruteforcer
                 {
                     inputs.Add((Input)currentNode.Action);
                 }
-                points.Add(new Point(currentNode.State.X, (int)Math.Round(currentNode.State.Y)));
+                points.Add(new Point(currentNode.State.X, (currentNode.State.RoundedY)));
                 currentNode = currentNode.Parent;
             } 
             inputs.Reverse();
@@ -150,9 +142,10 @@ namespace Jump_Bruteforcer
 
         private static bool IsAlive(Dictionary<(int X, int Y), CollisionType> CollisionMap, PlayerNode node)
         {
-            int yRounded = (int)Math.Round(node.State.Y);
+            int yRounded = node.State.RoundedY;
             CollisionMap.TryGetValue((node.State.X, yRounded), out CollisionType ctype);
-            return ctype != CollisionType.Killer;
+            bool inbounds =  node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
+            return ctype != CollisionType.Killer & inbounds;
         }
 
         /// <summary>

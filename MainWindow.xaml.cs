@@ -66,5 +66,10 @@ namespace Jump_Bruteforcer
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
 
         }
+
+        private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
+        {
+            ImageHeatMap.Visibility = ImageHeatMap.Visibility is Visibility.Visible? Visibility.Hidden : Visibility.Visible;
+        }
     }
 }

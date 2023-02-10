@@ -38,28 +38,28 @@ namespace TestBrute
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
         //harder ones
         [InlineData(241, 119.4, 541, 231, "decession")] //takes 5 minutes
-        [InlineData(753, 567.4, 743, 119, "1")] //takes 5 minutes
-        //[InlineData(379, 566, 115, 147, "needlesatan")] takes like half an hour
+        [InlineData(753, 567.4, 743, 119, "nameless")] //takes 5 minutes
+        [InlineData(379, 566, 115, 147, "needlesatan")] //takes like half an hour
+        [InlineData(113, 407.3, 753, 247, "Ascend screen 1")]
         [InlineData(75, 308, 33, 476, "ctw_ex_inspired")]
         [InlineData(47, 567.4, 47, 370, "uwu1")]
         [InlineData(490, 407.4, 490, 50, "just_for_fun")]
         [InlineData(401, 407.4, 687, 211, "gate")]
-        [InlineData(127, 342.85055, 738, 247, "exhopetheendof")]
-        [InlineData(127, 342.85055, 738, 247, "ex_2")]
+        [InlineData(127, 342.85055, 738, 247, "exhopetheendof")] //fastest strat is at most 221
         [InlineData(401, 407.4, 476, 343, "tomo_2")]
-        
+        [InlineData(58, 535.4, 677, 567, "winter_king")]
+        [InlineData(49, 567.4, 765, 567, "winter_king_2")]
+        [InlineData(17, 343, 179, 471, "ex_rz")]
 
         //might not be solvable for the program right now
-        //[InlineData(58, 535.4, 677, 567, "winter_king")] 
-        //[InlineData(49, 567.4, 765, 567, "winter_king_2")]
-        //[InlineData(377, 307.4, 599, 407, "needle_extremity_2_ex_2")]
-        //[InlineData(344, 311.4, 485, 311, "needle_extremity_2_1")]
-        //[InlineData(440, 407.4, 593, 407, "needle_extremity_2_2")]
-        //[InlineData(434, 407.4, 509, 407, "needle_extremity_2_6")]
-        //[InlineData(401, 407.4, 587, 407, "needle_extremity_2_7")]
-        //[InlineData(113, 407.3, 753, 247, "Ascend_screen_1")]
-        //[InlineData(49, 567.4, 702, 279, "32px_precision")]
-        //[InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
+
+        [InlineData(377, 307.4, 599, 407, "needle_extremity_2_ex_2")]
+        [InlineData(344, 311.4, 485, 311, "needle_extremity_2_1")]
+        [InlineData(440, 407.4, 593, 407, "needle_extremity_2_2")]
+        [InlineData(434, 407.4, 509, 407, "needle_extremity_2_6")]
+        [InlineData(401, 407.4, 587, 407, "needle_extremity_2_7")]
+        [InlineData(49, 567.4, 702, 279, "32px_precision")]
+        [InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
 
 
         public void TestJMaps(int startX, double startY, int goalX, int goalY, string jmapName)

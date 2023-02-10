@@ -15,10 +15,6 @@ namespace Jump_Bruteforcer
         private Dictionary<(int, int), CollisionType> _collisionMap = new();
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
-        private Dictionary<(int X, int Y), (int Open, int Closed)> statesPerPx = new();
-        private int maxStatesPerPx = 0;
-        public int MaxStatesPerPx { get { return maxStatesPerPx; } set { maxStatesPerPx = value; } }
-        public Dictionary<(int X, int Y), (int Open, int Closed)> StatesPerPx { get { return statesPerPx; } set { statesPerPx = value; OnPropertyChanged(); } }
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
@@ -56,8 +52,6 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            StatesPerPx = new();
-
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
             var openSet = new SimplePriorityQueue<PlayerNode, float>();
@@ -76,39 +70,7 @@ namespace Jump_Bruteforcer
 
                     // count states in open/closed set per pixel
 
-                    foreach (PlayerNode p in openSet)
-                    {
-                        int X = p.State.X;
-                        int Y = (int)Math.Round(p.State.Y);
-
-                        if (!StatesPerPx.ContainsKey((X, Y)))
-                        {
-                            StatesPerPx.Add((X, Y), (1, 0));
-                        }
-                        else
-                        {
-                            StatesPerPx[(X, Y)] = (StatesPerPx[(X, Y)].Open + 1, StatesPerPx[(X, Y)].Closed);
-                        }
-
-                        MaxStatesPerPx = Math.Max(MaxStatesPerPx, StatesPerPx[(X, Y)].Open + StatesPerPx[(X, Y)].Closed);
-                    }
-
-                    foreach (PlayerNode p in closedSet)
-                    {
-                        int X = p.State.X;
-                        int Y = (int)Math.Round(p.State.Y);
-
-                        if (!StatesPerPx.ContainsKey((X, Y)))
-                        {
-                            StatesPerPx.Add((X, Y), (0, 1));
-                        }
-                        else
-                        {
-                            StatesPerPx[(X, Y)] = (StatesPerPx[(X, Y)].Open, StatesPerPx[(X, Y)].Closed + 1);
-                        }
-
-                        MaxStatesPerPx = Math.Max(MaxStatesPerPx, StatesPerPx[(X, Y)].Open + StatesPerPx[(X, Y)].Closed);
-                    }
+                    VisualizeSearch.CountStates(openSet, closedSet);
 
                     return new SearchResult(Strat, true);
                 }

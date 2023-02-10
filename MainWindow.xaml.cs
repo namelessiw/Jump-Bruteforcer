@@ -63,33 +63,7 @@ namespace Jump_Bruteforcer
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
             s.RunAStar();
-
-            if (s.StatesPerPx.Count == 0)
-                return;
-            
-            Dictionary<(int X, int Y), (int Open, int Closed)>.Enumerator enumerator = s.StatesPerPx.GetEnumerator();
-
-            string FileName = (string)LabelFileName.Content;
-            string Text = File.ReadAllText(FileName);
-            Map Map = JMap.Parse(Text);
-            Bitmap Bmp = Map.Bmp;
-            int MaxStatesPerPx = s.MaxStatesPerPx;
-
-            do
-            {
-                (int X, int Y) = enumerator.Current.Key;
-                (int Open, int Closed) = enumerator.Current.Value;
-
-                int intensity = (int)Math.Round((Open + Closed) / (double)MaxStatesPerPx * 255); 
-
-                System.Drawing.Color c = System.Drawing.Color.FromArgb(255, Open == 0 ? 0 : 255, Closed == 0 ? 0 : 255, intensity);
-
-                Bmp.SetPixel(X, Y, c);
-            }
-            while (enumerator.MoveNext());
-
-            BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(Bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); //https://stackoverflow.com/questions/6484357/converting-bitmapimage-to-bitmap-and-vice-versa
-            ImageJMap.Source = source;
+            ImageHeatMap.Source = VisualizeSearch.HeatMap();
 
         }
     }

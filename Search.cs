@@ -2,6 +2,8 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Windows;
 using System.Windows.Media;
 
@@ -65,7 +67,7 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
 
-                    return new SearchResult(Strat, true);
+                    return new SearchResult(Strat, true, closedSet.Count);
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -93,7 +95,7 @@ namespace Jump_Bruteforcer
 
             }
             Strat = "SEARCH FAILURE";
-            return new SearchResult();
+            return new SearchResult(Strat, false, closedSet.Count);
         }
 
         public SearchResult RunBFS()
@@ -113,7 +115,7 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
 
-                    return new SearchResult(Strat, true);
+                    return new SearchResult(Strat, true, visited.Count);
                 }
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
                 {
@@ -126,7 +128,7 @@ namespace Jump_Bruteforcer
 
             }
             Strat = "SEARCH FAILURE";
-            return new SearchResult();
+            return new SearchResult(Strat, false, visited.Count);
 
 
         }
@@ -135,16 +137,17 @@ namespace Jump_Bruteforcer
     {
         public string InputString { get; } = string.Empty;
         public bool Success { get; }
-        
+        public int Visited { get; }
 
-        public SearchResult(string inputString, bool success)
-        {
-            InputString = inputString;
-            Success = success;
-        }
 
+        public SearchResult(string inputString, bool success, int visited) => (InputString, Success, Visited) = (inputString, success, visited);
         public SearchResult()
         {
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
 }

@@ -37,9 +37,10 @@ namespace TestBrute
         [InlineData(410, 407.4, 452, 279, "32px")] 
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
         //harder ones
-        //[InlineData(241, 119.4, 541, 231, "decession")] takes 5 minutes
-        //[InlineData(753, 567.4, 743, 119, "1")] takes 5 minutes
+        [InlineData(241, 119.4, 541, 231, "decession")] //takes 5 minutes
+        [InlineData(753, 567.4, 743, 119, "1")] //takes 5 minutes
         //[InlineData(379, 566, 115, 147, "needlesatan")] takes like half an hour
+        [InlineData(75, 308, 33, 476, "ctw_ex_inspired")]
         [InlineData(47, 567.4, 47, 370, "uwu1")]
         [InlineData(490, 407.4, 490, 50, "just_for_fun")]
         [InlineData(401, 407.4, 687, 211, "gate")]
@@ -72,6 +73,7 @@ namespace TestBrute
             s.CollisionMap.Count.Should().BeGreaterThan(0);
             SearchResult result = s.RunAStar();
             result.Success.Should().BeTrue();
+            output.WriteLine(result.ToString());
         }
 
         [Fact]

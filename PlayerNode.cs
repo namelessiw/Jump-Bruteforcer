@@ -13,6 +13,24 @@ using System.Windows;
 
 namespace Jump_Bruteforcer
 {
+    public class Priority : IComparable<Priority>
+    {
+        public float Cost;
+        public long Counter;
+        public Priority(float cost, long counter) => (Cost, Counter) = (cost, counter);
+
+        public int CompareTo(Priority? other)
+        {
+            if (other == null) return 1;
+            if (Cost < other.Cost) return -1;
+            if (Cost > other.Cost) { 
+                return 1; 
+            }else{
+                if (Counter > other.Counter) return -1;
+            }
+            return 1;
+        }
+    }
     public class State :IEquatable<State>
     {
         public int X { get; init; }
@@ -32,20 +50,12 @@ namespace Jump_Bruteforcer
             return ((State)obj).Equals(this);
         }
 
-        public bool Equals(State? other)
-        {
-            return X == other.X && Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) && Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) && CanDJump == other.CanDJump;
-        }
-
-        public override int GetHashCode()
-        {
-            return (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanDJump).GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this);
-        }
+        public bool Equals(State? other)=>
+            X == other.X & Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) &
+            Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) & CanDJump == other.CanDJump;
+        public override int GetHashCode() => (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanDJump).GetHashCode();
+        public override string ToString() => JsonSerializer.Serialize(this);
+        
     }
     public class PlayerNode : IEquatable<PlayerNode>
     {
@@ -90,10 +100,8 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        public bool IsGoal((int x, int y) goal)
-        {
-            return State.X == goal.x & State.RoundedY == goal.y;
-        }
+        public bool IsGoal((int x, int y) goal)=> State.X == goal.x & State.RoundedY == goal.y;
+        
 
         /// <summary>
         /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
@@ -187,14 +195,7 @@ namespace Jump_Bruteforcer
             return State.Equals(other.State);
         }
 
-        public override int GetHashCode()
-        {
-            return State.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return State.ToString();
-        }
+        public override int GetHashCode() => State.GetHashCode();
+        public override string ToString() => State.ToString();
     }
 }

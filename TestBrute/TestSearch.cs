@@ -50,6 +50,7 @@ namespace TestBrute
         [InlineData(58, 535.4, 677, 567, "winter_king")]
         [InlineData(49, 567.4, 765, 567, "winter_king_2")]
         [InlineData(17, 343, 179, 471, "ex_rz")]
+        [InlineData(17, 119, 259, 535, "ex_hades")]
 
         //might not be solvable for the program right now
 

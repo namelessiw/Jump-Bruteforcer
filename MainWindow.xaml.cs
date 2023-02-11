@@ -46,7 +46,7 @@ namespace Jump_Bruteforcer
             if (result == true)
             {
                 string FileName = o.FileName;
-                LabelFileName.Content = FileName;
+                LabelFileName.Content = o.SafeFileName;
 
                 string Text = File.ReadAllText(FileName);
 

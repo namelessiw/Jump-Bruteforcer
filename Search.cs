@@ -1,10 +1,6 @@
 ﻿using Priority_Queue;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer
@@ -42,22 +38,24 @@ namespace Jump_Bruteforcer
         //inadmissable heuristic because of y position rounding
         public float Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
+            return (float)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4 - 1))));
         }
         public static float Distance(PlayerNode n1, PlayerNode n2)
         {
             return (float)Math.Ceiling(Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 9.4));
         }
 
-        // max per px
-        // (x, y) -> (open, closed)
-
         public SearchResult RunAStar()
         {
+            Dictionary<PlayerNode, long> nodeTime = new();
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
-            var openSet = new SimplePriorityQueue<PlayerNode, float>();
-            openSet.Enqueue(root, Distance(root, goal));
+            long count = 1;
+            nodeTime[root] = count;
+
+            var openSet = new SimplePriorityQueue<PlayerNode, Priority>();
+            openSet.Enqueue(root, new Priority(Distance(root, goal), nodeTime[root]));
+            
             var closedSet = new HashSet<PlayerNode>();
 
             while (openSet.Count > 0)
@@ -69,14 +67,12 @@ namespace Jump_Bruteforcer
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
-
-                    // count states in open/closed set per pixel
-
                     VisualizeSearch.CountStates(openSet, closedSet);
 
-                    return new SearchResult(Strat, true);
+                    return new SearchResult(Strat, true, closedSet.Count);
                 }
                 closedSet.Add(v);
+                nodeTime.Remove(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
                 {
                     if (closedSet.Contains(w))
@@ -90,11 +86,12 @@ namespace Jump_Bruteforcer
                         w.PathCost = newCost;
                         if (openSet.Contains(w))
                         {
-                            openSet.UpdatePriority(w, newCost + Distance(w, goal));
+                            openSet.UpdatePriority(w, new Priority(newCost + Distance(w, goal), nodeTime[w]));
                         }
                         else
                         {
-                            openSet.Enqueue(w, newCost + Distance(w, goal));
+                            nodeTime[w] = ++count;
+                            openSet.Enqueue(w, new Priority(newCost + Distance(w, goal), nodeTime[w]));
                         }
                     }
 
@@ -104,41 +101,6 @@ namespace Jump_Bruteforcer
             Strat = "SEARCH FAILURE";
             return new SearchResult(Strat, false, closedSet.Count);
         }
-
-        public SearchResult RunBFS()
-        {
-            PlayerNode root = new PlayerNode(start.x, start.y, 0);
-
-            Queue<PlayerNode> Q = new Queue<PlayerNode>();
-            HashSet<PlayerNode> visited = new HashSet<PlayerNode>() { root };
-            Q.Enqueue(root);
-            while (Q.Count > 0)
-            {
-                PlayerNode v = Q.Dequeue();
-                if (v.IsGoal(goal))
-                {
-
-                    (List<Input> inputs, PointCollection points) = v.GetPath();
-                    Strat = PlayerNode.GetInputString(inputs);
-                    PlayerPath = points;
-
-                    return new SearchResult(Strat, true, visited.Count);
-                }
-                foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
-                {
-                    if (!visited.Contains(w))
-                    {
-                        visited.Add(w);
-                        Q.Enqueue(w);
-                    }
-                }
-
-            }
-            Strat = "SEARCH FAILURE";
-            return new SearchResult(Strat, false, visited.Count);
-
-
-        }
     }
     public class SearchResult
     {
@@ -146,15 +108,7 @@ namespace Jump_Bruteforcer
         public bool Success { get; }
         public int Visited { get; }
 
-
         public SearchResult(string inputString, bool success, int visited) => (InputString, Success, Visited) = (inputString, success, visited);
-        public SearchResult()
-        {
-        }
-
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this);
-        }
+        public override string ToString() => JsonSerializer.Serialize(this);     
     }
 }

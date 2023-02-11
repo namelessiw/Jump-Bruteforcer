@@ -49,6 +49,9 @@ namespace Jump_Bruteforcer
             return (float)Math.Ceiling(Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 9.4));
         }
 
+        // max per px
+        // (x, y) -> (open, closed)
+
         public SearchResult RunAStar()
         {
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
@@ -67,7 +70,11 @@ namespace Jump_Bruteforcer
                     Strat = PlayerNode.GetInputString(inputs);
                     PlayerPath = points;
 
-                    return new SearchResult(Strat, true, closedSet.Count);
+                    // count states in open/closed set per pixel
+
+                    VisualizeSearch.CountStates(openSet, closedSet);
+
+                    return new SearchResult(Strat, true);
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))

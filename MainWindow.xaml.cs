@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Jump_Bruteforcer
 {
@@ -61,6 +63,13 @@ namespace Jump_Bruteforcer
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
             s.RunAStar();
+            ImageHeatMap.Source = VisualizeSearch.HeatMap();
+
+        }
+
+        private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
+        {
+            ImageHeatMap.Visibility = ImageHeatMap.Visibility is Visibility.Visible? Visibility.Hidden : Visibility.Visible;
         }
     }
 }

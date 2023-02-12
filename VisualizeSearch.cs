@@ -11,7 +11,7 @@ namespace Jump_Bruteforcer
         private static int maxStatesPerPx = 0;
         public static int MaxStatesPerPx { get { return maxStatesPerPx; } set { maxStatesPerPx = value; } }
         public static Dictionary<(int X, int Y), (int Open, int Closed)> StatesPerPx { get { return statesPerPx; } set { statesPerPx = value;} }
-        public static void CountStates(SimplePriorityQueue<PlayerNode, Priority> openSet, HashSet<PlayerNode> closedSet)
+        public static void CountStates(SimplePriorityQueue<PlayerNode, int> openSet, HashSet<PlayerNode> closedSet)
         {
             statesPerPx.Clear();
             foreach (PlayerNode p in openSet)

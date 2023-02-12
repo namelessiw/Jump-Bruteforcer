@@ -61,12 +61,12 @@ namespace Jump_Bruteforcer
     {
         public State State { get; set; }
         public PlayerNode? Parent { get; set; }
-        public float PathCost { get; set; }
+        public int PathCost { get; set; }
         public Input? Action { get; set; }
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, float pathCost = float.PositiveInfinity, PlayerNode? parent = null) =>
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, int pathCost = int.MaxValue, PlayerNode? parent = null) =>
             (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump }, parent, pathCost, action);
 
         public static string GetInputString(List<Input> inputs)

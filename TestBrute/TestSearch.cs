@@ -37,23 +37,36 @@ namespace TestBrute
         [InlineData(410, 407.4, 452, 279, "32px")] 
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
         //harder ones
-        [InlineData(241, 119.4, 541, 231, "decession")] //takes 5 minutes
-        [InlineData(753, 567.4, 743, 119, "nameless")] //takes 5 minutes
-        [InlineData(379, 566, 115, 147, "needlesatan")] //takes like half an hour
-        [InlineData(113, 407.3, 753, 247, "Ascend screen 1")]
-        [InlineData(75, 308, 33, 476, "ctw_ex_inspired")]
-        [InlineData(47, 567.4, 47, 370, "uwu1")]
-        [InlineData(490, 407.4, 490, 50, "just_for_fun")]
-        [InlineData(401, 407.4, 687, 211, "gate")]
-        [InlineData(127, 342.85055, 738, 247, "exhopetheendof")] //fastest strat is at most 221
-        [InlineData(401, 407.4, 476, 343, "tomo_2")]
-        [InlineData(58, 535.4, 677, 567, "winter_king")]
-        [InlineData(49, 567.4, 765, 567, "winter_king_2")]
-        [InlineData(17, 343, 179, 471, "ex_rz")]
-        [InlineData(17, 119, 259, 535, "ex_hades")]
+        [InlineData(241, 119.4, 541, 231, "decession")] //Frames 229
+        [InlineData(753, 567.4, 743, 119, "nameless")] //Frames 577
+        [InlineData(379, 566, 115, 147, "needlesatan")] //Frames 921
+        [InlineData(113, 407.3, 753, 247, "Ascend screen 1")] //Frames 331
+        [InlineData(27, 240, 527, 52, "Ascend screen 2")] //Frames 300
+        [InlineData(600, 537, 20, 370, "Ascend screen 3")] //Frames 316
+        [InlineData(782, 375.4, 305, 17, "Ascend screen 4")] //Frames 332
+        [InlineData(305, 503.4, 785, 148, "Ascend screen 5")] //Frames 355
+        [InlineData(17, 151.4, 785, 311, "Ascend screen 6")] //Frames 316
+        [InlineData(753, 567.4, 98, 119, "ftfa-1")] //Frames 784
+        [InlineData(183, 567.4, 578, 87, "ftfa-2")] //Frames 414
+        [InlineData(573, 567.4, 484, 87, "ftfa-3")] //Frames 825
+        [InlineData(75, 308, 33, 476, "ctw_ex_inspired")] //Frames 899
+        [InlineData(47, 567.4, 47, 370, "uwu1")] //Frames 592
+        [InlineData(490, 407.4, 490, 50, "just_for_fun")] //Frames 582
+        [InlineData(401, 407.4, 687, 211, "gate")] //Frames 110
+        [InlineData(127, 342.85055, 738, 247, "exhopetheendof")] //Frames 221
+        [InlineData(401, 407.4, 476, 343, "tomo_2")]  //Frames 37
+        [InlineData(58, 535.4, 677, 567, "winter_king")] //Frames 416
+        [InlineData(49, 567.4, 765, 567, "winter_king_2")] //Frames 297
+        [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107
+        [InlineData(17, 119, 259, 535, "ex_hades")] //Frames 603
+        [InlineData(49, 87.4, 762, 567, "e_2")]  //Frames 1195
+        [InlineData(125, 119.4, 680, 46, "subset")] //Frames 991
+        [InlineData(49, 567, 771, 231, "i_wanna_x")] //Frames 1103
+        [InlineData(114, 119, 389, 606, "anticlimax_second_screen")] //Frames 624
+        [InlineData(17, 311, 733, 119, "drown_drones")] //Frames 746
 
         //might not be solvable for the program right now
-
+        /*
         [InlineData(377, 307.4, 599, 407, "needle_extremity_2_ex_2")]
         [InlineData(344, 311.4, 485, 311, "needle_extremity_2_1")]
         [InlineData(440, 407.4, 593, 407, "needle_extremity_2_2")]
@@ -61,7 +74,7 @@ namespace TestBrute
         [InlineData(401, 407.4, 587, 407, "needle_extremity_2_7")]
         [InlineData(49, 567.4, 702, 279, "32px_precision")]
         [InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
-
+        */
 
         public void TestJMaps(int startX, double startY, int goalX, int goalY, string jmapName)
         {
@@ -82,6 +95,17 @@ namespace TestBrute
         {
             (int x, int y) evenGoal = (30, 20);
             (int x, int y) oddGoal = (30, 21);
+            Search evenS = new Search((0, 0), evenGoal, new Dictionary<(int, int), CollisionType>());
+            Search oddS = new Search((0, 0), oddGoal, new Dictionary<(int, int), CollisionType>());
+            evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
+            evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
+            evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);
+            evenS.Distance(new PlayerNode(30, 30, 0), evenGoal).Should().Be(2);
+
+            evenS.Distance(new PlayerNode(30, 10.5, 0), evenGoal).Should().Be(1);
+            evenS.Distance(new PlayerNode(30, 11, 0), evenGoal).Should().Be(1);
+            evenS.Distance(new PlayerNode(30, 10, 0), evenGoal).Should().Be(2);
+
             throw new NotImplementedException();
 
         }

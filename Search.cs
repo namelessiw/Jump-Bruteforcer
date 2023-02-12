@@ -36,25 +36,20 @@ namespace Jump_Bruteforcer
             CollisionMap = collision;
         }
         //inadmissable heuristic because of y position rounding
-        public float Distance(PlayerNode n, (int x, int y) goal)
+        public int Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (float)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4 - 1))));
+            return (int)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
         }
-        public static float Distance(PlayerNode n1, PlayerNode n2)
-        {
-            return (float)Math.Ceiling(Math.Max(Math.Abs(n1.State.X - n2.State.X) / 3, Math.Abs(n1.State.Y - n2.State.Y) / 9.4));
-        }
+
 
         public SearchResult RunAStar()
         {
             Dictionary<PlayerNode, long> nodeTime = new();
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
-            long count = 1;
-            nodeTime[root] = count;
 
-            var openSet = new SimplePriorityQueue<PlayerNode, Priority>();
-            openSet.Enqueue(root, new Priority(Distance(root, goal), nodeTime[root]));
+            var openSet = new SimplePriorityQueue<PlayerNode, int>();
+            openSet.Enqueue(root, Distance(root, goal));
             
             var closedSet = new HashSet<PlayerNode>();
 
@@ -79,19 +74,18 @@ namespace Jump_Bruteforcer
                     {
                         continue;
                     }
-                    float newCost = v.PathCost + Distance(v, w);
+                    int newCost = v.PathCost + 1;
                     if (!openSet.Contains(w) || newCost < w.PathCost)
                     {
                         w.Parent = v;
                         w.PathCost = newCost;
                         if (openSet.Contains(w))
                         {
-                            openSet.UpdatePriority(w, new Priority(newCost + Distance(w, goal), nodeTime[w]));
+                            openSet.UpdatePriority(w, newCost + Distance(w, goal));
                         }
                         else
                         {
-                            nodeTime[w] = ++count;
-                            openSet.Enqueue(w, new Priority(newCost + Distance(w, goal), nodeTime[w]));
+                            openSet.Enqueue(w, newCost + Distance(w, goal));
                         }
                     }
 
@@ -99,6 +93,7 @@ namespace Jump_Bruteforcer
 
             }
             Strat = "SEARCH FAILURE";
+            VisualizeSearch.CountStates(openSet, closedSet);
             return new SearchResult(Strat, false, closedSet.Count);
         }
     }

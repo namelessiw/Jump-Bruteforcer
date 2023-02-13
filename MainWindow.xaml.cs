@@ -71,5 +71,16 @@ namespace Jump_Bruteforcer
         {
             ImageHeatMap.Visibility = ImageHeatMap.Visibility is Visibility.Visible? Visibility.Hidden : Visibility.Visible;
         }
+
+
+        private void ImageJMap_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            (s.StartX, s.StartY) = ((int)e.GetPosition(ImageJMap).X, e.GetPosition(ImageJMap).Y);
+        }
+
+        private void ImageJMap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            (s.GoalX, s.GoalY) = ((int)e.GetPosition(ImageJMap).X, (int)e.GetPosition(ImageJMap).Y);
+        }
     }
 }

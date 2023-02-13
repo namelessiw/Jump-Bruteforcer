@@ -121,21 +121,13 @@ namespace Jump_Bruteforcer
             foreach (Input input in inputs)
             {
                 PlayerNode neighbor = NewState(input, CollisionMap);
-                if (IsAlive(CollisionMap, neighbor))
+                if (Player.IsAlive(CollisionMap, neighbor))
                 {
                     neighbors.Add(neighbor);
                 }
             }
 
             return neighbors; 
-        }
-
-        private static bool IsAlive(Dictionary<(int X, int Y), CollisionType> CollisionMap, PlayerNode node)
-        {
-            int yRounded = node.State.RoundedY;
-            CollisionMap.TryGetValue((node.State.X, yRounded), out CollisionType ctype);
-            bool inbounds =  node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
-            return ctype != CollisionType.Killer & inbounds;
         }
 
         /// <summary>

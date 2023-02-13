@@ -36,19 +36,18 @@ namespace Jump_Bruteforcer
             CollisionMap = collision;
         }
         //inadmissable heuristic because of y position rounding
-        public int Distance(PlayerNode n, (int x, int y) goal)
+        public uint Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (int)(AStarWeight * Math.Ceiling((Math.Max(Math.Abs(n.State.X - goal.x) / 3, Math.Abs(n.State.Y - goal.y) / 9.4))));
+            return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / 3.0, Math.Abs(n.State.Y - goal.y) / 9.4)));
         }
 
 
         public SearchResult RunAStar()
         {
-            Dictionary<PlayerNode, long> nodeTime = new();
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
 
-            var openSet = new SimplePriorityQueue<PlayerNode, int>();
+            var openSet = new SimplePriorityQueue<PlayerNode, uint>();
             openSet.Enqueue(root, Distance(root, goal));
             
             var closedSet = new HashSet<PlayerNode>();
@@ -67,14 +66,13 @@ namespace Jump_Bruteforcer
                     return new SearchResult(Strat, true, closedSet.Count);
                 }
                 closedSet.Add(v);
-                nodeTime.Remove(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
                 {
                     if (closedSet.Contains(w))
                     {
                         continue;
                     }
-                    int newCost = v.PathCost + 1;
+                    uint newCost = v.PathCost + 1;
                     if (!openSet.Contains(w) || newCost < w.PathCost)
                     {
                         w.Parent = v;

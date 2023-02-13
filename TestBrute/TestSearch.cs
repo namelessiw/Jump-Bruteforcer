@@ -54,7 +54,7 @@ namespace TestBrute
         [InlineData(490, 407.4, 490, 50, "just_for_fun")] //Frames 582
         [InlineData(401, 407.4, 687, 211, "gate")] //Frames 110
         [InlineData(127, 342.85055, 738, 247, "exhopetheendof")] //Frames 221
-        [InlineData(401, 407.4, 476, 343, "tomo_2")]  //Frames 37
+        [InlineData(401, 407.4, 476, 343, "tomo_2")]  //Fgits rames 37
         [InlineData(58, 535.4, 677, 567, "winter_king")] //Frames 416
         [InlineData(49, 567.4, 765, 567, "winter_king_2")] //Frames 297
         [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107
@@ -64,6 +64,11 @@ namespace TestBrute
         [InlineData(49, 567, 771, 231, "i_wanna_x")] //Frames 1103
         [InlineData(114, 119, 389, 606, "anticlimax_second_screen")] //Frames 624
         [InlineData(17, 311, 733, 119, "drown_drones")] //Frames 746
+        [InlineData(49, 567, 775, 567, "aod")] //Frames 867
+        [InlineData(441, 209, 790, 530, "delphi1")] //Frames 804
+        [InlineData(20, 567.4, 692, 182, "delphi2")] //Frames 848
+        [InlineData(20, 567.4, 692, 182, "delphi2_modified")] //Frames 848
+        [InlineData(50, 567.4, 51, 60, "forties")] //Frames 609
 
         //might not be solvable for the program right now
         /*

@@ -1,10 +1,34 @@
 ﻿using Priority_Queue;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Jump_Bruteforcer
 {
+    public class CoordinatePointConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            //Keeps the VS Designer UI from crashing
+            for (int i = 0; i< values.Length; i++)
+            {
+                if (values[i] == DependencyProperty.UnsetValue)
+                {
+                    values[i] = 0;
+                }
+            }
+            (int x, int y) = (System.Convert.ToInt32(values[0]), (int)Math.Round(System.Convert.ToDouble(values[1])));
+            return new Point(x, y);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public static class VisualizeSearch
     {
         private static Dictionary<(int X, int Y), (int Open, int Closed)> statesPerPx = new();

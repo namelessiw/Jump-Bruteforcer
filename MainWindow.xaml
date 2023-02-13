@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:Jump_Bruteforcer" d:DataContext="{d:DesignInstance Type=local:Search}"
         mc:Ignorable="d"
         Title="Window1" Height="700" Width="1200">
+    <Window.Resources>
+        <local:CoordinatePointConverter x:Key="PointConverter"/>
+    </Window.Resources>
     <Canvas>
         <Button Content="Select jmap"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
         <Button Content="Toggle heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
@@ -16,8 +19,32 @@
         <Label Canvas.Left="965" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
         <Label Canvas.Left="870" Canvas.Top="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A* weight"/>
         <Image x:Name="ImageJMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
-        <Image x:Name="ImageHeatMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38"/>
+        <Image x:Name="ImageHeatMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
+        <Path Stroke="DarkGoldenrod" Fill="DarkGoldenrod" Canvas.Left="50" Canvas.Top="38">
+            <Path.Data>
+                <EllipseGeometry RadiusX="5" RadiusY="5" >
+                    <EllipseGeometry.Center>
+                        <MultiBinding Converter="{StaticResource PointConverter}">
+                            <Binding Path="StartX"/>
+                            <Binding Path="StartY"/>
+                        </MultiBinding>
+                    </EllipseGeometry.Center>
+                </EllipseGeometry>
+            </Path.Data>
+        </Path>
+        <Path Stroke="DarkGreen" Fill="DarkGreen" Canvas.Left="50" Canvas.Top="38">
+            <Path.Data>
+                <EllipseGeometry RadiusX="5" RadiusY="5" >
+                    <EllipseGeometry.Center>
+                        <MultiBinding Converter="{StaticResource PointConverter}">
+                            <Binding Path="GoalX"/>
+                            <Binding Path="GoalY"/>
+                        </MultiBinding>
+                    </EllipseGeometry.Center>
+                </EllipseGeometry>
+            </Path.Data>
+        </Path>
         <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="392" Canvas.Top="10" Width="89" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="565" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="732" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>

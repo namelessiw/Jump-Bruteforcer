@@ -1,6 +1,7 @@
 ﻿using Priority_Queue;
 using System.ComponentModel;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer

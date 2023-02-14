@@ -88,7 +88,7 @@ namespace Jump_Bruteforcer
 
         private void CopyMacroButton_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(Macro);
+            Clipboard.SetDataObject(Macro);
         }
     }
 }

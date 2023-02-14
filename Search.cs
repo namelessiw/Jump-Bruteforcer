@@ -60,11 +60,11 @@ namespace Jump_Bruteforcer
                 {
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();
-                    Strat = PlayerNode.GetInputString(inputs);
+                    Strat = SearchOutput.GetInputString(inputs);
                     PlayerPath = points;
                     VisualizeSearch.CountStates(openSet, closedSet);
 
-                    string Macro = PlayerNode.GetMacro(inputs);
+                    string Macro = SearchOutput.GetMacro(inputs);
                     
                     return new SearchResult(Strat, Macro, true, closedSet.Count);
                 }

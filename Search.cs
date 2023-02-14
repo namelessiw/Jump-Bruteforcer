@@ -64,7 +64,9 @@ namespace Jump_Bruteforcer
                     PlayerPath = points;
                     VisualizeSearch.CountStates(openSet, closedSet);
 
-                    return new SearchResult(Strat, true, closedSet.Count);
+                    string Macro = PlayerNode.GetMacro(inputs);
+                    
+                    return new SearchResult(Strat, Macro, true, closedSet.Count);
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -93,16 +95,17 @@ namespace Jump_Bruteforcer
             }
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
-            return new SearchResult(Strat, false, closedSet.Count);
+            return new SearchResult(Strat, "", false, closedSet.Count);
         }
     }
     public class SearchResult
     {
         public string InputString { get; } = string.Empty;
+        public string Macro { get; } = string.Empty;
         public bool Success { get; }
         public int Visited { get; }
 
-        public SearchResult(string inputString, bool success, int visited) => (InputString, Success, Visited) = (inputString, success, visited);
+        public SearchResult(string inputString, string macro, bool success, int visited) => (InputString, Macro, Success, Visited) = (inputString, macro, success, visited);
         public override string ToString() => JsonSerializer.Serialize(this);     
     }
 }

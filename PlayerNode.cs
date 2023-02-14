@@ -51,6 +51,64 @@ namespace Jump_Bruteforcer
         public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
             (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump }, parent, pathCost, action);
 
+        public static string GetMacro(List<Input> inputs)
+        {
+            if (inputs.Count == 0)
+                return "";
+
+            StringBuilder sb = new StringBuilder();
+
+            int Direction = 0, NextDirection;
+
+            foreach (Input input in inputs)
+            {
+                bool InputChanged = false;
+
+                NextDirection = 0;
+                if ((input & Input.Left) == Input.Left)
+                {
+                    NextDirection = -1;
+                }
+                else if ((input & Input.Right) == Input.Right)
+                {
+                    NextDirection = 1;
+                }
+
+                if (Direction != NextDirection)
+                {
+                    if (Direction != 0)
+                    {
+                        sb.Append((Direction == 1 ? "RightArrow" : "LeftArrow") + "(R)");
+                        InputChanged = true;
+                    }
+
+                    if (NextDirection != 0)
+                    {
+                        sb.Append((InputChanged ? "," : "") + (NextDirection == 1 ? "RightArrow" : "LeftArrow") + "(P)");
+                    }
+
+                    InputChanged = true;
+                }
+
+                if ((input & Input.Jump) == Input.Jump)
+                {
+                    sb.Append((InputChanged ? "," : "") + "J(PR)");
+
+                    InputChanged = true;
+                }
+                if ((input & Input.Release) == Input.Release)
+                {
+                    sb.Append((InputChanged ? "," : "") + "K(PR)");
+                }
+
+                Direction = NextDirection;
+
+                sb.Append('>');
+            }
+
+            return sb.ToString();
+        }
+
         public static string GetInputString(List<Input> inputs)
         {
             if (inputs.Count == 0)

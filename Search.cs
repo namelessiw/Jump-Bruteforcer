@@ -22,7 +22,7 @@ namespace Jump_Bruteforcer
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
         public Dictionary<(int, int), CollisionType> CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
 
         private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] String propertyName = "")

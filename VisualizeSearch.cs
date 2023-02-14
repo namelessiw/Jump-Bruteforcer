@@ -1,4 +1,5 @@
 ﻿using Priority_Queue;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -12,13 +13,14 @@ namespace Jump_Bruteforcer
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             //Keeps the VS Designer UI from crashing
+            if(DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             for (int i = 0; i< values.Length; i++)
             {
-                if (values[i] == DependencyProperty.UnsetValue)
-                {
-                    values[i] = 0;
-                }
+
+                values[i] = 0;
+
             }
+            
             (int x, int y) = (System.Convert.ToInt32(values[0]), (int)Math.Round(System.Convert.ToDouble(values[1])));
             return new Point(x, y);
         }

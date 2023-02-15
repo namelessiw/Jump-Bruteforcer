@@ -22,10 +22,24 @@ namespace Jump_Bruteforcer
             return CollisionMap.TryGetValue((x, (int)Math.Round(y + 1)), out CollisionType ctype) && ctype == CollisionType.Solid;
         }
 
-        public static (double, bool) CalculateVSpeed(PlayerNode n, Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        /// <summary>
+        /// Checks the CollisionMap for collision of "type" at (x, y). If there is, return true, else false.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <param name="CollisionMap"></param>
+        /// <returns></returns>
+        private static bool PlaceMeeting(int x, int y, CollisionType type, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        {
+            return CollisionMap.TryGetValue((x, y), out CollisionType ctype) && ctype == type;
+        }
+
+        public static (double, bool, bool) CalculateVSpeed(PlayerNode n, Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
         {
             double finalVSpeed = n.State.VSpeed;
             bool DJumpRefresh = false;
+            bool onPlatform = n.State.OnPlatform && !(n.State.OnPlatform && !PlaceMeeting(n.State.X, n.State.RoundedY + 4, CollisionType.Platform, CollisionMap));
 
             finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
 
@@ -48,7 +62,7 @@ namespace Jump_Bruteforcer
             }
             finalVSpeed += PhysicsParams.GRAVITY;
 
-            return (finalVSpeed, DJumpRefresh);
+            return (finalVSpeed, DJumpRefresh, onPlatform);
         }
 
         public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) CollisionCheck(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
@@ -66,12 +80,10 @@ namespace Jump_Bruteforcer
                     case CollisionType.Solid:
                         bool VSpeedReset;
                         (NewX, NewY, VSpeedReset, DJumpRefresh) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
-
-                        if (CollisionMap.TryGetValue((NewX, (int)Math.Round(NewY)), out Type))
-                        {
-                            return (Type, NewX, NewY, VSpeedReset, DJumpRefresh);
-                        }
-                        return (CollisionType.Solid, NewX, NewY, VSpeedReset, DJumpRefresh);
+                        return (Type, NewX, NewY, VSpeedReset, DJumpRefresh);
+                    case CollisionType.Platform:
+                        (NewX, NewY, VSpeedReset, DJumpRefresh) = PlatformCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
+                        return (Type, NewX, NewY, VSpeedReset, DJumpRefresh);
 
                     default:
                         //throw new NotImplementedException($"Collision with type {Type} not implemented. collision at x={NewX}, y={RoundedNewY}");
@@ -79,6 +91,12 @@ namespace Jump_Bruteforcer
                 }
             }
             return (CollisionType.None, NewX, NewY, false, false);
+        }
+        
+        
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) PlatformCollision(Dictionary<(int X, int Y), CollisionType> collisionMap, int currentX, int newX, double currentY, double newY)
+        {
+            
         }
 
         private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)

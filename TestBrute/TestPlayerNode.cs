@@ -338,9 +338,20 @@ namespace TestBrute
                 n1 = n1.NewState(input, Map.CollisionMap);
             }
             n1.State.CanDJump.Should().BeFalse();
-            
-            
+        }
 
+        [Fact]
+        public void TestStandOnPlatform()
+        {
+
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(394, 375, 0);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true).State); // or should speed be 0.0...0734788...?
 
         }
 

@@ -26,6 +26,8 @@ namespace Jump_Bruteforcer
     public partial class MainWindow : Window
     {
         private Search s;
+        private string Macro = "";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -62,9 +64,10 @@ namespace Jump_Bruteforcer
         
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
-            s.RunAStar();
+            SearchResult sr = s.RunAStar();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
 
+            Macro = sr.Macro;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
@@ -81,6 +84,11 @@ namespace Jump_Bruteforcer
         private void ImageJMap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             (s.GoalX, s.GoalY) = ((int)e.GetPosition(ImageJMap).X, (int)e.GetPosition(ImageJMap).Y);
+        }
+
+        private void CopyMacroButton_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetDataObject(Macro);
         }
     }
 }

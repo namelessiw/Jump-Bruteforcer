@@ -96,7 +96,7 @@ namespace Jump_Bruteforcer
         
         private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) PlatformCollision(Dictionary<(int X, int Y), CollisionType> collisionMap, int currentX, int newX, double currentY, double newY)
         {
-            
+            throw new NotImplementedException();
         }
 
         private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(Dictionary<(int X, int Y), CollisionType> CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)

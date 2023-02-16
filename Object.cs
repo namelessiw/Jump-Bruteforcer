@@ -43,9 +43,9 @@ namespace Jump_Bruteforcer
         Water2,
         Water3,
         Water1,
-        Platform,
-        Killer,
         Warp,
+        Killer,
+        Platform,
         Solid
     }
 

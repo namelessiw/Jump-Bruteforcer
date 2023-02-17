@@ -31,9 +31,10 @@ namespace TestBrute
             {
                 { (10, 5), CollisionType.Solid }
             };
+            CollisionMap cmap = new(collision, null);
 
 
-            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((ctype, endX, endY, vSpeedReset));
+            Player.CollisionCheck(cmap, startX, targetX, startY, targetY).Should().BeEquivalentTo((ctype, endX, endY, vSpeedReset));
 
         }
 
@@ -48,8 +49,9 @@ namespace TestBrute
             {
                 { (targetX, (int)Math.Round(targetY)), CollisionType.Solid }
             };
+            CollisionMap cmap = new(collision, null);
 
-            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, startX, targetY, vSpeedReset));
+            Player.CollisionCheck(cmap, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, startX, targetY, vSpeedReset));
         }
 
         [Theory]
@@ -78,8 +80,9 @@ namespace TestBrute
             {
                 collision.Add((startX, tY), CollisionType.Solid);
             }
+            CollisionMap cmap = new(collision, null);
 
-            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, targetX, endY, vSpeedReset));
+            Player.CollisionCheck(cmap, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, targetX, endY, vSpeedReset));
         }
 
         [Fact]
@@ -96,8 +99,9 @@ namespace TestBrute
                 { (1, 2), CollisionType.Solid },
                 { (2, 1), CollisionType.Solid },
             };
+            CollisionMap cmap = new(collision, null);
 
-            Player.CollisionCheck(collision, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, endX, endY, vSpeedReset));
+            Player.CollisionCheck(cmap, startX, targetX, startY, targetY).Should().BeEquivalentTo((CollisionType.Solid, endX, endY, vSpeedReset));
         }
     }
 }

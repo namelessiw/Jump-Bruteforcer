@@ -116,7 +116,7 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public HashSet<PlayerNode> GetNeighbors(Dictionary<(int X, int Y), CollisionType> CollisionMap) 
+        public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap) 
         { 
             var neighbors =  new HashSet<PlayerNode>();
             foreach (Input input in inputs)
@@ -137,7 +137,7 @@ namespace Jump_Bruteforcer
         /// <param name="input"></param> the inputs for the next frame
         /// <param name="CollisionMap"></param> the game field
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
-        public PlayerNode NewState(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
             
             (int targetX, double targetY) = (State.X, State.Y);

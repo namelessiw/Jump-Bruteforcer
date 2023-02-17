@@ -13,14 +13,16 @@ namespace Jump_Bruteforcer
     {
         private readonly ImmutableArray<Object> Objects;
         public Bitmap Bmp { get; init; }
-        public Dictionary<(int X, int Y), CollisionType> CollisionMap { get; init; }
+        public CollisionMap CollisionMap { get; init; }
+        
 
         public Map(List<Object> objects)
         {
+            List<Object> platforms = new(objects.FindAll(o=>o.ObjectType == ObjectType.Platform));
             objects.Sort(Comparer<Object>.Create((Object o1, Object o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
-            CollisionMap = GenerateCollisionMap();
+            CollisionMap = new(GenerateCollisionMap(), platforms);
         }
         
         private Bitmap GenerateCollisionImage()

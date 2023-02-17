@@ -89,7 +89,6 @@ namespace TestBrute
 
             Map Map = JMap.Parse(Text);
             Search s = new Search((startX, startY), (goalX, goalY), Map.CollisionMap);
-            s.CollisionMap.Count.Should().BeGreaterThan(0);
             SearchResult result = s.RunAStar();
             result.Success.Should().BeTrue();
             output.WriteLine(result.ToString());
@@ -100,8 +99,8 @@ namespace TestBrute
         {
             (int x, int y) evenGoal = (30, 20);
             (int x, int y) oddGoal = (30, 21);
-            Search evenS = new Search((0, 0), evenGoal, new Dictionary<(int, int), CollisionType>());
-            Search oddS = new Search((0, 0), oddGoal, new Dictionary<(int, int), CollisionType>());
+            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(null, null));
+            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(null, null));
             evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
             evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
             evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);

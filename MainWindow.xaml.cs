@@ -30,7 +30,7 @@ namespace Jump_Bruteforcer
         {
             InitializeComponent();
 
-            s = new Search((127, 342.85055), (738, 247), new Dictionary<(int X, int Y), CollisionType>()); 
+            s = new Search((127, 342.85055), (738, 247), new CollisionMap(null, null)); 
             DataContext = s;
         }
 

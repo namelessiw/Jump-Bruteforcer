@@ -1,8 +1,20 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Drawing;
 
 namespace Jump_Bruteforcer
 {
+
+    public class BoundingBox
+    {
+        public Rectangle rect;
+        public BoundingBox(int x, int y, int width, int height)
+        {
+            rect = new(x, y, width, height);
+        }   
+    }
+
+
     //must be ordered by ID
     //names need to correspond to filenames of the images of the objects
     public enum ObjectType
@@ -54,6 +66,8 @@ namespace Jump_Bruteforcer
         public int X, Y;
         public ObjectType ObjectType;
         public CollisionType CollisionType;
+        public BoundingBox? bbox;
+        public int instanceNum;
         private static readonly Dictionary<ObjectType, CollisionType> toCollisionType = new()
         {
             {ObjectType.Unknown, CollisionType.None},
@@ -85,12 +99,14 @@ namespace Jump_Bruteforcer
             {ObjectType.SaveUpsideDown,CollisionType.None }
         };
 
-        public Object(int X, int Y, ObjectType objectType)
+        public Object(int X, int Y, ObjectType objectType, BoundingBox? bbox = null, int instanceNum = 0)
         {
             this.X = X;
             this.Y = Y;
             this.ObjectType = objectType;
             this.CollisionType = toCollisionType[objectType];
+            this.bbox= bbox;
+            this.instanceNum = instanceNum;
         }
 
         public override string ToString()

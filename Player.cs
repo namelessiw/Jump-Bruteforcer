@@ -46,7 +46,7 @@ namespace Jump_Bruteforcer
 
             if (input.HasFlag(Input.Jump))
             {
-                if (OnGround(n.State.X, n.State.Y, CollisionMap) || n.State.OnPlatform)
+                if (OnGround(n.State.X, n.State.Y, CollisionMap) || n.State.OnPlatform || CollisionMap.GetCollisionType(n.State.X, (int)Math.Round(n.State.Y + 1)) == CollisionType.Platform)
                 {
                     finalVSpeed = PhysicsParams.SJUMP_VSPEED;       
                     DJumpRefresh= true;
@@ -84,7 +84,7 @@ namespace Jump_Bruteforcer
                         (NewX, NewY, VSpeedReset, DJumpRefresh) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
                         return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, false);
                     case CollisionType.Platform:
-                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, NewY, CurrentVSpeed);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, CurrentY, NewY, CurrentVSpeed);
                         return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
 
                     default:
@@ -96,7 +96,7 @@ namespace Jump_Bruteforcer
         }
         
         
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double newY, double currentVSpeed)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double currentY, double newY, double currentVSpeed)
         {
             
             bool dJumpRefresh = false;

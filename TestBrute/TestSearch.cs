@@ -36,6 +36,7 @@ namespace TestBrute
         [InlineData(420, 407.4, 477, 375, "ground_dplane")]
         [InlineData(410, 407.4, 452, 279, "32px")] 
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
+        [InlineData(388, 407.4, 541, 407, "platforminvert")] //Frames 51
         //harder ones
         [InlineData(241, 119.4, 541, 231, "decession")] //Frames 229
         [InlineData(753, 567.4, 743, 119, "nameless")] //Frames 577
@@ -54,7 +55,7 @@ namespace TestBrute
         [InlineData(490, 407.4, 490, 50, "just_for_fun")] //Frames 582
         [InlineData(401, 407.4, 687, 211, "gate")] //Frames 110
         [InlineData(127, 342.85055, 738, 247, "exhopetheendof")] //Frames 221
-        [InlineData(401, 407.4, 476, 343, "tomo_2")]  //Fgits rames 37
+        [InlineData(401, 407.4, 476, 343, "tomo_2")]  //Frames 37
         [InlineData(58, 535.4, 677, 567, "winter_king")] //Frames 416
         [InlineData(49, 567.4, 765, 567, "winter_king_2")] //Frames 297
         [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107

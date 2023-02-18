@@ -388,5 +388,72 @@ namespace TestBrute
 
         }
 
+        [Fact]
+        public void TestFallInsidePlatform()
+        {
+
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(394, 396, 0, true, false);
+
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 396.4, 0.4, true, false).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 397.2, 0.8, true, false).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 398.4, 1.2000000000000002, true, false).State);
+
+        }
+        [Fact]
+        public void TestMoveOutOfPlatform()
+        {
+
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(418, 380, 6, true, false);
+
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, true, true).State);
+
+            n1.NewState(Input.Right, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4, true, false).State);
+            
+
+        }
+
+        [Fact]
+        public void TestMoveIntoPlatform()
+        {
+
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(421, 380, 6, true, false);
+
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4, true, false).State);
+
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, true, true).State);
+
+
+        }
+
+        [Fact]
+        public void TestPlatformTripleJump()
+        {
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(394, 375, 0, true, true);
+            n1.State.CanDJump.Should().BeTrue();
+
+            n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 371.575, -3.4250000000000003, true, true).State);
+            n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 368.15, -3.4250000000000003, true, true).State);
+            n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 365.4, -2.75, false, false).State);
+
+        }
+
     }
 }

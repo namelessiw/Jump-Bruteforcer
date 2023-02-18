@@ -46,7 +46,7 @@ namespace Jump_Bruteforcer
 
             if (input.HasFlag(Input.Jump))
             {
-                if (OnGround(n.State.X, n.State.Y, CollisionMap))
+                if (OnGround(n.State.X, n.State.Y, CollisionMap) || n.State.OnPlatform)
                 {
                     finalVSpeed = PhysicsParams.SJUMP_VSPEED;       
                     DJumpRefresh= true;

@@ -39,7 +39,7 @@ namespace Jump_Bruteforcer
         {
             double finalVSpeed = n.State.VSpeed;
             bool DJumpRefresh = false;
-            bool onPlatform = n.State.OnPlatform && !(n.State.OnPlatform && !PlaceMeeting(n.State.X, n.State.RoundedY + 4, CollisionType.Platform, CollisionMap));
+            bool onPlatform =  PlaceMeeting(n.State.X, n.State.RoundedY + 4, CollisionType.Platform, CollisionMap);
 
             finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
 
@@ -65,7 +65,7 @@ namespace Jump_Bruteforcer
             return (finalVSpeed, DJumpRefresh, onPlatform);
         }
 
-        public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) CollisionCheck(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) CollisionCheck(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY, double CurrentVSpeed = 0)
         {
             int RoundedNewY = (int)Math.Round(NewY);
             CollisionType ctype = CollisionMap.GetCollisionType(NewX, RoundedNewY);
@@ -73,31 +73,55 @@ namespace Jump_Bruteforcer
             if (ctype != CollisionType.None)
             {
                 bool DJumpRefresh;
+                bool OnPlatform;
                 switch (ctype)
                 {
                     case CollisionType.Killer:
                     case CollisionType.Warp:
-                        return (ctype, NewX, NewY, false, false);
+                        return (ctype, NewX, NewY, false, false, false);
                     case CollisionType.Solid:
                         bool VSpeedReset;
                         (NewX, NewY, VSpeedReset, DJumpRefresh) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
-                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh);
+                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, false);
                     case CollisionType.Platform:
-                        (NewX, NewY, VSpeedReset, DJumpRefresh) = PlatformCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
-                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, NewY, CurrentVSpeed);
+                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
 
                     default:
                         //throw new NotImplementedException($"Collision with type {Type} not implemented. collision at x={NewX}, y={RoundedNewY}");
-                        return (ctype, NewX, NewY, false, false);
+                        return (ctype, NewX, NewY, false, false, false);
                 }
             }
-            return (CollisionType.None, NewX, NewY, false, false);
+            return (CollisionType.None, NewX, NewY, false, false, false);
         }
         
         
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) PlatformCollision(CollisionMap collisionMap, int currentX, int newX, double currentY, double newY)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double newY, double currentVSpeed)
         {
-            throw new NotImplementedException();
+            
+            bool dJumpRefresh = false;
+            bool onPlatform = false;
+            bool vSpeedReset = false;
+            int minInstanceNum = 0;
+
+
+            Object? platform = collisionMap.GetCollidingPlatform(newX, (int)Math.Round(newY), minInstanceNum);
+
+            while (platform is not null)
+            {
+                if (newY - currentVSpeed / 2 <= platform.Y)
+                {
+                    newY = platform.Y - 9;
+                    vSpeedReset = true;
+                    dJumpRefresh = true;
+                    onPlatform = true;
+                }
+                minInstanceNum = platform.instanceNum + 1;
+                platform = collisionMap.GetCollidingPlatform(newX, (int)Math.Round(newY), minInstanceNum);
+            }
+
+            return (newX, newY, vSpeedReset, dJumpRefresh, onPlatform);
+            
         }
 
         private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)

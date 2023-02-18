@@ -362,17 +362,29 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestStandOnPlatform()
+        public void TestMoveOnPlatform()
         {
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(394, 375, 0);
+            var n1 = new PlayerNode(394, 375, 0, true, true);
+            n1.State.CanDJump.Should().BeTrue();
+
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true, true).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true).State); // or should speed be 0.0...0734788...?
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true, true).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(391, 375.4, 0.4, true, true).State);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(397, 375.4, 0.4, true, true).State);
 
         }
 

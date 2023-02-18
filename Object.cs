@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Drawing;
+using System.Windows;
 
 namespace Jump_Bruteforcer
 {
 
     public class BoundingBox
     {
-        public Rectangle rect;
+        public Rect rect;
         public BoundingBox(int x, int y, int width, int height)
         {
             rect = new(x, y, width, height);
         }   
+
+        public bool Contains(int x, int y)
+        {
+            return rect.Contains(x, y);
+        }
     }
 
 

@@ -149,13 +149,15 @@ namespace Jump_Bruteforcer
             {
                 targetX += 3;
             }
-            (double finalVSpeed, bool DJumpRefresh, bool onPlatform) = Player.CalculateVSpeed(this, input, CollisionMap);
+            bool onPlatform = this.State.OnPlatform;
+           (double finalVSpeed, bool DJumpRefresh, bool onPlatform2) = Player.CalculateVSpeed(this, input, CollisionMap);
             targetY += finalVSpeed;
 
-            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
+            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2, bool onPlatform3) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
             DJumpRefresh |= DJumpRefresh2 || (State.CanDJump && !input.HasFlag(Input.Jump));
+            onPlatform &= onPlatform2 || onPlatform3;
 
             return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, onPlatform, action: input, pathCost:PathCost + 1, parent:this);
         }

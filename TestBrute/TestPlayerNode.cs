@@ -479,8 +479,6 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407.4, 0.4, true, true).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407, 0, true, true).State);
-
-
         }
         [Fact]
         public void TestSnapCausesOnPlatform()
@@ -490,6 +488,23 @@ namespace TestBrute
             Map Map = JMap.Parse(Text);
             var n1 = new PlayerNode(401, 407, 0, true, false);
             n1.NewState(Input.Jump | Input.Release, Map.CollisionMap).NewState(Input.Jump, Map.CollisionMap).State.VSpeed.Should().NotBe(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY);
+        }
+
+        [Fact]
+        public void TestCeilingPlatform()
+        {
+            string path = @$"..\..\..\jmaps\platform_ceiling.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(466, 499, 0, false, false);
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(466, 499.4, 0.4, false, false).State);
+            n1 = n1.NewState(Input.Jump, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492, 0, true, false).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492.4, 0.4, true, false).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8, true, false).State);
+
 
 
         }

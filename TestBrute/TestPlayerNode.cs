@@ -455,5 +455,33 @@ namespace TestBrute
 
         }
 
+        [Fact]
+        public void TestFallOntoPlatform()
+        {
+            string path = @$"..\..\..\jmaps\platform.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(394, 375, 9.4, true, true);
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.VSpeed.Should().Be(0);
+            
+
+        }
+
+        [Fact]
+        public void TestCannotFallThrough()
+        {
+            string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(410, 408, 0, true, true);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407.4, 0.4, true, true).State);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407, 0, true, true).State);
+
+
+        }
+
     }
 }

@@ -46,7 +46,7 @@ namespace Jump_Bruteforcer
 
             if (input.HasFlag(Input.Jump))
             {
-                if (OnGround(n.State.X, n.State.Y, CollisionMap) || n.State.OnPlatform || CollisionMap.GetCollisionType(n.State.X, (int)Math.Round(n.State.Y + 1)) == CollisionType.Platform)
+                if (OnGround(n.State.X, n.State.Y, CollisionMap) || onPlatform || CollisionMap.GetCollisionType(n.State.X, (int)Math.Round(n.State.Y + 1)) == CollisionType.Platform)
                 {
                     finalVSpeed = PhysicsParams.SJUMP_VSPEED;       
                     DJumpRefresh= true;
@@ -81,10 +81,10 @@ namespace Jump_Bruteforcer
                         return (ctype, NewX, NewY, false, false, false);
                     case CollisionType.Solid:
                         bool VSpeedReset;
-                        (NewX, NewY, VSpeedReset, DJumpRefresh) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
-                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, false);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
+                        return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
                     case CollisionType.Platform:
-                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, CurrentY, NewY, CurrentVSpeed);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, NewY, CurrentVSpeed);
                         return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
 
                     default:
@@ -96,7 +96,7 @@ namespace Jump_Bruteforcer
         }
         
         
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double currentY, double newY, double currentVSpeed)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double newY, double currentVSpeed)
         {
             
             bool dJumpRefresh = false;
@@ -124,12 +124,13 @@ namespace Jump_Bruteforcer
             
         }
 
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh) SolidCollision(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) SolidCollision(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
         {
             int CurrentYRounded = (int)Math.Round(CurrentY);
             int NewYRounded = (int)Math.Round(NewY);
             bool VSpeedReset = false;
             bool DJumpRefresh = false;
+            double VSpeed = NewY - CurrentY;
 
             if (CollisionMap.GetCollisionType(NewX, CurrentYRounded) == CollisionType.Solid)
             {
@@ -146,7 +147,7 @@ namespace Jump_Bruteforcer
             if (CollisionMap.GetCollisionType(CurrentX, NewYRounded) == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
-                double VSpeed = NewY - CurrentY;
+                
                 int sign = Math.Sign(VSpeed);
                 if (sign != 0)
                 {
@@ -174,7 +175,13 @@ namespace Jump_Bruteforcer
                 NewX = CurrentX;
             }
 
-            return (NewX, NewY, VSpeedReset, DJumpRefresh);
+            if (CollisionMap.GetCollidingPlatform(NewX, (int)Math.Round(NewY), 0) is not null)
+            {
+                return PlatformCollision(CollisionMap, NewX, NewY, VSpeed);
+            }
+
+
+            return (NewX, NewY, VSpeedReset, DJumpRefresh, false);
         }
 
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)

@@ -482,6 +482,17 @@ namespace TestBrute
 
 
         }
+        [Fact]
+        public void TestSnapCausesOnPlatform()
+        {
+            string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(401, 407, 0, true, false);
+            n1.NewState(Input.Jump | Input.Release, Map.CollisionMap).NewState(Input.Jump, Map.CollisionMap).State.VSpeed.Should().NotBe(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY);
+
+
+        }
 
     }
 }

@@ -39,7 +39,7 @@ namespace Jump_Bruteforcer
         {
             double finalVSpeed = n.State.VSpeed;
             bool DJumpRefresh = false;
-            bool onPlatform =  PlaceMeeting(n.State.X, n.State.RoundedY + 4, CollisionType.Platform, CollisionMap);
+            bool onPlatform = n.State.OnPlatform && PlaceMeeting(n.State.X, n.State.RoundedY + 4, CollisionType.Platform, CollisionMap);
 
             finalVSpeed = Math.Clamp(finalVSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
 

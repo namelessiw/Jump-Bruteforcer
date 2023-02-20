@@ -84,7 +84,7 @@ namespace Jump_Bruteforcer
                         (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = SolidCollision(CollisionMap, CurrentX, NewX, CurrentY, NewY);
                         return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
                     case CollisionType.Platform:
-                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, NewY, CurrentVSpeed);
+                        (NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform) = PlatformCollision(CollisionMap, NewX, NewY, CurrentVSpeed, false);
                         return (ctype, NewX, NewY, VSpeedReset, DJumpRefresh, OnPlatform);
 
                     default:
@@ -96,12 +96,12 @@ namespace Jump_Bruteforcer
         }
         
         
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double newY, double currentVSpeed)
+        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) PlatformCollision(CollisionMap collisionMap, int newX, double newY, double currentVSpeed, bool VSpeedReset)
         {
             
             bool dJumpRefresh = false;
             bool onPlatform = false;
-            bool vSpeedReset = false;
+            bool vSpeedReset = VSpeedReset;
             int minInstanceNum = 0;
 
 
@@ -177,7 +177,7 @@ namespace Jump_Bruteforcer
 
             if (CollisionMap.GetCollidingPlatform(NewX, (int)Math.Round(NewY), 0) is not null)
             {
-                return PlatformCollision(CollisionMap, NewX, NewY, VSpeed);
+                return PlatformCollision(CollisionMap, NewX, NewY, VSpeed, VSpeedReset);
             }
 
 

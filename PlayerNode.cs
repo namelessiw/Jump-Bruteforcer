@@ -19,6 +19,7 @@ namespace Jump_Bruteforcer
         public double Y { get; init; }
         public double VSpeed { get; init; }
         public bool CanDJump { get; init; }
+        public bool OnPlatform { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
         const int epsilon = 10;
 
@@ -42,8 +43,8 @@ namespace Jump_Bruteforcer
         }
         public bool Equals(State? other)=>
             X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & CanDJump == other.CanDJump;
-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), CanDJump).GetHashCode();
+            ApproximatelyEquals(VSpeed, other.VSpeed) & CanDJump == other.CanDJump & OnPlatform == other.OnPlatform;
+        public override int GetHashCode() => (X, Quantize(Y),Quantize(VSpeed), CanDJump, OnPlatform).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
         
     }
@@ -56,8 +57,8 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump }, parent, pathCost, action);
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
+            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform }, parent, pathCost, action);
 
         public bool IsGoal((int x, int y) goal)=> State.X == goal.x & State.RoundedY == goal.y;
         
@@ -92,7 +93,7 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public HashSet<PlayerNode> GetNeighbors(Dictionary<(int X, int Y), CollisionType> CollisionMap) 
+        public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap) 
         { 
             var neighbors =  new HashSet<PlayerNode>();
             foreach (Input input in inputs)
@@ -113,7 +114,7 @@ namespace Jump_Bruteforcer
         /// <param name="input"></param> the inputs for the next frame
         /// <param name="CollisionMap"></param> the game field
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
-        public PlayerNode NewState(Input input, Dictionary<(int X, int Y), CollisionType> CollisionMap)
+        public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
             
             (int targetX, double targetY) = (State.X, State.Y);
@@ -125,15 +126,18 @@ namespace Jump_Bruteforcer
             {
                 targetX += 3;
             }
-            (double finalVSpeed, bool DJumpRefresh) = Player.CalculateVSpeed(this, input, CollisionMap);
+            bool onPlatform = this.State.OnPlatform;
+           (double finalVSpeed, bool DJumpRefresh, bool onPlatform2) = Player.CalculateVSpeed(this, input, CollisionMap);
             targetY += finalVSpeed;
 
-            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY);
+            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2, bool onPlatform3) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY, finalVSpeed);
             finalVSpeed = reset ? 0 : finalVSpeed;
 
             DJumpRefresh |= DJumpRefresh2 || (State.CanDJump && !input.HasFlag(Input.Jump));
+            onPlatform &= onPlatform2;
+            onPlatform |= onPlatform3;
 
-            return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, action: input, pathCost:PathCost + 1, parent:this);
+            return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, onPlatform, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         public bool Equals(PlayerNode? other)

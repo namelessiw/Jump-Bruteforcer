@@ -11,7 +11,7 @@ namespace Jump_Bruteforcer
         public (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
-        private Dictionary<(int, int), CollisionType> _collisionMap = new();
+        private CollisionMap _collisionMap = new(null, null);
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
@@ -21,7 +21,7 @@ namespace Jump_Bruteforcer
         public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
-        public Dictionary<(int, int), CollisionType> CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
+        public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -30,7 +30,7 @@ namespace Jump_Bruteforcer
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Search((int, double) start, (int, int) goal, Dictionary<(int, int), CollisionType> collision)
+        public Search((int, double) start, (int, int) goal, CollisionMap collision)
         {
             this.start = start;
             this.goal = goal;

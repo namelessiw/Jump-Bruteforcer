@@ -13,6 +13,7 @@ namespace Jump_Bruteforcer
 
             int datalinenum = 5;
             string[] args = Text.Split('\n')[datalinenum - 1].Trim().Split(' ');
+            int instanceNum = 0;
 
             for (int i = 0; i < args.Length; i+=3)
             {
@@ -25,7 +26,13 @@ namespace Jump_Bruteforcer
                     x -= 10;
                     y -= 12;
                 }
-                objects.Add(new(x, y, o));
+                BoundingBox? bbox = null;
+                if (o == ObjectType.Platform)
+                {
+                    bbox = new BoundingBox(x - 5, y - 10, 42, 36);
+                }
+                objects.Add(new(x, y, o, bbox, instanceNum));
+                instanceNum++;
             }
 
 

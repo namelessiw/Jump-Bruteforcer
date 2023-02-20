@@ -20,7 +20,7 @@ namespace Jump_Bruteforcer
         public double VSpeed { get; init; }
         public bool CanDJump { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
-        const int roundAmount = 1;
+        const int epsilon = 10;
 
         public override bool Equals(object? obj)
         {
@@ -32,10 +32,18 @@ namespace Jump_Bruteforcer
             return ((State)obj).Equals(this);
         }
 
+        private static double Quantize(double a)
+        {
+            return Math.Round(a * epsilon) / epsilon;
+        }
+        private static bool ApproximatelyEquals(double a, double b)
+        {
+            return Quantize(a) == Quantize(b);
+        }
         public bool Equals(State? other)=>
-            X == other.X & Math.Round(Y, roundAmount) == Math.Round(other.Y, roundAmount) &
-            Math.Round(VSpeed, roundAmount) == Math.Round(other.VSpeed, roundAmount) & CanDJump == other.CanDJump;
-        public override int GetHashCode() => (X, Math.Round(Y, roundAmount),Math.Round(VSpeed, roundAmount), CanDJump).GetHashCode();
+            X == other.X & ApproximatelyEquals(Y, other.Y) &
+            ApproximatelyEquals(VSpeed, other.VSpeed) & CanDJump == other.CanDJump;
+        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), CanDJump).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
         
     }

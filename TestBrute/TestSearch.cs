@@ -70,6 +70,7 @@ namespace TestBrute
         [InlineData(20, 567.4, 692, 182, "delphi2")] //Frames 848
         [InlineData(20, 567.4, 692, 182, "delphi2_modified")] //Frames 848
         [InlineData(50, 567.4, 51, 60, "forties")] //Frames 609
+        [InlineData(49, 503, 52, 320, "I_wanna_D_L")] //Frames 980
 
         //might not be solvable for the program right now
         /*

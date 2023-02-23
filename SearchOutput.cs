@@ -43,33 +43,26 @@ namespace Jump_Bruteforcer
 
             StringBuilder sb = new StringBuilder();
 
-            int Direction = 0, NextDirection;
+            Input Direction = Input.Neutral, NextDirection;
 
             foreach (Input input in inputs)
             {
                 bool InputChanged = false;
 
-                NextDirection = 0;
-                if ((input & Input.Left) == Input.Left)
-                {
-                    NextDirection = -1;
-                }
-                else if ((input & Input.Right) == Input.Right)
-                {
-                    NextDirection = 1;
-                }
+                NextDirection = input & Input.Right | input & Input.Left;
+                
 
                 if (Direction != NextDirection)
                 {
-                    if (Direction != 0)
+                    if (Direction != Input.Neutral)
                     {
-                        sb.Append((Direction == 1 ? "RightArrow" : "LeftArrow") + "(R)");
+                        sb.Append((Direction == Input.Right ? "RightArrow" : "LeftArrow") + "(R)");
                         InputChanged = true;
                     }
 
-                    if (NextDirection != 0)
+                    if (NextDirection != Input.Neutral)
                     {
-                        sb.Append((InputChanged ? "," : "") + (NextDirection == 1 ? "RightArrow" : "LeftArrow") + "(P)");
+                        sb.Append((InputChanged ? "," : "") + (NextDirection == Input.Right ? "RightArrow" : "LeftArrow") + "(P)");
                     }
 
                     InputChanged = true;

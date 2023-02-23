@@ -504,9 +504,6 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492.4, 0.4, true, false).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8, true, false).State);
-
-
-
         }
 
     }

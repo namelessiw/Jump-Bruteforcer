@@ -120,11 +120,11 @@ namespace Jump_Bruteforcer
             (int targetX, double targetY) = (State.X, State.Y);
             if (input.HasFlag(Input.Left))
             {
-                targetX -= 3;
+                targetX -= (int)PhysicsParams.WALKING_SPEED;
             }
             if (input.HasFlag(Input.Right))
             {
-                targetX += 3;
+                targetX += (int)PhysicsParams.WALKING_SPEED;
             }
             bool onPlatform = this.State.OnPlatform;
            (double finalVSpeed, bool DJumpRefresh, bool onPlatform2) = Player.CalculateVSpeed(this, input, CollisionMap);

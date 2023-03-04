@@ -14,9 +14,9 @@
         <Button Content="Toggle heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Label Canvas.Left="517" Canvas.Top="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Start x" />
-        <Label Canvas.Left="665" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
-        <Label Canvas.Left="817" Canvas.Top="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goal x" />
-        <Label Canvas.Left="965" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
+        <Label Canvas.Left="650" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
+        <Label Canvas.Left="780" Canvas.Top="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goal x" />
+        <Label Canvas.Left="910" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
         <Label Canvas.Left="870" Canvas.Top="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A* weight"/>
         <Image x:Name="ImageJMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Image x:Name="ImageHeatMap"  Width="800" Height="608" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
@@ -47,11 +47,11 @@
         </Path>
         <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="392" Canvas.Top="10" Width="89" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="565" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="732" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBox Height="20" Canvas.Left="865" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="1032" TextWrapping="Wrap" Text="{Binding GoalY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox Height="20" Canvas.Left="700" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox Height="20" Canvas.Left="830" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Height="20" Canvas.Left="960" TextWrapping="Wrap" Text="{Binding GoalY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <ScrollViewer Canvas.Left="872"  Canvas.Top="74" Height="600"  Width="229" Content="{Binding Strat}"/>
-        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1122" Canvas.Top="35" Click="CopyMacroButton_Click"/>
+        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
     </Canvas>
 </Window>

@@ -73,14 +73,22 @@ namespace TestBrute
         [InlineData(20, 567.4, 692, 182, "delphi2_modified")] //Frames 848
         [InlineData(50, 567.4, 51, 60, "forties")] //Frames 609
         [InlineData(49, 503, 52, 320, "I_wanna_D_L")] //Frames 980
+        [InlineData(96, 450, 770, 435, "kae1325")] //Frames 1002
+        [InlineData(686, 562, 599, 485, "hard2timarc")] //Frames 1020
+        [InlineData(61, 565, 593, 278, "Doner_Goner_Game")] //Frames 867
+        [InlineData(393, 406, 780, 182, "i_wanna_lxz")] //Frames 906
+        [InlineData(45, 118, 745, 603, "Zeus_recreation")] //Frames 906
+        [InlineData(748, 4, 51, 573, "Zeus_recreation_2")] //Frames 717
+        [InlineData(793, 84, 768, 566, "rapeechscreen1")] //Frames 986
+        [InlineData(6, 563, 746, 31, "rapeechscreen2")] //Frames 1172
 
         //might not be solvable for the program right now
         /*
-        [InlineData(377, 307.4, 599, 407, "needle_extremity_2_ex_2")]
-        [InlineData(344, 311.4, 485, 311, "needle_extremity_2_1")]
-        [InlineData(440, 407.4, 593, 407, "needle_extremity_2_2")]
-        [InlineData(434, 407.4, 509, 407, "needle_extremity_2_6")]
-        [InlineData(401, 407.4, 587, 407, "needle_extremity_2_7")]
+        [InlineData(376, 407.4, 598, 407, "needle_extremity_2_ex_2")] //works with epsilon=50
+        [InlineData(344, 311.4, 485, 315, "needle_extremity_2_1")] //works with epsilon=50
+        [InlineData(440, 407.4, 551, 412, "needle_extremity_2_2")]  //works with epsilon=50
+        [InlineData(434, 407.4, 509, 407, "needle_extremity_2_6")] //works with epsilon=50
+        [InlineData(401, 407.4, 587, 407, "needle_extremity_2_7")] //works with epsilon=50
         [InlineData(49, 567.4, 702, 279, "32px_precision")]
         [InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
         */

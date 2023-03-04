@@ -154,6 +154,16 @@ namespace TestBrute
         }
 
         [Fact]
+        public void TestHorizontalDualCollision()
+        {
+            string path = @$"..\..\..\jmaps\1_green_5.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(342, 376.845, 0);
+            n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, false, false).State);
+        }
+
+        [Fact]
         public void TestNewStateBHop()
         {
             Dictionary<(int, int), CollisionType> collision = new()

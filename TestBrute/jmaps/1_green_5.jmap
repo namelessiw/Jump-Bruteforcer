@@ -1,0 +1,13 @@
+jtool|1.3.5|inf:0|dot:0|sav:1|bor:0|px:40u9000000000|py:40ubmcp000000|ps:1|pg:1|objects:-eobg0bh08fg9h0-e88fg9h01eg1dg1hg1ig-fg7j07ig7e07dg-g03e03i01ig1dgkg0-d81dg1ig-h01dg1hg1gg1fg1eg1ig
+
+data repeated below for easy parsing by other tools
+objects: (x, y, type)
+384 344 11 416 344 11 368 344 8 368 328 8 416 344 9 416 328 9 480 368 7 464 368 7 320 368 7 304 368 7 320 384 3 448 384 3 304 296 1 336 328 1 304 328 1 464 296 1 432 328 1 464 328 1 464 384 1 304 384 1 304 416 1 432 416 1 400 416 1 368 416 1 336 416 1 464 416 1 384 384 20 
+version:1.3.5
+infinitejump:0
+dotkid:0
+savetype:1
+bordertype:0
+playersavex:402
+playersavey:407.3999633789062500
+playersavexscale:1

@@ -142,6 +142,7 @@ namespace Jump_Bruteforcer
                         CurrentX += sign;
                     }
                 }
+                NewX = CurrentX;
 
             }
             if (CollisionMap.GetCollisionType(CurrentX, NewYRounded) == CollisionType.Solid)

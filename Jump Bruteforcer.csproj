@@ -18,12 +18,55 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="images\apple.png" />
+    <None Remove="images\block.png" />
+    <None Remove="images\killerblock.png" />
+    <None Remove="images\miniblock.png" />
+    <None Remove="images\minispikedown.png" />
+    <None Remove="images\minispikeleft.png" />
+    <None Remove="images\minispikeright.png" />
+    <None Remove="images\minispikeup.png" />
+    <None Remove="images\platform.png" />
+    <None Remove="images\spikedown.png" />
+    <None Remove="images\spikeleft.png" />
+    <None Remove="images\spikeright.png" />
+    <None Remove="images\spikeup.png" />
+    <None Remove="images\warp.png" />
+    <None Remove="images\water1.png" />
+    <None Remove="images\water2.png" />
+    <None Remove="images\water3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Remove="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\minispikedown.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\apple.png" />
+    <Resource Include="images\block.png" />
+    <Resource Include="images\killerblock.png" />
+    <Resource Include="images\miniblock.png" />
+    <Resource Include="images\minispikeleft.png" />
+    <Resource Include="images\minispikeright.png" />
+    <Resource Include="images\minispikeup.png" />
+    <Resource Include="images\platform.png" />
+    <Resource Include="images\spikedown.png" />
+    <Resource Include="images\spikeleft.png" />
+    <Resource Include="images\spikeright.png" />
+    <Resource Include="images\spikeup.png" />
+    <Resource Include="images\warp.png" />
+    <Resource Include="images\water1.png" />
+    <Resource Include="images\water2.png" />
+    <Resource Include="images\water3.png" />
   </ItemGroup>
 
 </Project>

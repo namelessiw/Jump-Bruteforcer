@@ -6,6 +6,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Jump_Bruteforcer
 {
@@ -104,8 +106,14 @@ namespace Jump_Bruteforcer
 
         private static Image GetImage(string fileName)
         {
-            string path = @$"..\..\..\images\{fileName}.png";
-            return File.Exists(path) ? Image.FromFile(path) : new Bitmap(1,1);
+            try
+            {
+                Uri path = new Uri(@$"..\..\..\images\{fileName}.png", UriKind.Relative);
+                return new Bitmap(Application.GetResourceStream(path).Stream);
+            } catch (IOException e)
+            {
+                return new Bitmap(1, 1);
+            }
             
         }
     }

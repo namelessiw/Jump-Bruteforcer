@@ -129,16 +129,15 @@ namespace Jump_Bruteforcer
             x += hSpeed;
             y += vSpeed;
 
-            double angle = Math.Atan2(-vSpeed, hSpeed);
-            double speed = Math.Sqrt(Math.Pow(vSpeed, 2) + Math.Pow(hSpeed, 2));
-            if (speed > 0)
+            if (hSpeed == 0 && vSpeed == 0)
             {
                 if (input == Input.Neutral)
                 {
+                    double angle = Math.Atan2(-vSpeed, hSpeed);
+
                     hSpeed -= Math.Sign(hSpeed) * Math.Cos(angle) * 0.05;
                     vSpeed -= Math.Sign(vSpeed) * Math.Sin(angle) * 0.05;
                 }
-
             }
             else
             {

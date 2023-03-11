@@ -117,10 +117,11 @@ namespace Jump_Bruteforcer
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
             
-            throw new NotImplementedException();
+            (double X, double Y, double hSpeed, double vSpeed) = Player.BubbleStep(input, State.X, State.Y, State.HSpeed, State.VSpeed);
 
 
-            //return new PlayerNode(finalX, finalY, finalVSpeed, finalHSpeed, action: input, pathCost:PathCost + 1, parent:this);
+
+            return new PlayerNode(X, Y, vSpeed, hSpeed, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         public bool Equals(PlayerNode? other)

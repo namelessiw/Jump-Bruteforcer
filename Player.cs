@@ -100,5 +100,45 @@ namespace Jump_Bruteforcer
             bool inbounds =  node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
             return ctype != CollisionType.Killer & inbounds;
         }
+
+        public static (double x, double y, double finalHspeed, double finalVSpeed) BubbleStep(Input input, double x, double y, double hSpeed, double vSpeed)
+        {
+            if (input.HasFlag(Input.Up))
+            {
+                vSpeed -= 0.1;
+            }
+            if (input.HasFlag(Input.Down))
+            {
+                vSpeed += 0.1;
+            }
+            if (input.HasFlag(Input.Left))
+            {
+                hSpeed -= 0.1;
+            }
+            if (input.HasFlag(Input.Right))
+            {
+                hSpeed += 0.1;
+            }
+            x += hSpeed;
+            y += vSpeed;
+
+            double angle = Math.Atan2(-vSpeed, hSpeed);
+            double speed = Math.Sqrt(Math.Pow(vSpeed, 2) + Math.Pow(hSpeed, 2));
+            if (speed > 0)
+            {
+                if (input == Input.Neutral)
+                {
+                    hSpeed -= Math.Sign(hSpeed) * Math.Cos(angle) * 0.05;
+                    vSpeed -= Math.Sign(vSpeed) * Math.Sin(angle) * 0.05;
+                }
+
+            }
+            else
+            {
+                hSpeed = vSpeed = 0;
+            }
+
+            return (x, y, hSpeed, vSpeed);
+        }
     }
 }

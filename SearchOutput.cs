@@ -38,53 +38,7 @@ namespace Jump_Bruteforcer
 
         public static string GetMacro(List<Input> inputs)
         {
-            if (inputs.Count == 0)
-                return "";
-
-            StringBuilder sb = new StringBuilder();
-
-            Input Direction = Input.Neutral, NextDirection;
-
-            foreach (Input input in inputs)
-            {
-                bool InputChanged = false;
-
-                NextDirection = input & Input.Right | input & Input.Left;
-                
-
-                if (Direction != NextDirection)
-                {
-                    if (Direction != Input.Neutral)
-                    {
-                        sb.Append((Direction == Input.Right ? "RightArrow" : "LeftArrow") + "(R)");
-                        InputChanged = true;
-                    }
-
-                    if (NextDirection != Input.Neutral)
-                    {
-                        sb.Append((InputChanged ? "," : "") + (NextDirection == Input.Right ? "RightArrow" : "LeftArrow") + "(P)");
-                    }
-
-                    InputChanged = true;
-                }
-
-                if ((input & Input.Jump) == Input.Jump)
-                {
-                    sb.Append((InputChanged ? "," : "") + "J(PR)");
-
-                    InputChanged = true;
-                }
-                if ((input & Input.Release) == Input.Release)
-                {
-                    sb.Append((InputChanged ? "," : "") + "K(PR)");
-                }
-
-                Direction = NextDirection;
-
-                sb.Append('>');
-            }
-
-            return sb.ToString();
+            throw new NotImplementedException();
         }
     }
 }

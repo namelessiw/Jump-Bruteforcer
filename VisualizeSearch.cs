@@ -56,7 +56,7 @@ namespace Jump_Bruteforcer
         {
             foreach (PlayerNode p in set)
             {
-                int X = p.State.X;
+                int X = p.State.RoundedX;
                 int Y = p.State.RoundedY;
                 statesPerPx[(X, Y)] = (statesPerPx[(X, Y)].Open + Convert.ToInt32(!closed), statesPerPx[(X, Y)].Closed + Convert.ToInt32(closed));
 

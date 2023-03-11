@@ -45,7 +45,7 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            PlayerNode root = new PlayerNode(start.x, start.y, 0);
+            PlayerNode root = new PlayerNode(start.x, start.y, 0, 0);
             root.PathCost = 0;
 
             var openSet = new SimplePriorityQueue<PlayerNode, uint>();

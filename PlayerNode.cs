@@ -15,12 +15,12 @@ namespace Jump_Bruteforcer
 {
     public class State :IEquatable<State>
     {
-        public int X { get; init; }
+        public double X { get; init; }
         public double Y { get; init; }
         public double VSpeed { get; init; }
-        public bool CanDJump { get; init; }
-        public bool OnPlatform { get; init; }
+        public double HSpeed { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
+        public int RoundedX { get { return (int)Math.Round(X); } }
         const int epsilon = 10;
 
         public override bool Equals(object? obj)
@@ -42,9 +42,9 @@ namespace Jump_Bruteforcer
             return Quantize(a) == Quantize(b);
         }
         public bool Equals(State? other)=>
-            X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & CanDJump == other.CanDJump & OnPlatform == other.OnPlatform;
-        public override int GetHashCode() => (X, Quantize(Y),Quantize(VSpeed), CanDJump, OnPlatform).GetHashCode();
+            ApproximatelyEquals(X, other.X) & ApproximatelyEquals(Y, other.Y) &
+            ApproximatelyEquals(VSpeed, other.VSpeed) & ApproximatelyEquals(HSpeed, other.HSpeed);
+        public override int GetHashCode() => (Quantize(X), Quantize(Y), Quantize(VSpeed), Quantize(HSpeed)).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
         
     }
@@ -54,13 +54,13 @@ namespace Jump_Bruteforcer
         public PlayerNode? Parent { get; set; }
         public uint PathCost { get; set; }
         public Input? Action { get; set; }
-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
-                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Up, Input.Down, Input.Up | Input.Left, Input.Up |
+                    Input.Right, Input.Down | Input.Left, Input.Down | Input.Right, Input.Left | Input.Right  );
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform }, parent, pathCost, action);
+        public PlayerNode(double x, double y, double vSpeed, double hSpeed, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
+            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, HSpeed = hSpeed }, parent, pathCost, action);
 
-        public bool IsGoal((int x, int y) goal)=> State.X == goal.x & State.RoundedY == goal.y;
+        public bool IsGoal((int x, int y) goal)=> State.RoundedX == goal.x & State.RoundedY == goal.y;
         
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Jump_Bruteforcer
                 {
                     inputs.Add((Input)currentNode.Action);
                 }
-                points.Add(new Point(currentNode.State.X, (currentNode.State.RoundedY)));
+                points.Add(new Point(currentNode.State.RoundedX, (currentNode.State.RoundedY)));
                 currentNode = currentNode.Parent;
             } 
             inputs.Reverse();
@@ -117,27 +117,10 @@ namespace Jump_Bruteforcer
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
             
-            (int targetX, double targetY) = (State.X, State.Y);
-            if (input.HasFlag(Input.Left))
-            {
-                targetX -= (int)PhysicsParams.WALKING_SPEED;
-            }
-            if (input.HasFlag(Input.Right))
-            {
-                targetX += (int)PhysicsParams.WALKING_SPEED;
-            }
-            bool onPlatform = this.State.OnPlatform;
-           (double finalVSpeed, bool DJumpRefresh, bool onPlatform2) = Player.CalculateVSpeed(this, input, CollisionMap);
-            targetY += finalVSpeed;
+            throw new NotImplementedException();
 
-            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2, bool onPlatform3) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY, finalVSpeed);
-            finalVSpeed = reset ? 0 : finalVSpeed;
 
-            DJumpRefresh |= DJumpRefresh2 || (State.CanDJump && !input.HasFlag(Input.Jump));
-            onPlatform &= onPlatform2;
-            onPlatform |= onPlatform3;
-
-            return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, onPlatform, action: input, pathCost:PathCost + 1, parent:this);
+            //return new PlayerNode(finalX, finalY, finalVSpeed, finalHSpeed, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         public bool Equals(PlayerNode? other)

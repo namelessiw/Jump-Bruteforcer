@@ -106,24 +106,7 @@ namespace TestBrute
             output.WriteLine(result.ToString());
         }
 
-        [Fact]
-        public void TestHeuristicIsAdmissable()
-        {
-            (int x, int y) evenGoal = (30, 20);
-            (int x, int y) oddGoal = (30, 21);
-            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(null, null));
-            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(null, null));
-            evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
-            evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 30, 0), evenGoal).Should().Be(2);
 
-            evenS.Distance(new PlayerNode(30, 10.5, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 11, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 10, 0), evenGoal).Should().Be(2);
-
-            throw new NotImplementedException();
-
-        }
+        
     }
 }

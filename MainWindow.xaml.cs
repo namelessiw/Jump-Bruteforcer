@@ -90,5 +90,10 @@ namespace Jump_Bruteforcer
         {
             Clipboard.SetDataObject(Macro);
         }
+
+        private void ScrollViewer_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Clipboard.SetDataObject(s.Strat);
+        }
     }
 }

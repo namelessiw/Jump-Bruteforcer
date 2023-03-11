@@ -51,7 +51,7 @@
         <TextBox Height="20" Canvas.Left="830" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="960" TextWrapping="Wrap" Text="{Binding GoalY}" Width="79" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <ScrollViewer Canvas.Left="872"  Canvas.Top="74" Height="600"  Width="229" Content="{Binding Strat}"/>
+        <ScrollViewer Canvas.Left="872"  Canvas.Top="74" Height="600"  Width="229" Content="{Binding Strat}" MouseRightButtonDown="ScrollViewer_MouseRightButtonDown"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
     </Canvas>
 </Window>

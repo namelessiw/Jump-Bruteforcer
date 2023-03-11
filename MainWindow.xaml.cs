@@ -32,7 +32,7 @@ namespace Jump_Bruteforcer
         {
             InitializeComponent();
 
-            s = new Search((127, 342.85055), (738, 247), new CollisionMap(null, null)); 
+            s = new Search((127, 342), (120, 342), new CollisionMap(null, null)); 
             DataContext = s;
         }
 

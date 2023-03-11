@@ -38,40 +38,46 @@ namespace Jump_Bruteforcer
         
     
 
-        private static (int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) SolidCollision(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY)
+        private static (double NewX, double NewY, bool VSpeedReset, bool HSpeedReset) SolidCollision(CollisionMap CollisionMap, double CurrentX, double NewX, double CurrentY, double NewY)
         {
             int CurrentYRounded = (int)Math.Round(CurrentY);
+            int CurrentXRounded = (int)Math.Round(CurrentX);
             int NewYRounded = (int)Math.Round(NewY);
+            int NewXRounded = (int)Math.Round(NewX);
             bool VSpeedReset = false;
-            bool DJumpRefresh = false;
+            bool HSpeedReset = false;
             double VSpeed = NewY - CurrentY;
+            double HSpeed = NewX - CurrentX;
 
-            if (CollisionMap.GetCollisionType(NewX, CurrentYRounded) == CollisionType.Solid)
+
+
+            if (CollisionMap.GetCollisionType(NewXRounded, CurrentYRounded) == CollisionType.Solid)
             {
-                int sign = Math.Sign(NewX - CurrentX);
+                int sign = Math.Sign(HSpeed);
                 if (sign != 0)
                 {
-                    while (CollisionMap.GetCollisionType(CurrentX + sign, CurrentYRounded) != CollisionType.Solid)
+                    int xRounded = (int)Math.Round(CurrentX + sign);
+                    while (Math.Abs(HSpeed) >= 1 && CollisionMap.GetCollisionType(xRounded, CurrentYRounded) != CollisionType.Solid)
                     {
                         CurrentX += sign;
+                        HSpeed -= sign;
+                        xRounded = (int)Math.Round(CurrentX + sign);
                     }
                 }
+                NewXRounded = (int)Math.Round(CurrentX);
                 NewX = CurrentX;
+                HSpeedReset = true;
 
             }
-            if (CollisionMap.GetCollisionType(CurrentX, NewYRounded) == CollisionType.Solid)
+            if (CollisionMap.GetCollisionType(CurrentXRounded, NewYRounded) == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
                 
                 int sign = Math.Sign(VSpeed);
                 if (sign != 0)
                 {
-                    if (VSpeed > 0)
-                    {
-                        DJumpRefresh= true;
-                    }
                     int yRounded = (int)Math.Round(CurrentY + sign);
-                    while (Math.Abs(VSpeed) >= 1 && (CollisionMap.GetCollisionType(CurrentX, yRounded) != CollisionType.Solid))
+                    while (Math.Abs(VSpeed) >= 1 && (CollisionMap.GetCollisionType(CurrentXRounded, yRounded) != CollisionType.Solid))
                     {
                         CurrentY += sign;
                         VSpeed -= sign;
@@ -85,19 +91,20 @@ namespace Jump_Bruteforcer
                 VSpeedReset = true;
             }
 
-            if (CollisionMap.GetCollisionType(NewX, NewYRounded) == CollisionType.Solid)
+            if (CollisionMap.GetCollisionType(NewXRounded, NewYRounded) == CollisionType.Solid)
             {
                 NewX = CurrentX;
+                HSpeedReset = true;
             }
 
-            return (NewX, NewY, VSpeedReset, DJumpRefresh, false);
+            return (NewX, NewY, VSpeedReset, HSpeedReset);
         }
 
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {
             int yRounded = node.State.RoundedY;
             CollisionType ctype = CollisionMap.GetCollisionType(node.State.RoundedX, yRounded);
-            bool inbounds =  node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
+            bool inbounds =  node.State.RoundedX is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
             return ctype != CollisionType.Killer & inbounds;
         }
 
@@ -139,6 +146,18 @@ namespace Jump_Bruteforcer
             }
 
             return (x, y, hSpeed, vSpeed);
+        }
+
+        public static (double NewX, double NewY, bool vSpeedReset, bool hSpeedReset) CollisionCheck(CollisionMap collisionMap, double CurrentX, double NewX, double CurrentY, double NewY)
+        {
+            int RoundedNewY = (int)Math.Round(NewY);
+            int RoundedNewX = (int)Math.Round(NewX);
+            CollisionType ctype = collisionMap.GetCollisionType(RoundedNewX, RoundedNewY);
+            if (ctype == CollisionType.Solid) 
+            {
+                return SolidCollision(collisionMap, CurrentX, NewX, CurrentY, NewY);
+            }
+            return (NewX, NewY, false, false);
         }
     }
 }

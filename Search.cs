@@ -8,14 +8,14 @@ namespace Jump_Bruteforcer
 {
     public class Search : INotifyPropertyChanged
     {
-        public (int x, double y) start;
+        public (double x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
         private CollisionMap _collisionMap = new(null, null);
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
-        public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
+        public double StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
         public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
         public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
@@ -30,7 +30,7 @@ namespace Jump_Bruteforcer
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Search((int, double) start, (int, int) goal, CollisionMap collision)
+        public Search((double, double) start, (int, int) goal, CollisionMap collision)
         {
             this.start = start;
             this.goal = goal;
@@ -39,7 +39,7 @@ namespace Jump_Bruteforcer
         //inadmissable heuristic because of y position rounding
         public uint Distance(PlayerNode n, (int x, int y) goal)
         {
-            return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / 3.0, Math.Abs(n.State.Y - goal.y) / 9.4)));
+            return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / 10.0, Math.Abs(n.State.Y - goal.y) / 10.0)));
         }
 
 

@@ -40,8 +40,8 @@ namespace Jump_Bruteforcer
         public static void CountStates(SimplePriorityQueue<PlayerNode, uint> openSet, HashSet<PlayerNode> closedSet)
         {
             statesPerPx.Clear();
-            var coveredCoords = from n in openSet.Union(closedSet).DistinctBy(n => (n.State.X, n.State.RoundedY))
-                                select (n.State.X, n.State.RoundedY);
+            var coveredCoords = from n in openSet.Union(closedSet).DistinctBy(n => (n.State.RoundedX, n.State.RoundedY))
+                                select (n.State.RoundedX, n.State.RoundedY);
 
             foreach ((int, int) key in coveredCoords) 
             {

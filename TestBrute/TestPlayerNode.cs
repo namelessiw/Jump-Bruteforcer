@@ -26,6 +26,12 @@ namespace TestBrute
 
         }
 
+        [Fact]
+        public void TestNewState()
+        {
+
+        }
+
        
 
     }

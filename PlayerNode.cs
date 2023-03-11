@@ -42,7 +42,7 @@ namespace Jump_Bruteforcer
             return Quantize(a) == Quantize(b);
         }
         public bool Equals(State? other)=>
-            ApproximatelyEquals(X, other.X) & ApproximatelyEquals(Y, other.Y) &
+            RoundedX == other.RoundedX & RoundedY == other.RoundedY &
             ApproximatelyEquals(VSpeed, other.VSpeed) & ApproximatelyEquals(HSpeed, other.HSpeed);
         public override int GetHashCode() => (Quantize(X), Quantize(Y), Quantize(VSpeed), Quantize(HSpeed)).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
@@ -118,10 +118,13 @@ namespace Jump_Bruteforcer
         {
             
             (double X, double Y, double hSpeed, double vSpeed) = Player.BubbleStep(input, State.X, State.Y, State.HSpeed, State.VSpeed);
+            (double finalX, double finalY, bool vSpeedReset, bool hSpeedReset) = Player.CollisionCheck(CollisionMap, State.X, X, State.Y, Y);
+            hSpeed = hSpeedReset ? 0 : hSpeed;
+            vSpeed = vSpeedReset ? 0 : vSpeed;
 
 
 
-            return new PlayerNode(X, Y, vSpeed, hSpeed, action: input, pathCost:PathCost + 1, parent:this);
+            return new PlayerNode(finalX, finalY, vSpeed, hSpeed, action: input, pathCost:PathCost + 1, parent:this);
         }
 
         public bool Equals(PlayerNode? other)

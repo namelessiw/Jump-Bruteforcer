@@ -38,7 +38,8 @@ namespace Jump_Bruteforcer
 
         public static string GetMacro(List<Input> inputs)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return "";
         }
     }
 }

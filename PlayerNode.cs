@@ -35,7 +35,7 @@ namespace Jump_Bruteforcer
 
         private static double Quantize(double a)
         {
-            return Math.Round(a * epsilon) / epsilon;
+            return Math.Round(a * epsilon);
         }
         private static bool ApproximatelyEquals(double a, double b)
         {

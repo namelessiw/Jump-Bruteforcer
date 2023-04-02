@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,23 @@ using System.Windows.Media;
 using FluentAssertions;
 using Jump_Bruteforcer;
 using Priority_Queue;
+using Xunit.Abstractions;
 
 namespace TestBrute
 {
     public class TestPlayerNode
     {
+
+
+        private readonly ITestOutputHelper output;
+
+        public TestPlayerNode(ITestOutputHelper output)
+        {
+            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
+            this.output = output;
+        }
+
+
         [Theory]
         [InlineData(1,2,3, true, false)]
         [InlineData(0,0,0, true, true)]

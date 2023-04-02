@@ -2,6 +2,7 @@
 using Jump_Bruteforcer;
 using System;
 using System.Collections.Generic;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace TestBrute
         private readonly ITestOutputHelper output;
         public TestCollisionMap(ITestOutputHelper output)
         {
+            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
             this.output = output;
         }
 

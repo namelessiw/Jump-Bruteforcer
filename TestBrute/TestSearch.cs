@@ -5,16 +5,18 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using System.IO.Packaging;
 
 namespace TestBrute
 {
-    public class SearchTests
+    public class TestSearch
     {
 
         private readonly ITestOutputHelper output;
 
-        public SearchTests(ITestOutputHelper output)
+        public TestSearch(ITestOutputHelper output)
         {
+            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
             this.output = output;
         }
 
@@ -40,7 +42,7 @@ namespace TestBrute
         [InlineData(399, 487.4, 399, 295, "platform_teleport")] //Frames 17
         [InlineData(399, 487.4, 399, 295, "platform_elevator")] //Frames 27
         //harder ones
-        [InlineData(241, 119.4, 541, 231, "decession")] //Frames 229
+        [InlineData(241, 119.4, 541, 231, "decession")] //Frames 230
         [InlineData(753, 567.4, 743, 119, "nameless")] //Frames 577
         [InlineData(379, 566, 115, 147, "needlesatan")] //Frames 921
         [InlineData(113, 407.3, 753, 247, "Ascend screen 1")] //Frames 331

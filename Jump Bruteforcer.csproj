@@ -41,9 +41,6 @@
     <Page Remove="App.xaml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="images\minispikedown.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />

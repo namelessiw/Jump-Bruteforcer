@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Media;
 using FluentAssertions;
@@ -13,6 +14,7 @@ namespace TestBrute
 
         public TestPlayer(ITestOutputHelper output)
         {
+            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
             this.output = output;
         }
 

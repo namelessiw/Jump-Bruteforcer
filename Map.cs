@@ -108,7 +108,7 @@ namespace Jump_Bruteforcer
         {
             try
             {
-                Uri path = new Uri(@$"..\..\..\images\{fileName}.png", UriKind.Relative);
+                Uri path = new Uri(@$"pack://application:,,,/Jump Bruteforcer;component/images/{fileName}.png", UriKind.Absolute);
                 return new Bitmap(Application.GetResourceStream(path).Stream);
             } catch (IOException e)
             {

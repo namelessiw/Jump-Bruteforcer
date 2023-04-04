@@ -6,6 +6,7 @@ using System.Windows;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.IO.Packaging;
+using Jump_Bruteforcer;
 
 namespace TestBrute
 {

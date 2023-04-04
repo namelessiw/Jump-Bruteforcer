@@ -9,6 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>True</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <StartupObject>Jump_Bruteforcer.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,8 +38,9 @@
     <None Remove="images\water3.png" />
   </ItemGroup>
 
+
   <ItemGroup>
-    <Page Remove="App.xaml" />
+    <Page Remove="Jump_Bruteforcer\App.xaml" />
   </ItemGroup>
 
 
@@ -47,11 +49,13 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
+
   <ItemGroup>
     <Resource Include="images\apple.png" />
     <Resource Include="images\block.png" />
     <Resource Include="images\killerblock.png" />
     <Resource Include="images\miniblock.png" />
+    <Resource Include="images\minispikedown.png" />
     <Resource Include="images\minispikeleft.png" />
     <Resource Include="images\minispikeright.png" />
     <Resource Include="images\minispikeup.png" />
@@ -64,6 +68,22 @@
     <Resource Include="images\water1.png" />
     <Resource Include="images\water2.png" />
     <Resource Include="images\water3.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

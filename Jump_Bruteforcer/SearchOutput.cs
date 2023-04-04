@@ -50,7 +50,7 @@ namespace Jump_Bruteforcer
                 bool InputChanged = false;
 
                 NextDirection = input & Input.Right | input & Input.Left;
-                
+
 
                 if (Direction != NextDirection)
                 {

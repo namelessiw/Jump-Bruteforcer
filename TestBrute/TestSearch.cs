@@ -39,7 +39,7 @@ namespace TestBrute
         [InlineData(420, 407.4, 477, 375, "ground_dplane")]
         [InlineData(410, 407.4, 452, 279, "32px")] 
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
-        [InlineData(388, 407.4, 541, 407, "platforminvert")] //Frames 51
+        [InlineData(388, 407.4, 541, 407, "platform_invert")] //Frames 51
         [InlineData(399, 487.4, 399, 295, "platform_teleport")] //Frames 17
         [InlineData(399, 487.4, 399, 295, "platform_elevator")] //Frames 27
         //harder ones

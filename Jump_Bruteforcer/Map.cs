@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace Jump_Bruteforcer
 {
@@ -48,34 +49,27 @@ namespace Jump_Bruteforcer
 
         private Dictionary<(int X, int Y), CollisionType> GenerateCollisionMap()
         {
-            Dictionary<Color, CollisionType> toCollision = new() {
-            {Color.FromArgb(128, 24, 24), CollisionType.Killer},
-            {Color.FromArgb(0, 0, 0) , CollisionType.Solid},
-            {Color.FromArgb(124, 252, 0) , CollisionType.Warp},
-            {Color.FromArgb(0, 0, 139) , CollisionType.Water1},
-            {Color.FromArgb(173, 216,230) , CollisionType.Water2},
-            {Color.FromArgb(0, 0, 255) , CollisionType.Water3},
-            {Color.FromArgb(112, 128, 144), CollisionType.Platform}
-            };
             Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
-
-            BitmapData bmpData = Bmp.LockBits(
-                new Rectangle(0, 0, Bmp.Width, Bmp.Height), ImageLockMode.ReadOnly, Bmp.PixelFormat);
-            IntPtr firstline = bmpData.Scan0;
-            int[] argbValues = new int[Math.Abs(bmpData.Stride / 4 * Bmp.Height)];
-            Marshal.Copy(firstline, argbValues, 0, argbValues.Length);
-
-            for (int i = 0; i < argbValues.Length; i++)
+            var query = from o in Objects
+                        where o.CollisionType != CollisionType.None
+                        select o;
+            foreach (Object o in query)
             {
-                Color c = Color.FromArgb(argbValues[i]);
-                if (toCollision.ContainsKey(c))
+                Bitmap img = (Bitmap) toImage[o.ObjectType];
+                (int objX, int objY) = (o.X - 5, o.Y - 8);
+                for (int x = 0; x < img.Width; x++)
                 {
-                    CollisionMap.Add((i % Bmp.Width, i / Bmp.Width), toCollision[c]);
+                    for (int y = 0; y < img.Height; y++)
+                    {
+                        if (img.GetPixel(x, y).A != 0)
+                        {
+                            CollisionMap[(objX + x, objY + y)] = o.CollisionType;
+                        }
+                        
+                    }
                 }
-
+                
             }
-            Bmp.UnlockBits(bmpData);
-
             return CollisionMap;
         }
 

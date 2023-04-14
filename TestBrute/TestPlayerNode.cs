@@ -529,5 +529,43 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8, true, false).State);
         }
 
+        // requires multiple object types per pixel
+        [Fact]
+        public void TestNabla2()
+        {
+            string path = @$"..\..\..\jmaps\nabla_2.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(479, 592.8957, 8.8, false, false);
+
+            Input[] inputs = new Input[]
+            {
+                Input.Left | Input.Jump,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left | Input.Jump,
+                Input.Left | Input.Jump | Input.Release,
+                Input.Left | Input.Release,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+                Input.Left,
+            };
+
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                n1 = n1.NewState(inputs[i], Map.CollisionMap);
+                //output.WriteLine($"frame {i}\tstate: {n1.State}");
+            }
+
+            n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2, true).State);
+        }
+
     }
 }

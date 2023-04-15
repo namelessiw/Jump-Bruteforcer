@@ -53,8 +53,7 @@ namespace Jump_Bruteforcer
                 string Text = File.ReadAllText(FileName);
 
                 Map Map = JMap.Parse(Text);
-                BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(Map.Bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); //https://stackoverflow.com/questions/6484357/converting-bitmapimage-to-bitmap-and-vice-versa
-                ImageJMap.Source = source;
+                ImageJMap.Source = Map.Bmp;
                 s.CollisionMap = Map.CollisionMap;
 
             }

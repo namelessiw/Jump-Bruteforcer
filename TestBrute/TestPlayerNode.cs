@@ -22,7 +22,8 @@ namespace TestBrute
 
         public TestPlayerNode(ITestOutputHelper output)
         {
-            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
+            if (Application.Current == null) //https://stackoverflow.com/a/14224558
+                new Application();
             this.output = output;
         }
 

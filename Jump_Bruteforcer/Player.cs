@@ -31,7 +31,7 @@ namespace Jump_Bruteforcer
             return CollisionMap.GetCollisionTypes(x, y).Contains(type);
         }
 
-      
+
 
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {

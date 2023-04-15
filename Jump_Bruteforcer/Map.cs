@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
+
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 
 namespace Jump_Bruteforcer
 {
     public class Map
     {
         private readonly ImmutableArray<Object> Objects;
-        public Bitmap Bmp { get; init; }
+        public ImageSource Bmp { get; init; }
         public CollisionMap CollisionMap { get; init; }
 
 
@@ -27,35 +30,40 @@ namespace Jump_Bruteforcer
             CollisionMap = new(GenerateCollisionMap(), platforms);
         }
 
-        private Bitmap GenerateCollisionImage()
+        private ImageSource GenerateCollisionImage()
         {
+            DrawingGroup drawingGroup = new DrawingGroup();
+            
             int width = 800, height = 608;
-            Bitmap bmp = new(width, height);
+            var mapBounds = new RectangleGeometry(new Rect(0, 0, width, height));
+            drawingGroup.Children.Add(new GeometryDrawing(Brushes.Transparent, new Pen(), mapBounds));
 
-            using (Graphics g = Graphics.FromImage(bmp))
+            var query = from o in Objects
+                        where o.CollisionType != CollisionType.None
+                        select o;
+            foreach (Object o in query)
             {
-                var query = from o in Objects
-                            where o.CollisionType != CollisionType.None
-                            select o;
-                foreach (Object o in query)
-                {
-                    Image img = toImage[o.ObjectType];
-                    g.DrawImage(img, o.X - 5, o.Y - 8, img.Width, img.Height);
-                }
+                BitmapSource img = toImage[o.ObjectType];
+                Rect rect = new Rect(o.X - 5, o.Y - 8, img.Width, img.Height);
+                drawingGroup.Children.Add(new ImageDrawing(img, rect));
+                
             }
+            drawingGroup.ClipGeometry = mapBounds;
+            DrawingImage drawingImage = new DrawingImage(drawingGroup);
+            drawingImage.Freeze();
 
-            return bmp;
+            return drawingImage;
         }
-
+        
         private Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>> GenerateCollisionMap()
         {
 
             return (from o in Objects
                     where o.CollisionType != CollisionType.None
-                    let img = (Bitmap)toImage[o.ObjectType]
-                    from spriteX in Enumerable.Range(0, img.Width)
-                    from spriteY in Enumerable.Range(0, img.Height)
-                    where img.GetPixel(spriteX, spriteY).A != 0
+                    let hitbox = toHitbox[o.ObjectType]
+                    from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
+                    from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
+                    where hitbox[spriteX, spriteY]
                     let x = o.X + spriteX - 5
                     let y = o.Y + spriteY - 8
                     group new { x, y, o } by (x, y) into pixel
@@ -77,26 +85,54 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        private static readonly Dictionary<ObjectType, Image> toImage;
+        private static readonly Dictionary<ObjectType, BitmapSource> toImage;
+        private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
         static Map()
         {
-            toImage = new Dictionary<ObjectType, Image>();
+            toImage = new Dictionary<ObjectType, BitmapSource>();
+            toHitbox = new Dictionary<ObjectType, bool[,]>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
-                toImage.Add((ObjectType)Enum.Parse(typeof(ObjectType), e), GetImage(e.ToLower()));
+                ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
+                BitmapSource img = GetImage(e.ToLower());
+
+                toImage.Add(o, img);
+                toHitbox.Add(o, GetHitbox(img));
             }
         }
 
-        private static Image GetImage(string fileName)
+        private static bool[,] GetHitbox(BitmapSource img)
+        {
+            var hitbox = new bool[img.PixelWidth, img.PixelHeight];
+
+            int[] argbValues = new int[img.PixelHeight * img.PixelWidth];
+            var stride = img.PixelWidth * img.Format.BitsPerPixel / 8;
+            img.CopyPixels(argbValues, stride, 0);
+
+            var query = from x in Enumerable.Range(0, img.PixelWidth)
+                        from y in Enumerable.Range(0, img.PixelHeight)
+                        where (argbValues[y * img.PixelWidth + x] & 0xff000000) != 0
+                        select (x, y);
+            foreach ((int x, int y) in query)
+            {
+                hitbox[x, y] = true;
+            }
+
+            return hitbox;
+        }
+
+        private static BitmapSource GetImage(string fileName)
         {
             try
             {
+
                 Uri path = new Uri(@$"pack://application:,,,/Jump Bruteforcer;component/images/{fileName}.png", UriKind.Absolute);
-                return new Bitmap(Application.GetResourceStream(path).Stream);
+                return new BitmapImage(path);
             }
             catch (IOException e)
             {
-                return new Bitmap(1, 1);
+
+                return BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0, 0, 0, 0 }, 4);
             }
 
         }

@@ -123,7 +123,7 @@ namespace Jump_Bruteforcer
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
-            
+
             State newState = Player.Update(State, input, CollisionMap);
 
             return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);

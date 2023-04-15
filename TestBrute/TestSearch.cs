@@ -66,7 +66,7 @@ namespace TestBrute
         [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107
         [InlineData(17, 119, 259, 535, "ex_hades")] //Frames 603
         [InlineData(49, 87.4, 762, 567, "e_2")]  //Frames 1195
-        [InlineData(125, 119.4, 680, 46, "subset")] //Frames 991
+        [InlineData(125, 119.4, 680, 46, "subset")] //Frames 989
         [InlineData(49, 567, 771, 231, "i_wanna_x")] //Frames 1103
         [InlineData(114, 119, 389, 606, "anticlimax_second_screen")] //Frames 624
         [InlineData(17, 311, 733, 119, "drown_drones")] //Frames 746

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,18 +10,24 @@ namespace Jump_Bruteforcer
 {
     public class CollisionMap
     {
-        public Dictionary<(int X, int Y), CollisionType> Collision { get; init; }
+        public Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>> Collision { get; init; }
         public List<Object> Platforms { get; init; }
-        public CollisionMap(Dictionary<(int X, int Y), CollisionType>? Collision, List<Object>? Platforms)
+        public CollisionMap(Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
         {
-            this.Collision = Collision ?? new Dictionary<(int X, int Y), CollisionType>();
+            this.Collision = Collision ?? new Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>>();
             this.Platforms = Platforms ?? new List<Object>();
         }
 
-        public CollisionType GetCollisionType(int x, int y)
+        public CollisionType GetHighestPriorityCollisionType(int x, int y)
         {
-            Collision.TryGetValue((x, y), out CollisionType type);
-            return type;
+            Collision.TryGetValue((x, y), out ImmutableSortedSet<CollisionType>? type);
+            return type?.Last() ?? CollisionType.None;
+        }
+
+        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y)
+        {
+            Collision.TryGetValue((x, y), out ImmutableSortedSet<CollisionType>? type);
+            return type ?? ImmutableSortedSet<CollisionType>.Empty;
         }
 
         /// <summary>

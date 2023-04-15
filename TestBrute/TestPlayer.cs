@@ -29,9 +29,9 @@ namespace TestBrute
         [InlineData(CollisionType.None, 8, 11, 5, 5, 11, 5, false)] //rightwards pass through
         public void TestSolidCollision(CollisionType ctype, int startX, int targetX, double startY, double targetY, int endX, int endY, bool vSpeedReset)
         {
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (10, 5), CollisionType.Solid }
+                { (10, 5), ImmutableSortedSet.Create(CollisionType.Solid) }
             };
             CollisionMap cmap = new(collision, null);
 
@@ -47,9 +47,9 @@ namespace TestBrute
         [InlineData(6, 3, 0, 5, false)] // down left
         public void TestCornerCollision(int startX, int targetX, double startY, double targetY, bool vSpeedReset)
         {
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (targetX, (int)Math.Round(targetY)), CollisionType.Solid }
+                { (targetX, (int)Math.Round(targetY)), ImmutableSortedSet.Create(CollisionType.Solid)}
             };
             CollisionMap cmap = new(collision, null);
 
@@ -72,15 +72,15 @@ namespace TestBrute
         public void TestDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool vSpeedReset)
         {
             int tY = (int)Math.Round(targetY);
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (targetX, tY), CollisionType.Solid },
-                { (startX, solidY), CollisionType.Solid } // snap to this solid
+                { (targetX, tY), ImmutableSortedSet.Create(CollisionType.Solid)},
+                { (startX, solidY), ImmutableSortedSet.Create( CollisionType.Solid) } // snap to this solid
             };
 
             if (solidY != tY)
             {
-                collision.Add((startX, tY), CollisionType.Solid);
+                collision.Add((startX, tY), ImmutableSortedSet.Create( CollisionType.Solid));
             }
             CollisionMap cmap = new(collision, null);
 
@@ -93,13 +93,13 @@ namespace TestBrute
             int startX = 0, targetX = 2, endX = 1;
             double startY = 0, targetY = 2, endY = 1;
             bool vSpeedReset = true;
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (2, 2), CollisionType.Solid },
-                { (0, 2), CollisionType.Solid },
-                { (2, 0), CollisionType.Solid },
-                { (1, 2), CollisionType.Solid },
-                { (2, 1), CollisionType.Solid },
+                { (2, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (2, 0), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (1, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (2, 1), ImmutableSortedSet.Create(CollisionType.Solid) },
             };
             CollisionMap cmap = new(collision, null);
 

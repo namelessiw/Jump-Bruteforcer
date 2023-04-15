@@ -61,9 +61,10 @@ namespace TestBrute
             double playerY = 567.254;
             int playerYRounded = (int)Math.Round(playerY);
             var n1 = new PlayerNode(450, playerY, 0);
-            
-            Dictionary<(int, int), CollisionType> collision = Enumerable.Range(0, 100 * floor_thickness).ToDictionary(x => (x % 100 + 400, x / 100 + playerYRounded + 1), x => CollisionType.Solid);
-            CollisionMap cmap = new(collision, null);
+
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = Enumerable.Range(0, 100 * floor_thickness).ToDictionary(x => (x % 100 + 400, x / 100 + playerYRounded + 1), x => ImmutableSortedSet.Create(CollisionType.Solid));
+            CollisionMap cmap = new(
+                collision, null);
 
             PlayerNode n2 = n1.NewState(Input.Left | Input.Jump, cmap);
             PlayerNode n3 = n1.NewState(Input.Left | Input.Jump | Input.Release, cmap);
@@ -114,13 +115,13 @@ namespace TestBrute
         {
             
             var n1 = new PlayerNode(0, 0, 2, false);
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (3, 2), CollisionType.Solid },
-                { (1, 2), CollisionType.Solid },
-                { (3, 0), CollisionType.Solid },
-                { (2, 2), CollisionType.Solid },
-                { (3, 1), CollisionType.Solid },
+                { (3, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (1, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (3, 0), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (2, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (3, 1), ImmutableSortedSet.Create(CollisionType.Solid) },
             };
             CollisionMap cmap = new(collision, null);
 
@@ -148,15 +149,15 @@ namespace TestBrute
         public void TestNewStateDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool canJump)
         {
             int tY = (int)Math.Round(targetY);
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (targetX, tY), CollisionType.Solid },
-                { (startX, solidY), CollisionType.Solid } // snap to this solid
+                { (targetX, tY), ImmutableSortedSet.Create( CollisionType.Solid) },
+                { (startX, solidY), ImmutableSortedSet.Create(CollisionType.Solid) } // snap to this solid
             };
 
             if (solidY != tY)
             {
-                collision.Add((startX, tY), CollisionType.Solid);
+                collision.Add((startX, tY), ImmutableSortedSet.Create( CollisionType.Solid));
             }
             CollisionMap cmap = new(collision, null);
 
@@ -179,9 +180,9 @@ namespace TestBrute
         [Fact]
         public void TestNewStateBHop()
         {
-            Dictionary<(int, int), CollisionType> collision = new()
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
-                { (0, 568), CollisionType.Solid }
+                { (0, 568), ImmutableSortedSet.Create(CollisionType.Solid) }
             };
             CollisionMap cmap = new(collision, null);
 
@@ -198,7 +199,7 @@ namespace TestBrute
         [Fact]
         public void TestGetNeighborsNoCollisionNegativeVSpeed()
         {
-            Dictionary<(int, int), CollisionType> collision = new();
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new();
             CollisionMap cmap = new(collision, null);
 
             PlayerNode n1 = new(400, 400, -1);
@@ -215,7 +216,7 @@ namespace TestBrute
         [Fact]
         public void TestGetNeighborsNoCollisionPositiveVSpeedNoJump()
         {
-            Dictionary<(int, int), CollisionType> collision = new();
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new();
             CollisionMap cmap = new(collision, null);
             PlayerNode n1 = new(400, 400, 1, false);
 
@@ -233,7 +234,7 @@ namespace TestBrute
         [Fact]
         public void TestGetNeighborsNoCollisionPositiveVSpeed()
         {
-            Dictionary<(int, int), CollisionType> collision = new();
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new();
             CollisionMap cmap = new(collision, null);
             PlayerNode n1 = new(400, 400, 1);
 
@@ -252,22 +253,22 @@ namespace TestBrute
         [Fact]
         public void TestGetNeighborsCollisionAndKiller()
         {
-            Dictionary<(int, int), CollisionType> collision = new() { 
-                { (0, 568), CollisionType.Solid },         
-                { (0, 559), CollisionType.Killer },
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new() { 
+                { (0, 568), ImmutableSortedSet.Create(CollisionType.Solid) },         
+                { (0, 559), ImmutableSortedSet.Create( CollisionType.Killer) },
             };
             CollisionMap cmap = new(collision, null);
 
             for (int x = -10; x < 10; x++)
             {
-                collision[(x, 568)] = CollisionType.Solid;
-                collision[(x, 559)] = CollisionType.Killer;
+                collision[(x, 568)] = ImmutableSortedSet.Create(CollisionType.Solid);
+                collision[(x, 559)] = ImmutableSortedSet.Create(CollisionType.Killer);
             }
             for (int y = 559; y < 568; y++)
             {
                 for(int x = -3; x < 0; x++)
                 {
-                    collision[(x, y)] = CollisionType.Solid;
+                    collision[(x, y)] = ImmutableSortedSet.Create(CollisionType.Solid);
                 }
             }
 
@@ -287,8 +288,8 @@ namespace TestBrute
         [Fact]
         public void TestGetPath()
         {
-            Dictionary<(int, int), CollisionType> collision = new() {
-                { (400, 568), CollisionType.Solid },
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new() {
+                { (400, 568), ImmutableSortedSet.Create(CollisionType.Solid) },
             };
             CollisionMap cmap = new(collision, null);
 
@@ -323,16 +324,16 @@ namespace TestBrute
         [Fact]
         public void TestNewStateBonk()
         {
-            Dictionary<(int, int), CollisionType> collision = new() {
-                { (0, 568), CollisionType.Solid },
-                { (0, 560), CollisionType.Solid },
-                { (0, 559), CollisionType.Solid },
-                { (0, 558), CollisionType.Solid },
-                { (0, 557), CollisionType.Solid },
-                { (0, 556), CollisionType.Solid },
-                { (0, 555), CollisionType.Solid },
-                { (0, 554), CollisionType.Solid },
-                { (0, 553), CollisionType.Solid },
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new() {
+                { (0, 568), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 560), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 559), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 558), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 557), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 556), ImmutableSortedSet.Create(CollisionType.Solid)},
+                { (0, 555), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 554), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 553), ImmutableSortedSet.Create(CollisionType.Solid) },
             };
             CollisionMap cmap = new(collision, null);
 
@@ -347,16 +348,16 @@ namespace TestBrute
         [Fact]
         public void TestCorner()
         {
-            Dictionary<(int, int), CollisionType> collision = new() {
-                { (0, 568), CollisionType.Solid },
-                { (0, 560), CollisionType.Solid },
-                { (0, 559), CollisionType.Solid },
-                { (0, 558), CollisionType.Solid },
-                { (0, 557), CollisionType.Solid },
-                { (0, 556), CollisionType.Solid },
-                { (0, 555), CollisionType.Solid },
-                { (0, 554), CollisionType.Solid },
-                { (0, 553), CollisionType.Solid },
+            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new() {
+                { (0, 568), ImmutableSortedSet.Create( CollisionType.Solid )},
+                { (0, 560), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 559), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 558), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 557), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 556), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 555), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 554), ImmutableSortedSet.Create(CollisionType.Solid) },
+                { (0, 553), ImmutableSortedSet.Create(CollisionType.Solid) },
             };
             CollisionMap cmap = new(collision, null);
 

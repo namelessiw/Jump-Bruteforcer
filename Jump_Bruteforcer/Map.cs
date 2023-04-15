@@ -47,30 +47,20 @@ namespace Jump_Bruteforcer
             return bmp;
         }
 
-        private Dictionary<(int X, int Y), CollisionType> GenerateCollisionMap()
+        private Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>> GenerateCollisionMap()
         {
-            Dictionary<(int X, int Y), CollisionType> CollisionMap = new();
-            var query = from o in Objects
-                        where o.CollisionType != CollisionType.None
-                        select o;
-            foreach (Object o in query)
-            {
-                Bitmap img = (Bitmap) toImage[o.ObjectType];
-                (int objX, int objY) = (o.X - 5, o.Y - 8);
-                for (int x = 0; x < img.Width; x++)
-                {
-                    for (int y = 0; y < img.Height; y++)
-                    {
-                        if (img.GetPixel(x, y).A != 0)
-                        {
-                            CollisionMap[(objX + x, objY + y)] = o.CollisionType;
-                        }
-                        
-                    }
-                }
-                
-            }
-            return CollisionMap;
+
+            return (from o in Objects
+                    where o.CollisionType != CollisionType.None
+                    let img = (Bitmap)toImage[o.ObjectType]
+                    from spriteX in Enumerable.Range(0, img.Width)
+                    from spriteY in Enumerable.Range(0, img.Height)
+                    where img.GetPixel(spriteX, spriteY).A != 0
+                    let x = o.X + spriteX - 5
+                    let y = o.Y + spriteY - 8
+                    group new { x, y, o } by (x, y) into pixel
+                    select pixel).ToDictionary(data => data.Key, data => (from o in data select o.o.CollisionType).ToImmutableSortedSet());
+
         }
 
         public override string ToString()

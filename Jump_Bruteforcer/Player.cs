@@ -19,7 +19,7 @@ namespace Jump_Bruteforcer
     {
         public static bool OnGround(int x, double y, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionType(x, (int)Math.Round(y + 1)) == CollisionType.Solid;
+            return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y + 1)) == CollisionType.Solid;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Jump_Bruteforcer
         /// <returns></returns>
         private static bool PlaceMeeting(int x, int y, CollisionType type, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionType(x, y) == type;
+            return CollisionMap.GetHighestPriorityCollisionType(x, y) == type;
         }
 
         public static (double, bool, bool) CalculateVSpeed(PlayerNode n, Input input, CollisionMap CollisionMap)
@@ -46,7 +46,7 @@ namespace Jump_Bruteforcer
 
             if (input.HasFlag(Input.Jump))
             {
-                if (OnGround(n.State.X, n.State.Y, CollisionMap) || onPlatform || CollisionMap.GetCollisionType(n.State.X, (int)Math.Round(n.State.Y + 1)) == CollisionType.Platform)
+                if (OnGround(n.State.X, n.State.Y, CollisionMap) || onPlatform || CollisionMap.GetHighestPriorityCollisionType(n.State.X, (int)Math.Round(n.State.Y + 1)) == CollisionType.Platform)
                 {
                     finalVSpeed = PhysicsParams.SJUMP_VSPEED;
                     DJumpRefresh = true;
@@ -68,7 +68,7 @@ namespace Jump_Bruteforcer
         public static (CollisionType Type, int NewX, double NewY, bool VSpeedReset, bool DJumpRefresh, bool OnPlatform) CollisionCheck(CollisionMap CollisionMap, int CurrentX, int NewX, double CurrentY, double NewY, double CurrentVSpeed = 0)
         {
             int RoundedNewY = (int)Math.Round(NewY);
-            CollisionType ctype = CollisionMap.GetCollisionType(NewX, RoundedNewY);
+            CollisionType ctype = CollisionMap.GetHighestPriorityCollisionType(NewX, RoundedNewY);
 
             if (ctype != CollisionType.None)
             {
@@ -132,12 +132,12 @@ namespace Jump_Bruteforcer
             bool DJumpRefresh = false;
             double VSpeed = NewY - CurrentY;
 
-            if (CollisionMap.GetCollisionType(NewX, CurrentYRounded) == CollisionType.Solid)
+            if (CollisionMap.GetHighestPriorityCollisionType(NewX, CurrentYRounded) == CollisionType.Solid)
             {
                 int sign = Math.Sign(NewX - CurrentX);
                 if (sign != 0)
                 {
-                    while (CollisionMap.GetCollisionType(CurrentX + sign, CurrentYRounded) != CollisionType.Solid)
+                    while (CollisionMap.GetHighestPriorityCollisionType(CurrentX + sign, CurrentYRounded) != CollisionType.Solid)
                     {
                         CurrentX += sign;
                     }
@@ -145,7 +145,7 @@ namespace Jump_Bruteforcer
                 NewX = CurrentX;
 
             }
-            if (CollisionMap.GetCollisionType(CurrentX, NewYRounded) == CollisionType.Solid)
+            if (CollisionMap.GetHighestPriorityCollisionType(CurrentX, NewYRounded) == CollisionType.Solid)
             {
                 // (re)rounding everytime because otherwise vfpi would lose its parity
 
@@ -157,7 +157,7 @@ namespace Jump_Bruteforcer
                         DJumpRefresh = true;
                     }
                     int yRounded = (int)Math.Round(CurrentY + sign);
-                    while (Math.Abs(VSpeed) >= 1 && CollisionMap.GetCollisionType(CurrentX, yRounded) != CollisionType.Solid)
+                    while (Math.Abs(VSpeed) >= 1 && CollisionMap.GetHighestPriorityCollisionType(CurrentX, yRounded) != CollisionType.Solid)
                     {
                         CurrentY += sign;
                         VSpeed -= sign;
@@ -171,7 +171,7 @@ namespace Jump_Bruteforcer
                 VSpeedReset = true;
             }
 
-            if (CollisionMap.GetCollisionType(NewX, NewYRounded) == CollisionType.Solid)
+            if (CollisionMap.GetHighestPriorityCollisionType(NewX, NewYRounded) == CollisionType.Solid)
             {
                 NewX = CurrentX;
             }
@@ -188,7 +188,7 @@ namespace Jump_Bruteforcer
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {
             int yRounded = node.State.RoundedY;
-            CollisionType ctype = CollisionMap.GetCollisionType(node.State.X, yRounded);
+            CollisionType ctype = CollisionMap.GetHighestPriorityCollisionType(node.State.X, yRounded);
             bool inbounds = node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
             return ctype != CollisionType.Killer & inbounds;
         }

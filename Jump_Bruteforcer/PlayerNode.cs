@@ -59,6 +59,14 @@ namespace Jump_Bruteforcer
         public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
             (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform }, parent, pathCost, action);
 
+        public PlayerNode(State state, PlayerNode? parent, uint pathCost, Input? action)
+        {
+            State = state;
+            Parent = parent;
+            PathCost = pathCost;
+            Action = action;
+        }
+
         public bool IsGoal((int x, int y) goal) => State.X == goal.x & State.RoundedY == goal.y;
 
 
@@ -115,22 +123,10 @@ namespace Jump_Bruteforcer
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
+            
+            State newState = Player.Update(State, input, CollisionMap);
 
-            (int targetX, double targetY) = (State.X, State.Y);
-            targetX += PhysicsParams.WALKING_SPEED * Math.Sign((input & Input.Right) - (input & Input.Left));
-
-            bool onPlatform = State.OnPlatform;
-            (double finalVSpeed, bool DJumpRefresh, bool onPlatform2) = Player.CalculateVSpeed(this, input, CollisionMap);
-            targetY += finalVSpeed;
-
-            (_, int finalX, double finalY, bool reset, bool DJumpRefresh2, bool onPlatform3) = Player.CollisionCheck(CollisionMap, State.X, targetX, State.Y, targetY, finalVSpeed);
-            finalVSpeed = reset ? 0 : finalVSpeed;
-
-            DJumpRefresh |= DJumpRefresh2 || State.CanDJump && !input.HasFlag(Input.Jump);
-            onPlatform &= onPlatform2;
-            onPlatform |= onPlatform3;
-
-            return new PlayerNode(finalX, finalY, finalVSpeed, DJumpRefresh, onPlatform, action: input, pathCost: PathCost + 1, parent: this);
+            return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);
         }
 
         public bool Equals(PlayerNode? other)

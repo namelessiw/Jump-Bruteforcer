@@ -30,6 +30,10 @@ namespace Jump_Bruteforcer
         {
             return CollisionMap.GetCollisionTypes(x, y).Contains(type);
         }
+        private static bool PlaceMeeting(int x, double y, CollisionType type, CollisionMap CollisionMap)
+        {
+            return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
+        }
 
 
 
@@ -41,6 +45,7 @@ namespace Jump_Bruteforcer
             return notOnKiller & inbounds;
         }
 
+
         /// <summary>
         /// Runs the GameMaker game loop on a state with the given inputs and CollisionMap and returns a new State. 
         /// </summary>
@@ -51,9 +56,41 @@ namespace Jump_Bruteforcer
         /// <exception cref="NotImplementedException"></exception>
         public static State Update(State state, Input input, CollisionMap collisionMap)
         {
-            (int x, double y, double vSpeed, bool canDJump, bool onPlatform) = (state.X, state.Y, state.VSpeed, state.CanDJump, state.OnPlatform);
+            (int x, double y, double vSpeed, double hSpeed, bool canDJump, bool onPlatform) = (state.X, state.Y, state.VSpeed, 0, state.CanDJump, state.OnPlatform);
             // mutate state variables here:
-            throw new NotImplementedException();
+            //step event:
+            if ((input & Input.Left) == Input.Left)
+            {
+                hSpeed = -PhysicsParams.WALKING_SPEED;
+            }
+            if ((input & Input.Right) == Input.Right)
+            {
+                hSpeed = PhysicsParams.WALKING_SPEED;
+            }
+            onPlatform &= PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap);
+            vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
+            //  playerJump
+            if ((input & Input.Jump) == Input.Jump)
+            {
+                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap))
+                {
+                    vSpeed = PhysicsParams.SJUMP_VSPEED;
+                    canDJump = true;
+                }
+                else if (canDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
+
+            }
+            //  playerVJump
+            if ((input & Input.Release) == Input.Release & vSpeed < 0)
+            {
+                vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
+            }
+            //apply friction, gravity, hspeed/vspeed:
+            vSpeed += PhysicsParams.GRAVITY;
+
 
             return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform };
         }

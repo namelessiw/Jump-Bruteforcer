@@ -24,9 +24,20 @@ namespace Jump_Bruteforcer
             return type?.Last() ?? CollisionType.None;
         }
 
+        /// <summary>
+        /// returns the set of CollisionTypes at pixel (x, y) in order of descending priority
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y)
         {
             Collision.TryGetValue((x, y), out ImmutableSortedSet<CollisionType>? type);
+            return type ?? ImmutableSortedSet<CollisionType>.Empty;
+        }
+        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y)
+        {
+            Collision.TryGetValue((x, (int)Math.Round(y)), out ImmutableSortedSet<CollisionType>? type);
             return type ?? ImmutableSortedSet<CollisionType>.Empty;
         }
 

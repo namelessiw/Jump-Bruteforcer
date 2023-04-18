@@ -67,7 +67,8 @@ namespace Jump_Bruteforcer
                     let x = o.X + spriteX - 5
                     let y = o.Y + spriteY - 8
                     group new { x, y, o } by (x, y) into pixel
-                    select pixel).ToDictionary(data => data.Key, data => (from o in data select o.o.CollisionType).ToImmutableSortedSet());
+                    select pixel).ToDictionary(data => data.Key, data => (from o in data select o.o.CollisionType)
+                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b)=> b.CompareTo(a))));
 
         }
 

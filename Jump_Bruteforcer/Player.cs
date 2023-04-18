@@ -82,7 +82,7 @@ namespace Jump_Bruteforcer
             //  playerJump
             if ((input & Input.Jump) == Input.Jump)
             {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap))
+                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = PhysicsParams.SJUMP_VSPEED;
                     canDJump = true;
@@ -129,7 +129,7 @@ namespace Jump_Bruteforcer
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
-                                canDJump = sign > 0;
+                                canDJump |= sign > 0;
                                 while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
                                 {
                                     y += sign;
@@ -148,6 +148,22 @@ namespace Jump_Bruteforcer
                         if (!PlaceFree(x, y, collisionMap))
                         {
                             (x, y) = (xPrevious, yPrevious);
+                        }
+                        break;
+                    case CollisionType.Platform:
+                        int minInstanceNum = 0;
+                        Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
+                        while (platform is not null)
+                        {
+                            if (y - vSpeed / 2 <= platform.Y)
+                            {
+                                y = platform.Y - 9;
+                                vSpeed = 0;
+                                canDJump = true;
+                                onPlatform = true;
+                            }
+                            minInstanceNum = platform.instanceNum + 1;
+                            platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                         }
                         break;
 

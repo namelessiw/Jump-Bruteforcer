@@ -56,5 +56,11 @@ namespace Jump_Bruteforcer
 
 
         }
+        public Object? GetCollidingPlatform(int x, double y, int minInstanceNum)
+        {
+            return (from Object platform in Platforms
+                    where platform.instanceNum >= minInstanceNum & platform.bbox.Contains(x, (int)Math.Round(y))
+                    select platform).MinBy(x => x.instanceNum);
+        }
     }
 }

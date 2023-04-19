@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
@@ -19,6 +20,7 @@ namespace Jump_Bruteforcer
         private readonly ImmutableArray<Object> Objects;
         public ImageSource Bmp { get; init; }
         public CollisionMap CollisionMap { get; init; }
+        public const int WIDTH = 800, HEIGHT = 608;
 
 
         public Map(List<Object> objects)
@@ -55,10 +57,10 @@ namespace Jump_Bruteforcer
             return drawingImage;
         }
         
-        private Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>> GenerateCollisionMap()
+        private ImmutableSortedSet<CollisionType>[,] GenerateCollisionMap()
         {
 
-            return (from o in Objects
+            var query = (from o in Objects
                     where o.CollisionType != CollisionType.None
                     let hitbox = toHitbox[o.ObjectType]
                     from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
@@ -66,10 +68,23 @@ namespace Jump_Bruteforcer
                     where hitbox[spriteX, spriteY]
                     let x = o.X + spriteX - 5
                     let y = o.Y + spriteY - 8
+                    where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                     group new { x, y, o } by (x, y) into pixel
-                    select pixel).ToDictionary(data => data.Key, data => (from o in data select o.o.CollisionType)
-                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b)=> b.CompareTo(a))));
-
+                    select pixel);
+            var collision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            for (int i = 0; i < WIDTH; i++)
+            {
+                for (int j = 0; j < HEIGHT; j++)
+                {
+                    collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                }
+            }
+            foreach (var pixel in query)
+            {
+                collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
+                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+            }
+            return collision;
         }
 
         public override string ToString()

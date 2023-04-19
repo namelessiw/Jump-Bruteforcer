@@ -5,23 +5,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace Jump_Bruteforcer
 {
     public class CollisionMap
     {
-        public Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>> Collision { get; init; }
+        public ImmutableSortedSet<CollisionType>[,] Collision { get; init; }
         public List<Object> Platforms { get; init; }
-        public CollisionMap(Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
+        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms)
         {
-            this.Collision = Collision ?? new Dictionary<(int X, int Y), ImmutableSortedSet<CollisionType>>();
+            this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
+            this.Platforms = Platforms ?? new List<Object>();
+        }
+        public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
+        {
+            this.Collision = new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
+            for (int i = 0; i < Map.WIDTH; i++)
+            {
+                for (int j = 0; j < Map.HEIGHT; j++)
+                {
+                    this.Collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                }
+            }
+            if (Collision != null)
+            {
+                foreach (var kvp in Collision)
+                {
+                    (int x, int y) = kvp.Key;
+                    this.Collision[x, y] = kvp.Value;
+                }
+            }
+
             this.Platforms = Platforms ?? new List<Object>();
         }
 
         public CollisionType GetHighestPriorityCollisionType(int x, int y)
         {
-            Collision.TryGetValue((x, y), out ImmutableSortedSet<CollisionType>? type);
-            return type?.Last() ?? CollisionType.None;
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT?  Collision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
         /// <summary>
@@ -32,13 +53,12 @@ namespace Jump_Bruteforcer
         /// <returns></returns>
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y)
         {
-            Collision.TryGetValue((x, y), out ImmutableSortedSet<CollisionType>? type);
-            return type ?? ImmutableSortedSet<CollisionType>.Empty;
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
+
         }
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y)
         {
-            Collision.TryGetValue((x, (int)Math.Round(y)), out ImmutableSortedSet<CollisionType>? type);
-            return type ?? ImmutableSortedSet<CollisionType>.Empty;
+            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
 
         /// <summary>

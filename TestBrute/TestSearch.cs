@@ -6,7 +6,7 @@ using System.Windows;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 using System.IO.Packaging;
-using Jump_Bruteforcer;
+using System.Collections.Immutable;
 
 namespace TestBrute
 {
@@ -116,8 +116,8 @@ namespace TestBrute
         {
             (int x, int y) evenGoal = (30, 20);
             (int x, int y) oddGoal = (30, 21);
-            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(null, null));
-            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(null, null));
+            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
+            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
             evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
             evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
             evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);

@@ -45,7 +45,6 @@ namespace Jump_Bruteforcer
 
 
 
-
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {
             int yRounded = node.State.RoundedY;
@@ -104,73 +103,77 @@ namespace Jump_Bruteforcer
             x += (int)hSpeed;
             y += vSpeed;
             //collision event
-            var nextCollision = CollisionType.Solid;
-            while (nextCollision != CollisionType.None)
-            {
-                CollisionType currentCollision = collisionMap.GetCollisionTypes(x, y).SkipWhile(x => x > nextCollision).FirstOrDefault();
-                switch (currentCollision)
-                {
-                    case CollisionType.Solid:
-                        (x, y) = (xPrevious, yPrevious);
-                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
-                        {
-                            int sign = Math.Sign(hSpeed);
-                            if (sign != 0)
+            var collisionTypes = collisionMap.GetCollisionTypes(x, y);
+            int collisionIdx = 0;
+            while (collisionIdx < collisionTypes.Count){ 
+                switch (collisionTypes[collisionIdx])
+                    {
+                        case CollisionType.Solid:
+                            (x, y) = (xPrevious, yPrevious);
+                            if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
                             {
-                                while (PlaceFree(x + sign, y, collisionMap))
+                                int sign = Math.Sign(hSpeed);
+                                if (sign != 0)
                                 {
-                                    x += sign;
+                                    while (PlaceFree(x + sign, y, collisionMap))
+                                    {
+                                        x += sign;
+                                    }
+                                    hSpeed = 0;
                                 }
+                            }
+                            if (!PlaceFree(x, y + vSpeed, collisionMap))
+                            {
+                                int sign = Math.Sign(vSpeed);
+                                if (sign != 0)
+                                {
+                                    canDJump |= sign > 0;
+                                    while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
+                                    {
+                                        y += sign;
+                                        vSpeed -= sign;
+                                    }
+                                    vSpeed = 0;
+                                }
+
+                            }
+                            if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
+                            {
                                 hSpeed = 0;
                             }
-                        }
-                        if (!PlaceFree(x, y + vSpeed, collisionMap))
-                        {
-                            int sign = Math.Sign(vSpeed);
-                            if (sign != 0)
+                            x += (int)hSpeed;
+                            y += vSpeed;
+                            if (!PlaceFree(x, y, collisionMap))
                             {
-                                canDJump |= sign > 0;
-                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
+                                (x, y) = (xPrevious, yPrevious);
+                            }
+                            break;
+                        case CollisionType.Platform:
+                            int minInstanceNum = 0;
+                            Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
+                            while (platform is not null)
+                            {
+                                if (y - vSpeed / 2 <= platform.Y)
                                 {
-                                    y += sign;
-                                    vSpeed -= sign;
+                                    y = platform.Y - 9;
+                                    vSpeed = 0;
+                                    canDJump = true;
+                                    onPlatform = true;
+                                    var currentCollisionType = collisionTypes[collisionIdx];
+                                    collisionTypes = collisionMap.GetCollisionTypes(x, y);
+                                    collisionIdx = collisionTypes.IndexOf(collisionTypes.SkipWhile(x => x > currentCollisionType).FirstOrDefault()) - 1;
+                                    if (collisionIdx < 0)
+                                        goto collisionDone;
                                 }
-                                vSpeed = 0;
+                                minInstanceNum = platform.instanceNum + 1;
+                                platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                             }
+                            break;
 
-                        }
-                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
-                        {
-                            hSpeed = 0;
-                        }
-                        x += (int)hSpeed;
-                        y += vSpeed;
-                        if (!PlaceFree(x, y, collisionMap))
-                        {
-                            (x, y) = (xPrevious, yPrevious);
-                        }
-                        break;
-                    case CollisionType.Platform:
-                        int minInstanceNum = 0;
-                        Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
-                        while (platform is not null)
-                        {
-                            if (y - vSpeed / 2 <= platform.Y)
-                            {
-                                y = platform.Y - 9;
-                                vSpeed = 0;
-                                canDJump = true;
-                                onPlatform = true;
-                            }
-                            minInstanceNum = platform.instanceNum + 1;
-                            platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
-                        }
-                        break;
-
-                }
-                nextCollision = collisionMap.GetCollisionTypes(x, y).SkipWhile(x => x >= currentCollision).FirstOrDefault();
+                    }
+                collisionIdx++;
             }
-
+            collisionDone:
 
             return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform };
         }

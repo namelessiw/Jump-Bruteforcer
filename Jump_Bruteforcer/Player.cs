@@ -81,7 +81,7 @@ namespace Jump_Bruteforcer
             //  playerJump
             if ((input & Input.Jump) == Input.Jump)
             {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
+                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = PhysicsParams.SJUMP_VSPEED;
                     canDJump = true;
@@ -169,8 +169,15 @@ namespace Jump_Bruteforcer
                                 platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                             }
                             break;
+                    case CollisionType.Water3:
+                        canDJump = true;
+                        vSpeed = Math.Min(2, vSpeed);
+                        break;
+                    case CollisionType.Water2:
+                        vSpeed = Math.Min(2, vSpeed);
+                        break;
 
-                    }
+                }
                 collisionIdx++;
             }
             collisionDone:

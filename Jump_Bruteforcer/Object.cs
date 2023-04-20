@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Jump_Bruteforcer
 {

@@ -1,9 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Text;
-using System.Windows;
-using System.Windows.Media;
-
-namespace Jump_Bruteforcer
+﻿namespace Jump_Bruteforcer
 {
     [Flags]
     public enum Input

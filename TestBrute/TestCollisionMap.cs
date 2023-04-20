@@ -1,6 +1,12 @@
 ﻿using FluentAssertions;
 using Jump_Bruteforcer;
+using System;
+using System.Collections.Generic;
 using System.IO.Packaging;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using Xunit.Abstractions;
 
 namespace TestBrute
@@ -10,7 +16,8 @@ namespace TestBrute
         private readonly ITestOutputHelper output;
         public TestCollisionMap(ITestOutputHelper output)
         {
-            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
+            if (Application.Current == null) //https://stackoverflow.com/a/14224558
+                new Application();
             this.output = output;
         }
 

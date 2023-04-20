@@ -1,6 +1,8 @@
 ﻿using Priority_Queue;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer
@@ -10,7 +12,7 @@ namespace Jump_Bruteforcer
         public (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
-        private CollisionMap _collisionMap = new(null, null);
+        private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }

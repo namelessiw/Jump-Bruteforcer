@@ -1,7 +1,12 @@
 using FluentAssertions;
 using Jump_Bruteforcer;
-using System.IO.Packaging;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.Windows;
 using Xunit.Abstractions;
+using Xunit.Sdk;
+using System.IO.Packaging;
+using System.Collections.Immutable;
 
 namespace TestBrute
 {
@@ -12,7 +17,9 @@ namespace TestBrute
 
         public TestSearch(ITestOutputHelper output)
         {
-            PackUriHelper.Create(new Uri("a://0")); //https://stackoverflow.com/a/3710922
+
+            if (Application.Current == null) //https://stackoverflow.com/a/14224558
+                new Application();
             this.output = output;
         }
 
@@ -34,7 +41,7 @@ namespace TestBrute
         [InlineData(420, 407.4, 477, 375, "ground_dplane")]
         [InlineData(410, 407.4, 452, 279, "32px")] 
         [InlineData(410, 407.4, 450, 311, "the_stupid")]
-        [InlineData(388, 407.4, 541, 407, "platforminvert")] //Frames 51
+        [InlineData(388, 407.4, 541, 407, "platform_invert")] //Frames 51
         [InlineData(399, 487.4, 399, 295, "platform_teleport")] //Frames 17
         [InlineData(399, 487.4, 399, 295, "platform_elevator")] //Frames 27
         //harder ones
@@ -61,7 +68,7 @@ namespace TestBrute
         [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107
         [InlineData(17, 119, 259, 535, "ex_hades")] //Frames 603
         [InlineData(49, 87.4, 762, 567, "e_2")]  //Frames 1195
-        [InlineData(125, 119.4, 680, 46, "subset")] //Frames 991
+        [InlineData(125, 119.4, 680, 46, "subset")] //Frames 989
         [InlineData(49, 567, 771, 231, "i_wanna_x")] //Frames 1103
         [InlineData(114, 119, 389, 606, "anticlimax_second_screen")] //Frames 624
         [InlineData(17, 311, 733, 119, "drown_drones")] //Frames 746
@@ -109,8 +116,8 @@ namespace TestBrute
         {
             (int x, int y) evenGoal = (30, 20);
             (int x, int y) oddGoal = (30, 21);
-            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(null, null));
-            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(null, null));
+            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
+            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
             evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
             evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
             evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);

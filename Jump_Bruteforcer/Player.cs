@@ -91,6 +91,11 @@ namespace Jump_Bruteforcer
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
                     canDJump = false;
                 }
+                else if (canDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                    canDJump = true;
+                }
 
             }
             //  playerVJump
@@ -170,6 +175,7 @@ namespace Jump_Bruteforcer
                             }
                             break;
                     case CollisionType.Water1:
+                    case CollisionType.Water3:
                         canDJump = true;
                         vSpeed = Math.Min(2, vSpeed);
                         break;

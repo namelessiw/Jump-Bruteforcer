@@ -36,11 +36,11 @@ namespace Jump_Bruteforcer
         }
         private static bool PlaceFree(int x, int y, CollisionMap CollisionMap)
         {
-            return !CollisionMap.GetCollisionTypes(x, y).Contains(CollisionType.Solid);
+            return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
         }
         private static bool PlaceFree(int x, double y, CollisionMap CollisionMap)
         {
-            return !CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(CollisionType.Solid);
+            return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y)) != CollisionType.Solid;
         }
 
 

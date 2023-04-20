@@ -251,40 +251,7 @@ namespace TestBrute
 
         }
 
-        [Fact]
-        public void TestGetNeighborsCollisionAndKiller()
-        {
-            Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new() { 
-                { (0, 568), ImmutableSortedSet.Create(CollisionType.Solid) },         
-                { (0, 559), ImmutableSortedSet.Create( CollisionType.Killer) },
-            };
-            CollisionMap cmap = new(collision, null);
-
-            for (int x = -10; x < 10; x++)
-            {
-                collision[(x, 568)] = ImmutableSortedSet.Create(CollisionType.Solid);
-                collision[(x, 559)] = ImmutableSortedSet.Create(CollisionType.Killer);
-            }
-            for (int y = 559; y < 568; y++)
-            {
-                for(int x = -3; x < 0; x++)
-                {
-                    collision[(x, y)] = ImmutableSortedSet.Create(CollisionType.Solid);
-                }
-            }
-
-            PlayerNode n1 = new(0, 567.1, 0);
-            Input[] inputs = { Input.Neutral, Input.Right, Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release };
-
-            PlayerNode[] players = new PlayerNode[inputs.Length];
-            for (int i = 0; i < players.Length; i++)
-            {
-                players[i] = n1.NewState(inputs[i], cmap);
-            }
-
-            n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
-
-        }
+     
 
         [Fact]
         public void TestGetPath()

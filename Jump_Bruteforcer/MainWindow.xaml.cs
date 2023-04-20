@@ -26,7 +26,8 @@ namespace Jump_Bruteforcer
         {
             OpenFileDialog o = new()
             {
-                DefaultExt = ".jmap"
+                DefaultExt = ".jmap",
+                Filter = "map files|*.jmap;*.cmap;*.txt",
             };
 
             bool? result = o.ShowDialog();

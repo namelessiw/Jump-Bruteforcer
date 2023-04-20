@@ -23,12 +23,21 @@ namespace Jump_Bruteforcer
             ("block", ObjectType.Block),
             ("miniblock", ObjectType.MiniBlock),
             ("damageblock", ObjectType.KillerBlock),
-            ("objwater", ObjectType.Water3),
-            ("objwater2", ObjectType.Water2),
+            ("apple", ObjectType.Apple),
+            ("cherry", ObjectType.Apple),
+            ("objwater", ObjectType.Water1), // yuuutu
+            ("objwater2", ObjectType.Water2), // yuuutu
+            ("water1", ObjectType.Water1), // renex
+            ("water2", ObjectType.Water2), // renex
+            ("water3", ObjectType.Water3), // renex
             ("spikeDown", ObjectType.SpikeDown),
             ("spikeLeft", ObjectType.SpikeLeft),
             ("spikeRight", ObjectType.SpikeRight),
             ("spikeUp", ObjectType.SpikeUp),
+            ("spikeD", ObjectType.SpikeDown),
+            ("spikeL", ObjectType.SpikeLeft),
+            ("spikeR", ObjectType.SpikeRight),
+            ("spikeU", ObjectType.SpikeUp),
             ("minispikeDown", ObjectType.MiniSpikeDown),
             ("minispikeLeft", ObjectType.MiniSpikeLeft),
             ("minispikeRight", ObjectType.MiniSpikeRight),
@@ -36,12 +45,15 @@ namespace Jump_Bruteforcer
             ("playerKiller", ObjectType.SpikeDown),
             ("platform", ObjectType.Platform), // yuuutu platform hitbox is a lot smaller than the regular one, good luck distinguishing here
             ("movingPlatform", ObjectType.Platform), // like this one should have the regular hitbox but not the other one since its just supposed to be an object parent
+            ("catharsiswater", ObjectType.CatharsisWater),
         };
 
         static ObjectType GetObjectType(string ObjectName)
         {
             return ObjectNames.FirstOrDefault<(string Name, ObjectType Type)>(
-                (x) => x.Name == ObjectName,
+                (x) => 
+                    x.Name.ToLower() == ObjectName.ToLower() || 
+                    x.Name.ToLower() == ("obj" + ObjectName).ToLower(),
                 ("", ObjectType.Unknown)
             ).Type;
         }
@@ -66,6 +78,13 @@ namespace Jump_Bruteforcer
                 }
 
                 string ObjectName = Parameters[0];
+                ObjectType Type = GetObjectType(ObjectName);
+
+                if (Type == ObjectType.Unknown)
+                {
+                    continue;
+                }
+
                 int X = (int)Math.Round(ParseDouble(Parameters[1]));
                 int Y = (int)Math.Round(ParseDouble(Parameters[2]));
                 //uid
@@ -76,31 +95,56 @@ namespace Jump_Bruteforcer
                 double Angle = ParseDouble(Parameters[8]);
                 //savecode
 
+
+
                 // ignore for non-representable objects?
                 if (XScale % 1 != 0)
                 {
-                    throw new Exception($"Expected integer image_xscale, found {XScale}");
+                    throw new Exception($"Expected integer image_xscale, found {XScale} for object {ObjectName} (line {i})");
                 }
                 if (YScale % 1 != 0)
                 {
-                    throw new Exception($"Expected integer image_yscale, found {XScale}");
+                    throw new Exception($"Expected integer image_yscale, found {YScale} for object {ObjectName} (line {i})");
                 }
                 if (Angle != 0)
                 {
                     throw new Exception($"Expected angle 0, found {Angle}");
                 }
 
-                ObjectType Type = GetObjectType(ObjectName);
-
-                if (Type != ObjectType.Unknown)
+                if ((Type == ObjectType.Platform || 
+                    Type == ObjectType.SpikeDown ||
+                    Type == ObjectType.SpikeLeft ||
+                    Type == ObjectType.SpikeRight ||
+                    Type == ObjectType.SpikeUp ||
+                    Type == ObjectType.MiniSpikeDown ||
+                    Type == ObjectType.MiniSpikeLeft ||
+                    Type == ObjectType.MiniSpikeRight ||
+                    Type == ObjectType.MiniSpikeUp ||
+                    Type == ObjectType.Warp ||
+                    Type == ObjectType.Apple) && 
+                    (YScale != 1 || XScale != 1))
                 {
-                    BoundingBox? bbox = null;
-                    if (Type == ObjectType.Platform)
+                    throw new Exception($"Scaling not implemented for object type {Type}");
+                }
+
+
+
+                for (double xs = 0; xs < XScale; xs++)
+                {
+                    for (double ys = 0; ys < YScale; ys++)
                     {
-                        bbox = new BoundingBox(X - 5, Y - 10, 42, 36);
+                        BoundingBox? bbox = null;
+                        if (Type == ObjectType.Platform)
+                        {
+                            bbox = new BoundingBox(X - 5, Y - 10, 42, 36);
+                        }
+
+                        Objects.Add(new Object(X + (int)(xs * 32), Y + (int)(ys * 32), Type, bbox, i));
+
+                        //Y += 32;
                     }
 
-                    Objects.Add(new Object(X, Y, Type, bbox, i));
+                    //X += 32;
                 }
             }
 

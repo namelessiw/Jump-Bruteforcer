@@ -4,6 +4,8 @@ namespace Jump_Bruteforcer
 {
     public static class Parser
     {
+        public static Map Parse(string Text) => Parse(".jmap", Text);
+
         public static Map Parse(string Extension, string Text)
         {
             return Extension.ToLower() switch

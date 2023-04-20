@@ -1,11 +1,7 @@
 using FluentAssertions;
 using Jump_Bruteforcer;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 using System.Windows;
 using Xunit.Abstractions;
-using Xunit.Sdk;
-using System.IO.Packaging;
 using System.Collections.Immutable;
 
 namespace TestBrute
@@ -98,13 +94,13 @@ namespace TestBrute
         [InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
         */
 
-        public void TestJMaps(int startX, double startY, int goalX, int goalY, string jmapName)
+        public void TestParsers(int startX, double startY, int goalX, int goalY, string jmapName)
         {
             
             string path = @$"..\..\..\jmaps\{jmapName}.jmap";
             string Text = File.ReadAllText(path);
 
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             Search s = new Search((startX, startY), (goalX, goalY), Map.CollisionMap);
             SearchResult result = s.RunAStar();
             result.Success.Should().BeTrue();

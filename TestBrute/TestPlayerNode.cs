@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
 using System.Windows;
 using System.Windows.Media;
 using FluentAssertions;
@@ -173,7 +167,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\1_green_5.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(342, 376.845, 0);
             n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, false, false).State);
         }
@@ -343,7 +337,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\dj.jmap";
             string Text = File.ReadAllText(path);
             Input[] inputs = new Input[] {Input.Right, Input.Left, Input.Left, Input.Left, Input.Left, Input.Left | Input.Jump, Input.Neutral};
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(452, 407.4, 0);
 
             foreach (Input input in inputs)
@@ -359,7 +353,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(394, 375, 0, true, true);
             n1.State.CanDJump.Should().BeTrue();
 
@@ -386,7 +380,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(394, 396, 0, true, false);
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
@@ -403,7 +397,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(418, 380, 6, true, false);
 
             n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, true, true).State);
@@ -419,7 +413,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(421, 380, 6, true, false);
 
             n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4, true, false).State);
@@ -434,7 +428,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(394, 375, 0, true, true);
             n1.State.CanDJump.Should().BeTrue();
 
@@ -452,7 +446,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(394, 375, 9.4, true, true);
             n1.NewState(Input.Neutral, Map.CollisionMap).State.VSpeed.Should().Be(0);
             
@@ -464,7 +458,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(410, 408, 0, true, true);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
@@ -477,7 +471,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(401, 407, 0, true, false);
             n1.NewState(Input.Jump | Input.Release, Map.CollisionMap).NewState(Input.Jump, Map.CollisionMap).State.VSpeed.Should().NotBe(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY);
         }
@@ -487,7 +481,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\platform_ceiling.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(466, 499, 0, false, false);
             n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(466, 499.4, 0.4, false, false).State);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
@@ -504,7 +498,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\nabla_2.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(479, 592.8957, 8.8, false, false);
 
             Input[] inputs = new Input[]

@@ -110,70 +110,73 @@ namespace Jump_Bruteforcer
             //collision event
             var collisionTypes = collisionMap.GetCollisionTypes(x, y);
             int collisionIdx = 0;
-            while (collisionIdx < collisionTypes.Count){ 
+            while (collisionIdx < collisionTypes.Count)
+            {
                 switch (collisionTypes[collisionIdx])
-                    {
-                        case CollisionType.Solid:
-                            (x, y) = (xPrevious, yPrevious);
-                            if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
+                {
+                    case CollisionType.Solid:
+                        (x, y) = (xPrevious, yPrevious);
+                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
+                        {
+                            int sign = Math.Sign(hSpeed);
+                            if (sign != 0)
                             {
-                                int sign = Math.Sign(hSpeed);
-                                if (sign != 0)
+                                while (PlaceFree(x + sign, y, collisionMap))
                                 {
-                                    while (PlaceFree(x + sign, y, collisionMap))
-                                    {
-                                        x += sign;
-                                    }
-                                    hSpeed = 0;
+                                    x += sign;
                                 }
-                            }
-                            if (!PlaceFree(x, y + vSpeed, collisionMap))
-                            {
-                                int sign = Math.Sign(vSpeed);
-                                if (sign != 0)
-                                {
-                                    canDJump |= sign > 0;
-                                    while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
-                                    {
-                                        y += sign;
-                                        vSpeed -= sign;
-                                    }
-                                    vSpeed = 0;
-                                }
-
-                            }
-                            if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
-                            {
                                 hSpeed = 0;
                             }
-                            x += (int)hSpeed;
-                            y += vSpeed;
-                            if (!PlaceFree(x, y, collisionMap))
+                        }
+                        if (!PlaceFree(x, y + vSpeed, collisionMap))
+                        {
+                            int sign = Math.Sign(vSpeed);
+                            if (sign != 0)
                             {
-                                (x, y) = (xPrevious, yPrevious);
-                            }
-                            break;
-                        case CollisionType.Platform:
-                            int minInstanceNum = 0;
-                            Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
-                            while (platform is not null)
-                            {
-                                if (y - vSpeed / 2 <= platform.Y)
+                                canDJump |= sign > 0;
+                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
                                 {
-                                    y = platform.Y - 9;
-                                    vSpeed = 0;
-                                    canDJump = true;
-                                    onPlatform = true;
-                                    var currentCollisionType = collisionTypes[collisionIdx];
-                                    collisionTypes = collisionMap.GetCollisionTypes(x, y);
-                                    collisionIdx = collisionTypes.IndexOf(collisionTypes.SkipWhile(x => x > currentCollisionType).FirstOrDefault()) - 1;
-                                    if (collisionIdx < 0)
-                                        goto collisionDone;
+                                    y += sign;
+                                    vSpeed -= sign;
                                 }
-                                minInstanceNum = platform.instanceNum + 1;
-                                platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
+                                vSpeed = 0;
                             }
-                            break;
+
+                        }
+                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
+                        {
+                            hSpeed = 0;
+                        }
+                        x += (int)hSpeed;
+                        y += vSpeed;
+                        if (!PlaceFree(x, y, collisionMap))
+                        {
+                            (x, y) = (xPrevious, yPrevious);
+                        }
+                        break;
+                    case CollisionType.Platform:
+                        int minInstanceNum = 0;
+                        Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
+                        while (platform is not null)
+                        {
+                            if (y - vSpeed / 2 <= platform.Y)
+                            {
+                                y = platform.Y - 9;
+                                vSpeed = 0;
+                                canDJump = true;
+                                onPlatform = true;
+                                var currentCollisionType = collisionTypes[collisionIdx];
+                                collisionTypes = collisionMap.GetCollisionTypes(x, y);
+                                CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
+                                if (nextCollisionType == CollisionType.None)
+                                    goto collisionDone;
+                                collisionIdx = collisionTypes.IndexOf((CollisionType)nextCollisionType) - 1;
+
+                            }
+                            minInstanceNum = platform.instanceNum + 1;
+                            platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
+                        }
+                        break;
                     case CollisionType.Water1:
                     case CollisionType.Water3:
                         canDJump = true;
@@ -186,7 +189,7 @@ namespace Jump_Bruteforcer
                 }
                 collisionIdx++;
             }
-            collisionDone:
+        collisionDone:
 
             return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform };
         }

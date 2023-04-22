@@ -13,10 +13,17 @@ namespace Jump_Bruteforcer
     {
         public ImmutableSortedSet<CollisionType>[,] Collision { get; init; }
         public List<Object> Platforms { get; init; }
-        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms)
+
+        private readonly VineDistance[,] vineLeftDistances;
+        private readonly VineDistance[,] vineRightDistances;
+
+        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,] vineLeftDistances, VineDistance[,] vineRightDistances)
         {
             this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
+            this.vineLeftDistances = vineLeftDistances;
+            this.vineRightDistances = vineRightDistances;
+
         }
         public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
         {
@@ -36,7 +43,8 @@ namespace Jump_Bruteforcer
                     this.Collision[x, y] = kvp.Value;
                 }
             }
-
+            this.vineLeftDistances = new VineDistance[Map.WIDTH, Map.HEIGHT];
+            this.vineRightDistances = new VineDistance[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
         }
 

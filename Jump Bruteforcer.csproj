@@ -32,6 +32,10 @@
     <None Remove="images\spikeleft.png" />
     <None Remove="images\spikeright.png" />
     <None Remove="images\spikeup.png" />
+    <None Remove="images\vinel.png" />
+    <None Remove="images\vineleft.png" />
+    <None Remove="images\viner.png" />
+    <None Remove="images\vineright.png" />
     <None Remove="images\warp.png" />
     <None Remove="images\water1.png" />
     <None Remove="images\water2.png" />
@@ -64,6 +68,8 @@
     <Resource Include="images\spikeleft.png" />
     <Resource Include="images\spikeright.png" />
     <Resource Include="images\spikeup.png" />
+    <Resource Include="images\vineleft.png" />
+    <Resource Include="images\vineright.png" />
     <Resource Include="images\warp.png" />
     <Resource Include="images\water1.png" />
     <Resource Include="images\water2.png" />

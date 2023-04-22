@@ -15,6 +15,13 @@ using System.Windows.Shapes;
 
 namespace Jump_Bruteforcer
 {
+    public enum VineDistance
+    {
+        FAR,
+        CORNER,
+        EDGE,
+        INSIDE
+    }
     public class Map
     {
         private readonly ImmutableArray<Object> Objects;
@@ -29,7 +36,8 @@ namespace Jump_Bruteforcer
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
-            CollisionMap = new(GenerateCollisionMap(), platforms);
+            (var cmap, var leftvine, var rightvine) = GenerateCollisionMap();
+            CollisionMap = new(cmap, platforms, leftvine, rightvine);
         }
 
         private ImageSource GenerateCollisionImage()
@@ -56,7 +64,7 @@ namespace Jump_Bruteforcer
             return drawingImage;
         }
         
-        private ImmutableSortedSet<CollisionType>[,] GenerateCollisionMap()
+        private (ImmutableSortedSet<CollisionType>[,], VineDistance[,], VineDistance[,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
@@ -83,7 +91,57 @@ namespace Jump_Bruteforcer
                 collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
             }
-            return collision;
+
+            //vine distance matrices
+            var vineLeftDistances = new VineDistance[WIDTH, HEIGHT];
+            var vineRightDistances = new VineDistance[WIDTH, HEIGHT];
+            var query2 = from o in Objects
+                         where o.ObjectType == ObjectType.VineLeft || o.ObjectType == ObjectType.VineRight
+                         select o;
+            foreach(Object vine in query2)
+            {
+                if (vine.ObjectType == ObjectType.VineRight)
+                {
+                    vineDistanceHelper(vineRightDistances, vine, 0);
+                }
+                else
+                {
+                    vineDistanceHelper(vineLeftDistances, vine, 18);
+                }
+            }
+
+            return (collision, vineLeftDistances, vineRightDistances);
+
+            static void vineDistanceArrayHelper(VineDistance[,] vineDistances, int x, int y, VineDistance distance)
+            {
+                if ((uint)x < WIDTH && (uint)y < HEIGHT)
+                    vineDistances[x, y] = (VineDistance)Math.Max((byte)distance, (byte)vineDistances[x, y]);
+            }
+
+            static void vineDistanceHelper(VineDistance[,] vineDistance, Object vine, int offset)
+            {
+                vineDistanceArrayHelper(vineDistance, vine.X - 6 + offset, vine.Y - 11, VineDistance.CORNER);
+                vineDistanceArrayHelper(vineDistance, vine.X - 6 + offset, vine.Y + 42, VineDistance.CORNER);
+                vineDistanceArrayHelper(vineDistance, vine.X + 19 + offset, vine.Y - 11, VineDistance.CORNER);
+                vineDistanceArrayHelper(vineDistance, vine.X + 19 + offset, vine.Y + 42, VineDistance.CORNER);
+                foreach (int x in Enumerable.Range(-5 + offset, 24))
+                {
+                    vineDistanceArrayHelper(vineDistance, vine.X + x, vine.Y - 11, VineDistance.EDGE);
+                    vineDistanceArrayHelper(vineDistance, vine.X + x, vine.Y + 42, VineDistance.EDGE);
+                }
+                foreach (int y in Enumerable.Range(-10, 52))
+                {
+                    vineDistanceArrayHelper(vineDistance, vine.X - 6 + offset, vine.Y + y, VineDistance.EDGE);
+                    vineDistanceArrayHelper(vineDistance, vine.X + 19 + offset, vine.Y + y, VineDistance.EDGE);
+                }
+                var query3 = from x in Enumerable.Range(-5 + offset, 24)
+                             from y in Enumerable.Range(-10, 52)
+                             select (x, y);
+                foreach ((int x, int y) in query3)
+                {
+                    vineDistanceArrayHelper(vineDistance, vine.X + x, vine.Y + y, VineDistance.INSIDE);
+                }
+            }
         }
 
         public override string ToString()

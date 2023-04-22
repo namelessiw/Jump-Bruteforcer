@@ -20,7 +20,7 @@ namespace Jump_Bruteforcer
         private readonly ImmutableArray<Object> Objects;
         public ImageSource Bmp { get; init; }
         public CollisionMap CollisionMap { get; init; }
-        public const int WIDTH = 800, HEIGHT = 608;
+        public const int WIDTH = 801, HEIGHT = 609;
 
 
         public Map(List<Object> objects)
@@ -36,8 +36,7 @@ namespace Jump_Bruteforcer
         {
             DrawingGroup drawingGroup = new DrawingGroup();
             
-            int width = 800, height = 608;
-            var mapBounds = new RectangleGeometry(new Rect(0, 0, width, height));
+            var mapBounds = new RectangleGeometry(new Rect(0, 0, WIDTH, HEIGHT));
             drawingGroup.Children.Add(new GeometryDrawing(Brushes.Transparent, new Pen(), mapBounds));
 
             var query = from o in Objects

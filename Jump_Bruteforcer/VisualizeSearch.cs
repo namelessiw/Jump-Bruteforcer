@@ -66,7 +66,7 @@ namespace Jump_Bruteforcer
 
         public static WriteableBitmap HeatMap()
         {
-            WriteableBitmap bmp = new(800, 608, 96, 96, PixelFormats.Bgra32, null);
+            WriteableBitmap bmp = new(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
 
             Dictionary<(int X, int Y), (int Open, int Closed)>.Enumerator enumerator = statesPerPx.GetEnumerator();
 

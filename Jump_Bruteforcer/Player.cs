@@ -49,7 +49,7 @@ namespace Jump_Bruteforcer
         {
             int yRounded = node.State.RoundedY;
             bool notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded).Contains(CollisionType.Killer);
-            bool inbounds = node.State.X is >= 0 and <= 799 & yRounded is >= 0 and <= 607;
+            bool inbounds = node.State.X is >= 0 and <= Map.WIDTH & node.State.Y is >= 0 and <= Map.HEIGHT;
             return notOnKiller & inbounds;
         }
 

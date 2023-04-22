@@ -86,6 +86,12 @@ namespace TestBrute
         [InlineData(748, 4, 51, 573, "Zeus_recreation_2")] //Frames 717
         [InlineData(793, 84, 768, 566, "rapeechscreen1")] //Frames 986
         [InlineData(6, 563, 746, 31, "rapeechscreen2")] //Frames 1172
+        [InlineData(49, 119.4, 536, 452, "tdati")] //Frames 884
+        [InlineData(49, 103, 333, 47, "dalet")] //Frames 1126
+        [InlineData(49, 567, 32, 335, "che")] //Frames 1268
+        [InlineData(49, 279, 545, 422, "che2")] //Frames 1151
+        [InlineData(753, 183, 217, 220, "nabla_2")] //Frames 946
+        [InlineData(49, 567, 727, 605, "phi_3")] //Frames 1073
 
         //might not be solvable for the program right now
         /*

@@ -68,14 +68,25 @@ namespace Jump_Bruteforcer
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             // mutate state variables here:
             //step event:
-            if ((input & Input.Left) == Input.Left)
+
+            //vines
+            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft);
+            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight);
+
+
+            if ((input & Input.Left) == Input.Left && vineRDistance != VineDistance.EDGE ||
+                (input & Input.Right) == Input.Right && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
             {
-                hSpeed = -PhysicsParams.WALKING_SPEED;
+                if ((input & Input.Left) == Input.Left)
+                {
+                    hSpeed = -PhysicsParams.WALKING_SPEED;
+                }
+                if ((input & Input.Right) == Input.Right)
+                {
+                    hSpeed = PhysicsParams.WALKING_SPEED;
+                }
             }
-            if ((input & Input.Right) == Input.Right)
-            {
-                hSpeed = PhysicsParams.WALKING_SPEED;
-            }
+
             onPlatform &= PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap);
             vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
             //  playerJump
@@ -103,6 +114,28 @@ namespace Jump_Bruteforcer
             {
                 vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
             }
+            //more vines
+            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
+            {
+                vSpeed = 2;
+                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                if ((input & Input.Right) == Input.Right)
+                {
+                    vSpeed = -9;
+                    hSpeed = 15;
+                }
+            }
+            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
+            {
+                vSpeed = 2;
+                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                if ((input & Input.Left) == Input.Left)
+                {
+                    vSpeed = -9;
+                    hSpeed = -15;
+                }
+            }
+
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += PhysicsParams.GRAVITY;
             x += (int)hSpeed;

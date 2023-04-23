@@ -25,6 +25,19 @@ namespace Jump_Bruteforcer
             this.vineRightDistances = vineRightDistances;
 
         }
+
+        public VineDistance GetVineDistance(int x, double y, ObjectType vine)
+        {
+            int yRounded = (int)Math.Round(y);
+            if (vine == ObjectType.VineRight)
+            {
+                return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineRightDistances[x, yRounded] : VineDistance.FAR;
+            }
+            else
+            {
+                return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineLeftDistances[x, yRounded] : VineDistance.FAR;
+            }
+        }
         public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
         {
             this.Collision = new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];

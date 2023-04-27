@@ -100,7 +100,7 @@ namespace Jump_Bruteforcer
             }
 
             //vine distance matrix
-            var vineDistances = new VineDistance[WIDTH, HEIGHT, 4];
+            var vineDistances = new VineDistance[WIDTH, HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
             var query2 = from o in Objects
                          where o.ObjectType == ObjectType.VineLeft || o.ObjectType == ObjectType.VineRight
                          select o;
@@ -126,13 +126,13 @@ namespace Jump_Bruteforcer
                     vineDistances[x, y, (int)idx] = (VineDistance)Math.Max((byte)distance, (byte)vineDistances[x, y, (int)idx]);
             }
 
-            static void vineDistanceHelper(VineDistance[,,] vineDistance, VineArrayIdx idx, Object vine, int offset, int extension)
+            static void vineDistanceHelper(VineDistance[,,] vineDistance, VineArrayIdx idx, Object vine, int offset, int bbox_extension)
             {
                 vineDistanceArrayHelper(vineDistance, idx, vine.X - 6 + offset, vine.Y - 9, VineDistance.CORNER);
                 vineDistanceArrayHelper(vineDistance, idx, vine.X - 6 + offset, vine.Y + 44, VineDistance.CORNER);
-                vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + extension, vine.Y - 9, VineDistance.CORNER);
-                vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + extension, vine.Y + 44, VineDistance.CORNER);
-                foreach (int x in Enumerable.Range(-5 + offset, 24 + extension))
+                vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + bbox_extension, vine.Y - 9, VineDistance.CORNER);
+                vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + bbox_extension, vine.Y + 44, VineDistance.CORNER);
+                foreach (int x in Enumerable.Range(-5 + offset, 24 + bbox_extension))
                 {
                     vineDistanceArrayHelper(vineDistance, idx, vine.X + x, vine.Y - 9, VineDistance.EDGE);
                     vineDistanceArrayHelper(vineDistance, idx, vine.X + x, vine.Y + 44, VineDistance.EDGE);
@@ -140,9 +140,9 @@ namespace Jump_Bruteforcer
                 foreach (int y in Enumerable.Range(-8, 52))
                 {
                     vineDistanceArrayHelper(vineDistance, idx, vine.X - 6 + offset, vine.Y + y, VineDistance.EDGE);
-                    vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + extension, vine.Y + y, VineDistance.EDGE);
+                    vineDistanceArrayHelper(vineDistance, idx, vine.X + 19 + offset + bbox_extension, vine.Y + y, VineDistance.EDGE);
                 }
-                var query3 = from x in Enumerable.Range(-5 + offset, 24 + extension)
+                var query3 = from x in Enumerable.Range(-5 + offset, 24 + bbox_extension)
                              from y in Enumerable.Range(-8, 52)
                              select (x, y);
                 foreach ((int x, int y) in query3)

@@ -85,8 +85,10 @@ namespace TestBrute
             Map Map = JMap.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
             cmap.GetVineDistance(172, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.CORNER) ;
+            cmap.GetVineDistance(172, 248.4, ObjectType.VineLeft, true).Should().Be(VineDistance.EDGE);
             cmap.GetVineDistance(173, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.EDGE);
             cmap.GetVineDistance(197, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(197, 248.4, ObjectType.VineLeft, true).Should().Be(VineDistance.EDGE);
             cmap.GetVineDistance(172, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.CORNER);
             cmap.GetVineDistance(173, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.EDGE);
             cmap.GetVineDistance(199, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.CORNER);

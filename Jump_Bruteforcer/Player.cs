@@ -73,11 +73,14 @@ namespace Jump_Bruteforcer
             //vines
             VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
             VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
-
-            if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+            if (h != 0)
             {
-                facingRight = h == 1;
+                if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                {
+                    facingRight = h == 1;
+                }
             }
+                
             vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
             vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
             if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
@@ -118,7 +121,7 @@ namespace Jump_Bruteforcer
                 vSpeed = 2;
                 facingRight = true;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if ((input & Input.Right) == Input.Right)
+                if (h == 1)
                 {
                     vSpeed = -9;
                     hSpeed = 15;
@@ -129,7 +132,7 @@ namespace Jump_Bruteforcer
                 vSpeed = 2;
                 facingRight = false;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if ((input & Input.Left) == Input.Left)
+                if (h == -1)
                 {
                     vSpeed = -9;
                     hSpeed = -15;

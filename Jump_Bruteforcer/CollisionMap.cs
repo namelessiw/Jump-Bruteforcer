@@ -60,7 +60,7 @@ namespace Jump_Bruteforcer
                     this.Collision[x, y] = kvp.Value;
                 }
             }
-            this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, 4];
+            this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
             this.Platforms = Platforms ?? new List<Object>();
         }
 

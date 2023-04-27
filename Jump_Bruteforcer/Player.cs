@@ -64,27 +64,25 @@ namespace Jump_Bruteforcer
         /// <exception cref="NotImplementedException"></exception>
         public static State Update(State state, Input input, CollisionMap collisionMap)
         {
-            (int x, double y, double vSpeed, double hSpeed, bool canDJump, bool onPlatform) = (state.X, state.Y, state.VSpeed, 0, state.CanDJump, state.OnPlatform);
+            (int x, double y, double vSpeed, double hSpeed, bool canDJump, bool onPlatform, bool facingRight) = (state.X, state.Y, state.VSpeed, 0, state.CanDJump, state.OnPlatform, state.FacingRight);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             // mutate state variables here:
             //step event:
-
+            int h = (input & Input.Left) == Input.Left ? -1 : 0;
+            h = (input & Input.Right) == Input.Right ? 1 : h;
             //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, true);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, true);
+            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
+            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
 
-
-            if ((input & Input.Left) == Input.Left && vineRDistance != VineDistance.EDGE ||
-                (input & Input.Right) == Input.Right && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+            if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
             {
-                if ((input & Input.Left) == Input.Left)
-                {
-                    hSpeed = -PhysicsParams.WALKING_SPEED;
-                }
-                if ((input & Input.Right) == Input.Right)
-                {
-                    hSpeed = PhysicsParams.WALKING_SPEED;
-                }
+                facingRight = h == 1;
+            }
+            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
+            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
+            if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+            {
+                hSpeed = h * PhysicsParams.WALKING_SPEED;
             }
 
             onPlatform &= PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap);
@@ -118,6 +116,7 @@ namespace Jump_Bruteforcer
             if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
             {
                 vSpeed = 2;
+                facingRight = true;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if ((input & Input.Right) == Input.Right)
                 {
@@ -128,6 +127,7 @@ namespace Jump_Bruteforcer
             if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
             {
                 vSpeed = 2;
+                facingRight = false;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if ((input & Input.Left) == Input.Left)
                 {
@@ -224,7 +224,7 @@ namespace Jump_Bruteforcer
             }
         collisionDone:
 
-            return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform };
+            return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform, FacingRight=facingRight};
         }
     }
 }

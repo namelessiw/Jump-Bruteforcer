@@ -19,6 +19,7 @@ namespace Jump_Bruteforcer
         public double VSpeed { get; init; }
         public bool CanDJump { get; init; }
         public bool OnPlatform { get; init; }
+        public bool FacingRight { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
         const int epsilon = 10;
 
@@ -56,8 +57,8 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
                 Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform }, parent, pathCost, action);
+        public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, bool facingRight = true, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
+            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform, FacingRight = facingRight }, parent, pathCost, action);
 
         public PlayerNode(State state, PlayerNode? parent, uint pathCost, Input? action)
         {

@@ -14,28 +14,32 @@ namespace Jump_Bruteforcer
         public ImmutableSortedSet<CollisionType>[,] Collision { get; init; }
         public List<Object> Platforms { get; init; }
 
-        private readonly VineDistance[,] vineLeftDistances;
-        private readonly VineDistance[,] vineRightDistances;
+        private readonly VineDistance[,,] vineDistance;
 
-        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,] vineLeftDistances, VineDistance[,] vineRightDistances)
+        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
             this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
-            this.vineLeftDistances = vineLeftDistances;
-            this.vineRightDistances = vineRightDistances;
+            this.vineDistance = vineDistances;
 
         }
 
-        public VineDistance GetVineDistance(int x, double y, ObjectType vine)
+        public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);
             if (vine == ObjectType.VineRight)
             {
-                return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineRightDistances[x, yRounded] : VineDistance.FAR;
+                if (facingRight)
+                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGRIGHT] : VineDistance.FAR;
+                else
+                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGLEFT] : VineDistance.FAR;
             }
             else
             {
-                return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineLeftDistances[x, yRounded] : VineDistance.FAR;
+                if (facingRight)
+                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGRIGHT] : VineDistance.FAR;
+                else
+                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGLEFT] : VineDistance.FAR;
             }
         }
         public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
@@ -56,8 +60,7 @@ namespace Jump_Bruteforcer
                     this.Collision[x, y] = kvp.Value;
                 }
             }
-            this.vineLeftDistances = new VineDistance[Map.WIDTH, Map.HEIGHT];
-            this.vineRightDistances = new VineDistance[Map.WIDTH, Map.HEIGHT];
+            this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, 4];
             this.Platforms = Platforms ?? new List<Object>();
         }
 

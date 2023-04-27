@@ -536,5 +536,23 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2, true).State);
         }
 
+        [Fact]
+        public void TestVineClip()
+        {
+
+            string path = @$"..\..\..\jmaps\vineclip.jmap";
+            string Text = File.ReadAllText(path);
+
+            Map Map = JMap.Parse(Text);
+            var n1 = new PlayerNode(165, 247.4, 0, true, false);
+            n1 = n1.NewState(Input.Jump, Map.CollisionMap);
+            for (int i = 0; i < 6; i++)
+                 n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0, true, false).State);
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(150, 195.2, -8.6, true, false).State);
+
+
+        }
+
     }
 }

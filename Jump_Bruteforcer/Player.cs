@@ -70,8 +70,8 @@ namespace Jump_Bruteforcer
             //step event:
 
             //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight);
+            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, true);
+            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, true);
 
 
             if ((input & Input.Left) == Input.Left && vineRDistance != VineDistance.EDGE ||

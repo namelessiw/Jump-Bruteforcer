@@ -77,6 +77,33 @@ namespace TestBrute
 
         }
 
+        [Fact]
+        public void TestVineDistance()
+        {
+            string path = @$"..\..\..\jmaps\vineclip.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = JMap.Parse(Text);
+            CollisionMap cmap = Map.CollisionMap;
+            cmap.GetVineDistance(172, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.CORNER) ;
+            cmap.GetVineDistance(173, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.EDGE);
+            cmap.GetVineDistance(197, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(172, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(173, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.EDGE);
+            cmap.GetVineDistance(199, 247.4, ObjectType.VineLeft, false).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(198, 248.4, ObjectType.VineLeft, true).Should().Be(VineDistance.FAR);
+            cmap.GetVineDistance(198, 248.4, ObjectType.VineLeft, false).Should().Be(VineDistance.INSIDE);
+
+            cmap.GetVineDistance(154, 151.4, ObjectType.VineRight, true).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(155, 151.4, ObjectType.VineRight, true).Should().Be(VineDistance.EDGE);
+            cmap.GetVineDistance(179, 151.4, ObjectType.VineRight, true).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(154, 151.4, ObjectType.VineRight, false).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(155, 151.4, ObjectType.VineRight, false).Should().Be(VineDistance.EDGE);
+            cmap.GetVineDistance(181, 151.4, ObjectType.VineRight, false).Should().Be(VineDistance.CORNER);
+            cmap.GetVineDistance(180, 152.4, ObjectType.VineRight, true).Should().Be(VineDistance.FAR);
+            cmap.GetVineDistance(180, 152.4, ObjectType.VineRight, false).Should().Be(VineDistance.INSIDE);
+
+        }
+
 
     }
 }

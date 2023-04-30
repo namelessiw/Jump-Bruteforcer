@@ -46,7 +46,6 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            PlayerPath = new();
             PlayerNode root = new PlayerNode(start.x, start.y, 0);
             root.PathCost = 0;
 

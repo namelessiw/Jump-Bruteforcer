@@ -55,6 +55,7 @@ namespace Jump_Bruteforcer
                 Map Map = JMap.Parse(Text);
                 ImageJMap.Source = Map.Bmp;
                 s.CollisionMap = Map.CollisionMap;
+                s.PlayerPath = new();
 
             }
 

@@ -54,9 +54,10 @@ namespace Jump_Bruteforcer
         public PlayerNode? Parent { get; set; }
         public uint PathCost { get; set; }
         public Input? Action { get; set; }
-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
-                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
-
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
+        public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
+        public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
+        private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
         public PlayerNode(int x, double y, double vSpeed, bool canDJump = true, bool onPlatform = false, bool facingRight = true, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
             (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform, FacingRight = facingRight }, parent, pathCost, action);
 
@@ -104,16 +105,29 @@ namespace Jump_Bruteforcer
         public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap)
         {
             var neighbors = new HashSet<PlayerNode>();
-            foreach (Input input in inputs)
+            fillNeighbors(CollisionMap, neighbors, inputs);
+
+            if (State.VSpeed < 0)
             {
-                PlayerNode neighbor = NewState(input, CollisionMap);
-                if (Player.IsAlive(CollisionMap, neighbor))
+                fillNeighbors(CollisionMap, neighbors, inputsRelease);
+            }
+            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 4)).Contains(CollisionType.Platform) || State.CanDJump || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 1)).Overlaps(jumpables))
+            {
+                fillNeighbors(CollisionMap, neighbors, inputsJump);
+            }
+
+            return neighbors;
+
+            void fillNeighbors(CollisionMap CollisionMap, HashSet<PlayerNode> neighbors, ImmutableArray<Input> inputs)
+            {
+                foreach (var neighbor in from Input input in inputs
+                                         let neighbor = NewState(input, CollisionMap)
+                                         where Player.IsAlive(CollisionMap, neighbor)
+                                         select neighbor)
                 {
                     neighbors.Add(neighbor);
                 }
             }
-
-            return neighbors;
         }
 
         /// <summary>

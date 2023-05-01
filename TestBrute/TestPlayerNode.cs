@@ -202,13 +202,15 @@ namespace TestBrute
         {
             Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new();
             CollisionMap cmap = new(collision, null);
+                ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
+                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
 
-            PlayerNode n1 = new(400, 400, -1);
+        PlayerNode n1 = new(400, 400, -1);
 
-            PlayerNode[] players = new PlayerNode[PlayerNode.inputs.Length];
+            PlayerNode[] players = new PlayerNode[inputs.Length];
             for (int i = 0; i < players.Length; i++)
             {
-                players[i] = n1.NewState(PlayerNode.inputs[i], cmap);
+                players[i] = n1.NewState(inputs[i], cmap);
             }
 
             n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
@@ -221,11 +223,10 @@ namespace TestBrute
             CollisionMap cmap = new(collision, null);
             PlayerNode n1 = new(400, 400, 1, false);
 
-            Input[] inputs =  {Input.Neutral, Input.Left, Input.Right};
-            PlayerNode[] players = new PlayerNode[inputs.Length];
+            PlayerNode[] players = new PlayerNode[PlayerNode.inputs.Length];
             for (int i = 0; i < players.Length; i++)
             {
-                players[i] = n1.NewState(inputs[i], cmap);
+                players[i] = n1.NewState(PlayerNode.inputs[i], cmap);
             }
 
             n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));

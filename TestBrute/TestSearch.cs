@@ -57,7 +57,7 @@ namespace TestBrute
         [InlineData(753, 567.4, 98, 119, "ftfa-1")] //Frames 784
         [InlineData(183, 567.4, 578, 87, "ftfa-2")] //Frames 414
         [InlineData(573, 567.4, 484, 87, "ftfa-3")] //Frames 825
-        [InlineData(75, 308, 33, 476, "ctw_ex_inspired")] //Frames 899
+        [InlineData(75, 308, 33, 470, "ctw_ex_inspired")] //Frames 900
         [InlineData(47, 567.4, 47, 370, "uwu1")] //Frames 592
         [InlineData(490, 407.4, 490, 50, "just_for_fun")] //Frames 582
         [InlineData(401, 407.4, 687, 211, "gate")] //Frames 110

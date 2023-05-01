@@ -96,13 +96,23 @@ namespace Jump_Bruteforcer
         public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap) 
         { 
             var neighbors =  new HashSet<PlayerNode>();
+            
             foreach (Input input in inputs)
             {
-                PlayerNode neighbor = NewState(input, CollisionMap);
-                if (Player.IsAlive(CollisionMap, neighbor))
+                PlayerNode neighbor = this;
+                int i = 0;
+                while (i < 5)
                 {
-                    neighbors.Add(neighbor);
+                    neighbor = neighbor.NewState(input, CollisionMap);
+                    if (Player.IsAlive(CollisionMap, neighbor))
+                    {
+                        neighbors.Add(neighbor);
+                    }
+
+                    i++;
                 }
+
+
             }
 
             return neighbors; 

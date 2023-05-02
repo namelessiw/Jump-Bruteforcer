@@ -104,12 +104,13 @@ namespace Jump_Bruteforcer
                 while (i < 5)
                 {
                     neighbor = neighbor.NewState(input, CollisionMap);
-                    if (Player.IsAlive(CollisionMap, neighbor))
-                    {
-                        neighbors.Add(neighbor);
-                    }
+
 
                     i++;
+                }
+                if (Player.IsAlive(CollisionMap, neighbor))
+                {
+                    neighbors.Add(neighbor);
                 }
 
 

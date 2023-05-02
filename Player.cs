@@ -129,7 +129,7 @@ namespace Jump_Bruteforcer
             x += hSpeed;
             y += vSpeed;
 
-            if (hSpeed == 0 && vSpeed == 0)
+            if (hSpeed != 0 || vSpeed != 0)
             {
                 if (input == Input.Neutral)
                 {

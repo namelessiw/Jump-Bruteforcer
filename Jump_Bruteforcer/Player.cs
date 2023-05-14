@@ -64,49 +64,49 @@ namespace Jump_Bruteforcer
         /// <exception cref="NotImplementedException"></exception>
         public static State Update(State state, Input input, CollisionMap collisionMap)
         {
-            (int x, double y, double vSpeed, double hSpeed, bool canDJump, bool onPlatform, bool facingRight) = (state.X, state.Y, state.VSpeed, 0, state.CanDJump, state.OnPlatform, state.FacingRight);
+            (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             // mutate state variables here:
             //step event:
             int h = (input & Input.Left) == Input.Left ? -1 : 0;
             h = (input & Input.Right) == Input.Right ? 1 : h;
             //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
+            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
             if (h != 0)
             {
                 if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
                 {
-                    facingRight = h == 1;
+                    flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
                 }
             }
                 
-            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
-            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
+            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
             if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
             {
                 hSpeed = h * PhysicsParams.WALKING_SPEED;
             }
 
-            onPlatform &= PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap);
+            flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
             vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
             //  playerJump
             if ((input & Input.Jump) == Input.Jump)
             {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || onPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
+                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = PhysicsParams.SJUMP_VSPEED;
-                    canDJump = true;
+                    flags |= Bools.CanDJump;
                 }
-                else if (canDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
                 {
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
-                    canDJump = false;
+                    flags &= ~Bools.CanDJump;
                 }
-                else if (canDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
                 {
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
-                    canDJump = true;
+                    flags |= Bools.CanDJump;
                 }
 
             }
@@ -119,7 +119,7 @@ namespace Jump_Bruteforcer
             if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
             {
                 vSpeed = 2;
-                facingRight = true;
+                flags |= Bools.FacingRight;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == 1)
                 {
@@ -130,7 +130,7 @@ namespace Jump_Bruteforcer
             if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
             {
                 vSpeed = 2;
-                facingRight = false;
+                flags &= ~Bools.FacingRight;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == -1)
                 {
@@ -169,7 +169,7 @@ namespace Jump_Bruteforcer
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
-                                canDJump |= sign > 0;
+                                flags |= sign > 0 ? Bools.CanDJump : Bools.None;
                                 while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
                                 {
                                     y += sign;
@@ -199,8 +199,8 @@ namespace Jump_Bruteforcer
                             {
                                 y = platform.Y - 9;
                                 vSpeed = 0;
-                                canDJump = true;
-                                onPlatform = true;
+                                flags |= Bools.CanDJump;
+                                flags |= Bools.OnPlatform;
                                 var currentCollisionType = collisionTypes[collisionIdx];
                                 collisionTypes = collisionMap.GetCollisionTypes(x, y);
                                 CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
@@ -215,7 +215,7 @@ namespace Jump_Bruteforcer
                         break;
                     case CollisionType.Water1:
                     case CollisionType.Water3:
-                        canDJump = true;
+                        flags |= Bools.CanDJump;
                         vSpeed = Math.Min(2, vSpeed);
                         break;
                     case CollisionType.Water2:
@@ -227,7 +227,7 @@ namespace Jump_Bruteforcer
             }
         collisionDone:
 
-            return new State() { X = x, Y = y, VSpeed = vSpeed, CanDJump = canDJump, OnPlatform = onPlatform, FacingRight=facingRight};
+            return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
         }
     }
 }

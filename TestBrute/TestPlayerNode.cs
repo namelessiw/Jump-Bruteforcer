@@ -34,8 +34,9 @@ namespace TestBrute
         [InlineData(0,0,0,false, false)]
         public void TestNodeEquals(int x, double y, double vSpeed, bool canDJump, bool shouldEqual)
         {
-            var n1 = new PlayerNode(0,0,0, true);
-            var n2 = new PlayerNode(x, y, vSpeed, canDJump);
+            var n1 = new PlayerNode(0,0,0);
+            Bools flags = canDJump ? Bools.CanDJump : ~Bools.CanDJump | Bools.FacingRight;
+            var n2 = new PlayerNode(x, y, vSpeed, flags);
             (n1.Equals(n2)).Should().Be(shouldEqual);
 
         }
@@ -46,7 +47,7 @@ namespace TestBrute
             var n1 = new PlayerNode(0, 0, 0);
             var n2 = new PlayerNode(0, 0, 0);
             var n3 = new PlayerNode(1, 0, 0);
-            var n4 = new PlayerNode(0, 0, 0, false);
+            var n4 = new PlayerNode(0, 0, 0, Bools.FacingRight);
             var q = new SimplePriorityQueue<PlayerNode, float>();
             q.Enqueue(n1, 1f);
             q.Contains(n2).Should().BeTrue();
@@ -86,36 +87,36 @@ namespace TestBrute
             n2.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 551.454, -7.699999999999999).State);
             n3.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 560.8040000000001, -3.0250000000000004).State);
 
-            n4.State.Should().BeEquivalentTo(new PlayerNode(450, 561.0790000000001, -2.75, false).State);
-            n3.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 557.229, -6.6, false).State);
+            n4.State.Should().BeEquivalentTo(new PlayerNode(450, 561.0790000000001, -2.75, Bools.FacingRight).State);
+            n3.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 557.229, -6.6, Bools.FacingRight).State);
 
-            n4.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 558.729, -2.35, false).State);
-            n4.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 558.729, -2.35, false).State);
+            n4.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 558.729, -2.35, Bools.FacingRight).State);
+            n4.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 558.729, -2.35, Bools.FacingRight).State);
 
-            n5.State.Should().BeEquivalentTo(new PlayerNode(450, 560.2415000000001, -0.8375, false).State);
-            n4.NewState(Input.Jump | Input.Release, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 560.2415000000001, -0.8375, false).State);
+            n5.State.Should().BeEquivalentTo(new PlayerNode(450, 560.2415000000001, -0.8375, Bools.FacingRight).State);
+            n4.NewState(Input.Jump | Input.Release, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 560.2415000000001, -0.8375, Bools.FacingRight).State);
 
-            n6.State.Should().BeEquivalentTo(new PlayerNode(453, 560.2646250000001, 0.023125000000000007, false).State);
+            n6.State.Should().BeEquivalentTo(new PlayerNode(453, 560.2646250000001, 0.023125000000000007, Bools.FacingRight).State);
 
-            n6.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 560.6877500000002, 0.42312500000000003, false).State);
-            n6.NewState(Input.Release, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 560.6877500000002, 0.42312500000000003, false).State);
+            n6.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 560.6877500000002, 0.42312500000000003, Bools.FacingRight).State);
+            n6.NewState(Input.Release, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 560.6877500000002, 0.42312500000000003, Bools.FacingRight).State);
 
             PlayerNode n7 = n6;
             for (int i = 0; i < 5; i++)
             {
                 n7 = n7.NewState(Input.Neutral, cmap);
             }
-            n7.State.Should().BeEquivalentTo(new PlayerNode(453, 566.3802500000002, 2.023125, false).State);
-            n7.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 567.3802500000002, 0, true).State);
+            n7.State.Should().BeEquivalentTo(new PlayerNode(453, 566.3802500000002, 2.023125, Bools.FacingRight).State);
+            n7.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 567.3802500000002, 0).State);
             n7 = n7.NewState(Input.Neutral, cmap);
-            n7.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 559.2802500000001, -8.1, true).State);
+            n7.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 559.2802500000001, -8.1).State);
         }
 
         [Fact]
         public void TestNewStateCorner()
         {
             
-            var n1 = new PlayerNode(0, 0, 2, false);
+            var n1 = new PlayerNode(0, 0, 2, Bools.FacingRight);
             Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
             {
                 { (3, 2), ImmutableSortedSet.Create(CollisionType.Solid) },
@@ -126,12 +127,12 @@ namespace TestBrute
             };
             CollisionMap cmap = new(collision, null);
 
-            n1.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, true).State);
+            n1.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0).State);
             PlayerNode n2 = n1.NewState(Input.Right, cmap);
-            n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0, true).State);
-            n2.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(2, -7.1, -8.1, true).State);
-            var n3 = new PlayerNode(5, 4, -2, false);
-            n3.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, false).State);
+            n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0).State);
+            n2.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(2, -7.1, -8.1).State);
+            var n3 = new PlayerNode(5, 4, -2, Bools.FacingRight);
+            n3.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, Bools.FacingRight).State);
         }
 
         [Theory]
@@ -163,9 +164,10 @@ namespace TestBrute
             CollisionMap cmap = new(collision, null);
 
             double vspeed = targetY - startY - PhysicsParams.GRAVITY;
-            PlayerNode n1 = new(startX, startY, vspeed, canDJump:false);
+            PlayerNode n1 = new(startX, startY, vspeed, Bools.FacingRight);
             Input input = targetX - startX < 0? Input.Left : Input.Right;
-            n1.NewState(input, cmap).State.Should().BeEquivalentTo(new PlayerNode(targetX, endY, 0, canJump).State);
+            Bools flags = canJump ? Bools.CanDJump | Bools.FacingRight : Bools.FacingRight;
+            n1.NewState(input, cmap).State.Should().BeEquivalentTo(new PlayerNode(targetX, endY, 0, flags).State);
         }
 
         [Fact]
@@ -175,7 +177,7 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
             var n1 = new PlayerNode(342, 376.845, 0);
-            n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, false, false).State);
+            n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, Bools.FacingRight).State);
         }
 
         [Fact]
@@ -221,7 +223,7 @@ namespace TestBrute
         {
             Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new();
             CollisionMap cmap = new(collision, null);
-            PlayerNode n1 = new(400, 400, 1, false);
+            PlayerNode n1 = new(400, 400, 1, Bools.FacingRight);
 
             PlayerNode[] players = new PlayerNode[PlayerNode.inputs.Length];
             for (int i = 0; i < players.Length; i++)
@@ -308,9 +310,9 @@ namespace TestBrute
 
             PlayerNode n1 = new(0, 567.1, 0);
             n1 = n1.NewState(Input.Jump, cmap);
-            n1.State.CanDJump.Should().BeTrue();
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeTrue();
             n1 = n1.NewState(Input.Jump, cmap);
-            n1.State.CanDJump.Should().BeFalse();
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeFalse();
 
         }
 
@@ -332,9 +334,9 @@ namespace TestBrute
 
             PlayerNode n1 = new(0, 567.1, 0);
             n1 = n1.NewState(Input.Jump, cmap);
-            n1.State.CanDJump.Should().BeTrue();
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeTrue();
             n1 = n1.NewState(Input.Jump, cmap);
-            n1.State.CanDJump.Should().BeFalse();
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeFalse();
 
         }
         [Fact]
@@ -351,7 +353,7 @@ namespace TestBrute
             {
                 n1 = n1.NewState(input, Map.CollisionMap);
             }
-            n1.State.CanDJump.Should().BeFalse();
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeFalse();
         }
 
         [Fact]
@@ -361,23 +363,23 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(394, 375, 0, true, true);
-            n1.State.CanDJump.Should().BeTrue();
+            var n1 = new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight);
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeTrue();
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(391, 375.4, 0.4, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(391, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(397, 375.4, 0.4, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(397, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
 
         }
 
@@ -388,14 +390,14 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(394, 396, 0, true, false);
+            var n1 = new PlayerNode(394, 396, 0);
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 396.4, 0.4, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 396.4, 0.4).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 397.2, 0.8, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 397.2, 0.8).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 398.4, 1.2000000000000002, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 398.4, 1.2000000000000002).State);
 
         }
         [Fact]
@@ -405,11 +407,11 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(418, 380, 6, true, false);
+            var n1 = new PlayerNode(418, 380, 6);
 
-            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, true, true).State);
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
 
-            n1.NewState(Input.Right, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4, true, false).State);
+            n1.NewState(Input.Right, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4).State);
             
 
         }
@@ -421,11 +423,11 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(421, 380, 6, true, false);
+            var n1 = new PlayerNode(421, 380, 6);
 
-            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4, true, false).State);
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4).State);
 
-            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, true, true).State);
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
 
 
         }
@@ -436,15 +438,15 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(394, 375, 0, true, true);
-            n1.State.CanDJump.Should().BeTrue();
+            var n1 = new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight);
+            n1.State.Flags.HasFlag(Bools.CanDJump).Should().BeTrue();
 
             n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 371.575, -3.4250000000000003, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 371.575, -3.4250000000000003, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 368.15, -3.4250000000000003, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 368.15, -3.4250000000000003, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Jump | Input.Release, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 365.4, -2.75, false, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(394, 365.4, -2.75, Bools.FacingRight).State);
 
         }
 
@@ -454,7 +456,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(394, 375, 9.4, true, true);
+            var n1 = new PlayerNode(394, 375, 9.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight);
             n1.NewState(Input.Neutral, Map.CollisionMap).State.VSpeed.Should().Be(0);
             
 
@@ -466,12 +468,12 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(410, 408, 0, true, true);
+            var n1 = new PlayerNode(410, 408, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407.4, 0.4, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407, 0, true, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(410, 407, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
         }
         [Fact]
         public void TestSnapCausesOnPlatform()
@@ -479,7 +481,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform_triple_jump.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(401, 407, 0, true, false);
+            var n1 = new PlayerNode(401, 407, 0);
             n1.NewState(Input.Jump | Input.Release, Map.CollisionMap).NewState(Input.Jump, Map.CollisionMap).State.VSpeed.Should().NotBe(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY);
         }
 
@@ -489,14 +491,14 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform_ceiling.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(466, 499, 0, false, false);
-            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(466, 499.4, 0.4, false, false).State);
+            var n1 = new PlayerNode(466, 499, 0, Bools.FacingRight);
+            n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(466, 499.4, 0.4, Bools.FacingRight).State);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492, 0, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492, 0).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492.4, 0.4, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 492.4, 0.4).State);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8).State);
         }
 
         // requires multiple object types per pixel
@@ -506,7 +508,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\nabla_2.jmap";
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(479, 592.8957, 8.8, false, false);
+            var n1 = new PlayerNode(479, 592.8957, 8.8, Bools.FacingRight);
 
             Input[] inputs = new Input[]
             {
@@ -534,7 +536,7 @@ namespace TestBrute
                 //output.WriteLine($"frame {i}\tstate: {n1.State}");
             }
 
-            n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2, true).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2).State);
         }
 
         [Fact]
@@ -545,12 +547,12 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
 
             Map Map = JMap.Parse(Text);
-            var n1 = new PlayerNode(165, 247.4, 0, true, false);
+            var n1 = new PlayerNode(165, 247.4, 0);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
             for (int i = 0; i < 6; i++)
                  n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0, true, false).State);
-            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(150, 195.2, -8.6, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0).State);
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(150, 195.2, -8.6).State);
 
 
         }
@@ -562,9 +564,9 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
             Map Map = JMap.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
-            var n1 = new PlayerNode(166, 122.165, 7.6, true, false);
+            var n1 = new PlayerNode(166, 122.165, 7.6);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0, true, false).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0).State);
 
 
         }

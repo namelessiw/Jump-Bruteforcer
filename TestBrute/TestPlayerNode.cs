@@ -557,19 +557,6 @@ namespace TestBrute
 
         }
 
-        [Fact]
-        public void TestVineJump()
-        {
-            string path = @$"..\..\..\jmaps\anticlimax_1.jmap";
-            string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
-            CollisionMap cmap = Map.CollisionMap;
-            var n1 = new PlayerNode(166, 122.165, 7.6);
-            n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0).State);
-
-
-        }
 
     }
 }

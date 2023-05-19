@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
         private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
+        private double startingVSpeed = 0;
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
@@ -23,6 +24,7 @@ namespace Jump_Bruteforcer
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
+        public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -46,7 +48,7 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            PlayerNode root = new PlayerNode(start.x, start.y, 0);
+            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
             root.PathCost = 0;
 
             var openSet = new SimplePriorityQueue<PlayerNode, uint>();

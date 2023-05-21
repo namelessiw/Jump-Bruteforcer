@@ -83,13 +83,14 @@ namespace Jump_Bruteforcer
                     {
                         w.Parent = v;
                         w.PathCost = newCost;
+                        uint distance = Distance(w, goal);
                         if (openSet.Contains(w))
                         {
-                            openSet.UpdatePriority(w, newCost + Distance(w, goal));
+                            openSet.UpdatePriority(w, newCost + distance);
                         }
                         else
                         {
-                            openSet.Enqueue(w, newCost + Distance(w, goal));
+                            openSet.Enqueue(w, newCost + distance);
                         }
                     }
 

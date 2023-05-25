@@ -62,7 +62,7 @@ namespace TestBrute
         [InlineData(58, 535.4, 677, 567, "winter_king")] //Frames 416
         [InlineData(49, 567.4, 765, 567, "winter_king_2")] //Frames 297
         [InlineData(17, 343, 179, 471, "ex_rz")] //Frames 107
-        [InlineData(17, 119, 259, 535, "ex_hades")] //Frames 603
+        [InlineData(17, 119, 259, 535, "ex_hades")] //Frames 602
         [InlineData(49, 87.4, 762, 567, "e_2")]  //Frames 1195
         [InlineData(125, 119.4, 680, 46, "subset")] //Frames 989
         [InlineData(49, 567, 771, 231, "i_wanna_x")] //Frames 1103
@@ -82,7 +82,7 @@ namespace TestBrute
         [InlineData(748, 4, 51, 573, "Zeus_recreation_2")] //Frames 717
         [InlineData(793, 84, 768, 566, "rapeechscreen1")] //Frames 986
         [InlineData(6, 563, 746, 31, "rapeechscreen2")] //Frames 1172
-        [InlineData(49, 119.4, 536, 452, "tdati")] //Frames 884
+        [InlineData(49, 119.4, 636, 452, "tdati")] //Frames 884
         [InlineData(49, 103, 333, 47, "dalet")] //Frames 1126
         [InlineData(49, 567, 32, 335, "che")] //Frames 1268
         [InlineData(49, 279, 545, 422, "che2")] //Frames 1151

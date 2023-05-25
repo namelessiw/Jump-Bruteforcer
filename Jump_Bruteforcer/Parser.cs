@@ -2,7 +2,7 @@
 
 namespace Jump_Bruteforcer
 {
-    public static class Parser
+    public  class Parser
     {
         public static Map Parse(string Text) => Parse(".jmap", Text);
 

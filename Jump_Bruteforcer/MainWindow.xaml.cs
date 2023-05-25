@@ -1,22 +1,8 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Jump_Bruteforcer
 {
@@ -40,7 +26,8 @@ namespace Jump_Bruteforcer
         {
             OpenFileDialog o = new()
             {
-                DefaultExt = ".jmap"
+                DefaultExt = ".jmap",
+                Filter = "map files|*.jmap;*.cmap;*.txt",
             };
 
             bool? result = o.ShowDialog();
@@ -51,11 +38,25 @@ namespace Jump_Bruteforcer
                 LabelFileName.Content = o.SafeFileName;
 
                 string Text = File.ReadAllText(FileName);
+                string Extension = System.IO.Path.GetExtension(FileName);
+                Map Map;
+                try
+                {
+                    Map = Parser.Parse(Extension, Text);
 
-                Map Map = JMap.Parse(Text);
-                ImageJMap.Source = Map.Bmp;
-                s.CollisionMap = Map.CollisionMap;
-                s.PlayerPath = new();
+
+                    s.PlayerPath = new();
+                    ImageJMap.Source = Map.Bmp;
+                    s.CollisionMap = Map.CollisionMap;
+                }
+                catch (UnknownExtensionException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to import map with error:\n" + ex.Message);
+                }
 
             }
 

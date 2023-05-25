@@ -1,11 +1,5 @@
 ﻿using FluentAssertions;
 using Jump_Bruteforcer;
-using System;
-using System.Collections.Generic;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Xunit.Abstractions;
 
@@ -27,7 +21,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
             cmap.Platforms.Should().HaveCountGreaterThan(0);
 
@@ -39,7 +33,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform_teleport.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
             cmap.Platforms.Should().HaveCountGreaterThan(0);
             cmap.Platforms.Should().BeInDescendingOrder(x => x.X);
@@ -59,7 +53,7 @@ namespace TestBrute
 
             string path = @$"..\..\..\jmaps\platform_elevator.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
             cmap.Platforms.Should().HaveCountGreaterThan(0);
             cmap.Platforms.Should().BeInAscendingOrder(x => x.X);

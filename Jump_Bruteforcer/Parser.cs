@@ -141,10 +141,10 @@ namespace Jump_Bruteforcer
 
                         Objects.Add(new Object(X + (int)(xs * 32), Y + (int)(ys * 32), Type, bbox, i));
 
-                        //Y += 32;
+
                     }
 
-                    //X += 32;
+
                 }
             }
 

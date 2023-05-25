@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System.Collections.Immutable;
 using System.IO;
 using System.Windows;
@@ -44,8 +44,6 @@ namespace Jump_Bruteforcer
                 {
                     Map = Parser.Parse(Extension, Text);
 
-
-                    s.PlayerPath = new();
                     ImageJMap.Source = Map.Bmp;
                     s.CollisionMap = Map.CollisionMap;
                 }
@@ -93,3 +91,4 @@ namespace Jump_Bruteforcer
         }
     }
 }
+

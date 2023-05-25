@@ -384,7 +384,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\platform.jmap";
             string Text = File.ReadAllText(path);
             Map Map = Parser.Parse(Text);
-            var n1 = new PlayerNode(394, 396, 0, true, false);
+            var n1 = new PlayerNode(394, 396, 0);
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(394, 396.4, 0.4).State);
@@ -540,7 +540,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\vineclip.jmap";
             string Text = File.ReadAllText(path);
 
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(165, 247.4, 0);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
             for (int i = 0; i < 6; i++)

@@ -76,7 +76,7 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\vineclip.jmap";
             string Text = File.ReadAllText(path);
-            Map Map = JMap.Parse(Text);
+            Map Map = Parser.Parse(Text);
             CollisionMap cmap = Map.CollisionMap;
             cmap.GetVineDistance(172, 247.4, ObjectType.VineLeft, true).Should().Be(VineDistance.CORNER) ;
             cmap.GetVineDistance(172, 248.4, ObjectType.VineLeft, true).Should().Be(VineDistance.EDGE);

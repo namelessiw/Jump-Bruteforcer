@@ -26,7 +26,7 @@ namespace Jump_Bruteforcer
             ("apple", ObjectType.Apple),
             ("cherry", ObjectType.Apple),
             ("objwater", ObjectType.Water1), // yuuutu
-            ("objwater2", ObjectType.Water2), // yuuutu
+
             ("water1", ObjectType.Water1), // renex
             ("water2", ObjectType.Water2), // renex
             ("water3", ObjectType.Water3), // renex
@@ -43,6 +43,8 @@ namespace Jump_Bruteforcer
             ("minispikeRight", ObjectType.MiniSpikeRight),
             ("minispikeUp", ObjectType.MiniSpikeUp),
             ("playerKiller", ObjectType.SpikeDown),
+            ("walljumpl", ObjectType.VineLeft),
+            ("walljumpr", ObjectType.VineRight),
             ("platform", ObjectType.Platform), // yuuutu platform hitbox is a lot smaller than the regular one, good luck distinguishing here
             ("movingPlatform", ObjectType.Platform), // like this one should have the regular hitbox but not the other one since its just supposed to be an object parent
             ("catharsiswater", ObjectType.CatharsisWater),
@@ -52,8 +54,8 @@ namespace Jump_Bruteforcer
         {
             return ObjectNames.FirstOrDefault<(string Name, ObjectType Type)>(
                 (x) => 
-                    x.Name.ToLower() == ObjectName.ToLower() || 
-                    x.Name.ToLower() == ("obj" + ObjectName).ToLower(),
+                    x.Name.ToLower() == ObjectName.ToLower() ||
+                    "obj" + x.Name.ToLower() == ObjectName.ToLower(),
                 ("", ObjectType.Unknown)
             ).Type;
         }
@@ -67,7 +69,7 @@ namespace Jump_Bruteforcer
             static double ParseDouble(string s) => double.Parse(s, Style, CultureInfo.InvariantCulture);
 
             string[] Lines = Text.Split('\n');
-            int ObjectCount = Lines.Length - 1;
+            int ObjectCount = Lines.Length;
 
             for (int i = 0; i < ObjectCount; i++)
             {
@@ -87,6 +89,11 @@ namespace Jump_Bruteforcer
 
                 int X = (int)Math.Round(ParseDouble(Parameters[1]));
                 int Y = (int)Math.Round(ParseDouble(Parameters[2]));
+                if (Type == ObjectType.Apple)
+                {
+                    X -= 10;
+                    Y -= 12;
+                }
                 //uid
                 //0
                 double XScale = ParseDouble(Parameters[5]);

@@ -46,7 +46,7 @@
                 </EllipseGeometry>
             </Path.Data>
         </Path>
-        <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="150" Canvas.Top="12" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Start search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="181" Canvas.Top="9" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="323" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="12" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="458" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="12" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="588" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="12" HorizontalAlignment="Left" VerticalAlignment="Top"/>

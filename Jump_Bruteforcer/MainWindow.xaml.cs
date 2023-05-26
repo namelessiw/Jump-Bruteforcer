@@ -47,10 +47,6 @@ namespace Jump_Bruteforcer
                     ImageJMap.Source = Map.Bmp;
                     s.CollisionMap = Map.CollisionMap;
                 }
-                catch (UnknownExtensionException ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Failed to import map with error:\n" + ex.Message);

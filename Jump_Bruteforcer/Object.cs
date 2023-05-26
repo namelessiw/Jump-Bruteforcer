@@ -172,8 +172,18 @@ namespace Jump_Bruteforcer
             {ObjectType.SidewaysPlatform, CollisionType.None },
         };
 
-        public Object(int X, int Y, ObjectType objectType, BoundingBox? bbox = null, int instanceNum = 0)
+        public Object(int X, int Y, ObjectType objectType, int instanceNum = 0)
         {
+            if (objectType == ObjectType.Apple)
+            {
+                X -= 10;
+                Y -= 12;
+            }
+            BoundingBox? bbox = null;
+            if (objectType == ObjectType.Platform)
+            {
+                bbox = new BoundingBox(X - 5, Y - 10, 42, 36);
+            }
             this.X = X;
             this.Y = Y;
             ObjectType = objectType;

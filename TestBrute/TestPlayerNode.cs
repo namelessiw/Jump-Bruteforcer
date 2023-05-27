@@ -175,6 +175,16 @@ namespace TestBrute
         }
 
         [Fact]
+        public void TestFallAgainstSolidAndWater()
+        {
+            string path = @$"..\..\..\jmaps\silent_1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(Text);
+            var n1 = new PlayerNode(440, 192.408137, 9.4, Bools.FacingRight);
+            n1.NewState(Input.Right, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(442, 201.808137, 9.4, Bools.FacingRight).State);
+        }
+
+        [Fact]
         public void TestNewStateBHop()
         {
             Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()

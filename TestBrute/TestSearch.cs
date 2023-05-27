@@ -88,6 +88,7 @@ namespace TestBrute
         [InlineData(49, 279, 545, 422, "che2")] //Frames 1151
         [InlineData(753, 183, 217, 220, "nabla_2")] //Frames 946
         [InlineData(49, 567, 727, 605, "phi_3")] //Frames 1073
+        [InlineData(17, 391, 750, 149, "silent_1")] //Frames 
 
         //might not be solvable for the program right now
         /*

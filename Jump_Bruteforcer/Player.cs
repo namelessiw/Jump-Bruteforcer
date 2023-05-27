@@ -140,6 +140,8 @@
             y += vSpeed;
             //collision event
             var collisionTypes = collisionMap.GetCollisionTypes(x, y);
+            (var currentX, var currentY) = (x,  y);
+            int minInstanceNum = 0;
             int collisionIdx = 0;
             while (collisionIdx < collisionTypes.Count)
             {
@@ -184,11 +186,12 @@
                         {
                             (x, y) = (xPrevious, yPrevious);
                         }
+
                         break;
                     case CollisionType.Platform:
-                        int minInstanceNum = 0;
+                        
                         Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
-                        while (platform is not null)
+                        if (platform != null)
                         {
                             if (y - vSpeed / 2 <= platform.Y)
                             {
@@ -196,17 +199,12 @@
                                 vSpeed = 0;
                                 flags |= Bools.CanDJump;
                                 flags |= Bools.OnPlatform;
-                                var currentCollisionType = collisionTypes[collisionIdx];
-                                collisionTypes = collisionMap.GetCollisionTypes(x, y);
-                                CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
-                                if (nextCollisionType == CollisionType.None)
-                                    goto collisionDone;
-                                collisionIdx = collisionTypes.IndexOf((CollisionType)nextCollisionType) - 1;
 
                             }
                             minInstanceNum = platform.instanceNum + 1;
-                            platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                         }
+
+                        
                         break;
                     case CollisionType.Water1:
                     case CollisionType.Water3:
@@ -217,6 +215,17 @@
                         vSpeed = Math.Min(2, vSpeed);
                         break;
 
+                }
+                if ((x,y) != (currentX, currentY))
+                {
+                    //update the collision types we'll check for on this frame
+                    var currentCollisionType = collisionTypes[collisionIdx];
+                    collisionTypes = collisionMap.GetCollisionTypes(x, y);
+                    CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
+                    if (nextCollisionType == CollisionType.None)
+                        goto collisionDone;
+                    collisionIdx = collisionTypes.IndexOf((CollisionType)nextCollisionType) - 1;
+                    (currentX, currentY) = (x, y);
                 }
                 collisionIdx++;
             }

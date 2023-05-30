@@ -51,7 +51,6 @@ namespace Jump_Bruteforcer
 
                 NextDirection = input & Input.Right | input & Input.Left;
 
-
                 if (Direction != NextDirection)
                 {
                     if (Direction != Input.Neutral)
@@ -62,9 +61,14 @@ namespace Jump_Bruteforcer
 
                     if (NextDirection != Input.Neutral)
                     {
-                        sb.Append((InputChanged ? "," : "") + (NextDirection == Input.Right ? "RightArrow" : "LeftArrow") + "(P)");
+                        sb.Append((InputChanged ? "," : "") + (NextDirection == Input.Right ? "RightArrow" : "LeftArrow") + "(PRP)");
                     }
 
+                    InputChanged = true;
+                }
+                else if (Direction != Input.Neutral)
+                {
+                    sb.Append((Direction == Input.Right ? "RightArrow" : "LeftArrow") + "(RP)");
                     InputChanged = true;
                 }
 

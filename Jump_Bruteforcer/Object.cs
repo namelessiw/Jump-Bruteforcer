@@ -91,6 +91,7 @@ namespace Jump_Bruteforcer
     public enum CollisionType
     {
         None,
+        CatharsisWater,
         Water2,
         Water3,
         Water1,
@@ -154,7 +155,7 @@ namespace Jump_Bruteforcer
             {ObjectType.TripleAdd, CollisionType.None },
             {ObjectType.DotField, CollisionType.None },
             {ObjectType.NoDot, CollisionType.None },
-            {ObjectType.CatharsisWater, CollisionType.None },
+            {ObjectType.CatharsisWater, CollisionType.CatharsisWater },
             {ObjectType.TripleRemove, CollisionType.None },
             {ObjectType.WaterDisappear, CollisionType.None },
             {ObjectType.WaterMini, CollisionType.None },
@@ -167,7 +168,7 @@ namespace Jump_Bruteforcer
             {ObjectType.TripleAddMini, CollisionType.None },
             {ObjectType.DotFieldMini, CollisionType.None },
             {ObjectType.NoDotMini, CollisionType.None },
-            {ObjectType.CatharsisWaterMini, CollisionType.None },
+            {ObjectType.CatharsisWaterMini, CollisionType.CatharsisWater },
             {ObjectType.WaterDisappearMini, CollisionType.None },
             {ObjectType.SidewaysPlatform, CollisionType.None },
         };

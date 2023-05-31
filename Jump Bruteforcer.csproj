@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Remove="images\apple.png" />
     <None Remove="images\block.png" />
+    <None Remove="images\catharsiswater.png" />
     <None Remove="images\killerblock.png" />
     <None Remove="images\miniblock.png" />
     <None Remove="images\minispikedown.png" />
@@ -57,6 +58,7 @@
   <ItemGroup>
     <Resource Include="images\apple.png" />
     <Resource Include="images\block.png" />
+    <Resource Include="images\catharsiswater.png" />
     <Resource Include="images\killerblock.png" />
     <Resource Include="images\miniblock.png" />
     <Resource Include="images\minispikedown.png" />

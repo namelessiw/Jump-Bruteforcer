@@ -212,6 +212,7 @@
                         vSpeed = Math.Min(2, vSpeed);
                         break;
                     case CollisionType.Water2:
+                    case CollisionType.CatharsisWater:
                         vSpeed = Math.Min(2, vSpeed);
                         break;
 

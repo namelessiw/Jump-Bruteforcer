@@ -8,7 +8,7 @@ namespace Jump_Bruteforcer
         public List<Object> Platforms { get; init; }
 
         private readonly VineDistance[,,] vineDistance;
-        private readonly HashSet<(int x, int y)> goalPixels; 
+        private readonly HashSet<(int x, int y)> goalPixels;
 
         public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
@@ -24,28 +24,32 @@ namespace Jump_Bruteforcer
                     {
                         goalPixels.Add((x, y));
                     }
-                    
+
                 }
             }
 
         }
-        public bool onWarp(int x, double y) => goalPixels.Contains((x, (int) Math.Round(y)));
+        public bool onWarp(int x, double y) => goalPixels.Contains((x, (int)Math.Round(y)));
         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);
+            if (!((uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT))
+            {
+                return VineDistance.FAR;
+            }
             if (vine == ObjectType.VineRight)
             {
                 if (facingRight)
-                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGRIGHT] : VineDistance.FAR;
+                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGRIGHT];
                 else
-                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGLEFT] : VineDistance.FAR;
+                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGLEFT];
             }
             else
             {
                 if (facingRight)
-                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGRIGHT] : VineDistance.FAR;
+                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGRIGHT];
                 else
-                    return (uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT ? vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGLEFT] : VineDistance.FAR;
+                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGLEFT];
             }
         }
         public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
@@ -72,7 +76,7 @@ namespace Jump_Bruteforcer
 
         public CollisionType GetHighestPriorityCollisionType(int x, int y)
         {
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT?  Collision[x, y].FirstOrDefault() : CollisionType.None;
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace Jump_Bruteforcer
             while (openSet.Count > 0)
             {
                 PlayerNode v = openSet.Dequeue();
-                if (v.IsGoal(goal))
+                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                 {
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();

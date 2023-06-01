@@ -8,15 +8,28 @@ namespace Jump_Bruteforcer
         public List<Object> Platforms { get; init; }
 
         private readonly VineDistance[,,] vineDistance;
+        private readonly HashSet<(int x, int y)> goalPixels; 
 
         public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
             this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
             this.vineDistance = vineDistances;
+            this.goalPixels = new();
+            for (int x = 0; x < Map.WIDTH; x++)
+            {
+                for (int y = 0; y < Map.HEIGHT; y++)
+                {
+                    if (this.Collision[x, y].Contains(CollisionType.Warp))
+                    {
+                        goalPixels.Add((x, y));
+                    }
+                    
+                }
+            }
 
         }
-
+        public bool onWarp(int x, double y) => goalPixels.Contains((x, (int) Math.Round(y)));
         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);

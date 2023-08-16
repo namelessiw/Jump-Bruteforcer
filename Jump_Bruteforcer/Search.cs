@@ -9,7 +9,7 @@ namespace Jump_Bruteforcer
     public class Search : INotifyPropertyChanged
     {
         public (int x, double y) start;
-        private (int x, int y) goal;
+        private (int x, double y) goal;
         private string _strat = "";
         private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
         private double _aStarWeight = 1.0;
@@ -19,7 +19,7 @@ namespace Jump_Bruteforcer
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
         public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
-        public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
+        public double GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
@@ -39,7 +39,7 @@ namespace Jump_Bruteforcer
             CollisionMap = collision;
         }
         //inadmissable heuristic because of y position rounding
-        public uint Distance(PlayerNode n, (int x, int y) goal)
+        public uint Distance(PlayerNode n, (int x, double y) goal)
         {
             return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / 3.0, Math.Abs(n.State.Y - goal.y) / 9.4)));
         }
@@ -58,7 +58,7 @@ namespace Jump_Bruteforcer
             while (openSet.Count > 0)
             {
                 PlayerNode v = openSet.Dequeue();
-                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
+                if ((v.IsGoal(goal)) || CollisionMap.onWarp(v.State.X, v.State.Y))
                 {
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();

@@ -42,9 +42,9 @@ namespace Jump_Bruteforcer
             return Quantize(a) == Quantize(b);
         }
         public bool Equals(State? other) =>
-            X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight);
-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight).GetHashCode();
+            X == other.X & Y == other.Y &
+            /*ApproximatelyEquals(VSpeed, other.VSpeed)*/ VSpeed == other.VSpeed & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight);
+        public override int GetHashCode() => (X, Y, /*Quantize(VSpeed)*/ VSpeed, Flags | Bools.FacingRight).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
 
     }
@@ -54,9 +54,9 @@ namespace Jump_Bruteforcer
         public PlayerNode? Parent { get; set; }
         public uint PathCost { get; set; }
         public Input? Action { get; set; }
-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
-        public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
-        public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral);
+        public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Jump | Input.Release);
+        public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release);
         private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
         public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
             (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, parent, pathCost, action);
@@ -69,7 +69,7 @@ namespace Jump_Bruteforcer
             Action = action;
         }
 
-        public bool IsGoal((int x, int y) goal) => State.X == goal.x & State.RoundedY == goal.y;
+        public bool IsGoal((int x, double y) goal) => State.X == goal.x & State.Y == goal.y;
 
 
         /// <summary>

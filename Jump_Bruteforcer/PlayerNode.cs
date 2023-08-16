@@ -69,7 +69,8 @@ namespace Jump_Bruteforcer
             Action = action;
         }
 
-        public bool IsGoal((int x, int y) goal) => State.X == goal.x & State.RoundedY == goal.y;
+        public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
+
 
 
         /// <summary>

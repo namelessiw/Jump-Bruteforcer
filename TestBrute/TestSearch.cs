@@ -133,5 +133,28 @@ namespace TestBrute
             throw new NotImplementedException();
 
         }
+        [Fact]
+        private void InstanceOverheadTest()
+        {
+            const int Size = 1000;
+            long initialMemory = GC.GetTotalMemory(true);
+            object[] array = new object[Size];
+            PlayerNode parent = new PlayerNode(0, 566.6500000000001, 3.374999999999999);
+            
+            for (int i = 0; i < Size; i++)
+            {
+                //   array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left, parent : parent);
+                array[i] = 1;
+
+            }
+            long finalMemory = GC.GetTotalMemory(true);
+            GC.KeepAlive(array);
+            long total = finalMemory - initialMemory;
+            uint classSize = (uint)((double)total / Size);
+            output.WriteLine("Measured size of each element: {0:0.000} bytes",
+                              classSize);
+            classSize.Should().Be(88);
+
+        }
     }
 }

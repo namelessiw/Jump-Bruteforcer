@@ -3,6 +3,8 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Jump_Bruteforcer
 {
@@ -46,6 +48,9 @@ namespace Jump_Bruteforcer
 
                     ImageJMap.Source = Map.Bmp;
                     s.CollisionMap = Map.CollisionMap;
+                    ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
+                    s.PlayerPath = new();
+                    s.Strat = "";
                 }
                 catch (Exception ex)
                 {

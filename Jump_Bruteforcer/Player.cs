@@ -118,7 +118,7 @@
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == 1)
                 {
-                    vSpeed = -9;
+                    vSpeed = -8.5;
                     hSpeed = 15;
                 }
             }
@@ -129,7 +129,7 @@
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == -1)
                 {
-                    vSpeed = -9;
+                    vSpeed = -8.5;
                     hSpeed = -15;
                 }
             }

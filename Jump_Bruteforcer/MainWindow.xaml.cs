@@ -66,8 +66,8 @@ namespace Jump_Bruteforcer
         {
             SearchResult sr = s.RunAStar();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
-
             Macro = sr.Macro;
+            Topmost = true;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)

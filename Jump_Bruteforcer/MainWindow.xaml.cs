@@ -68,6 +68,7 @@ namespace Jump_Bruteforcer
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;
+            Topmost = false;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)

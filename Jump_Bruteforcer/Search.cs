@@ -8,7 +8,7 @@ namespace Jump_Bruteforcer
 {
     public class Search : INotifyPropertyChanged
     {
-        public (int x, double y) start;
+        private (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
         private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
@@ -38,6 +38,8 @@ namespace Jump_Bruteforcer
             this.goal = goal;
             CollisionMap = collision;
         }
+
+
         //inadmissable heuristic because of y position rounding
         public uint Distance(PlayerNode n, (int x, int y) goal)
         {

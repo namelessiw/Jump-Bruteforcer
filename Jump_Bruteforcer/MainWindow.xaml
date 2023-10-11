@@ -9,7 +9,7 @@
     <Window.Resources>
         <local:CoordinatePointConverter x:Key="PointConverter"/>
     </Window.Resources>
-    <Canvas>
+    <Canvas x:Name="CanvasWindow">
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
         <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -53,7 +53,8 @@
         <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="977" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <ScrollViewer Canvas.Left="872"  Canvas.Top="74" Height="600"  Width="229" Content="{Binding Strat}"/>
+        <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
+        <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
     </Canvas>
 </Window>

@@ -66,6 +66,8 @@ namespace Jump_Bruteforcer
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = SearchOutput.GetInputString(inputs);
                     PlayerPath = points;
+                    var optimalGoal = points.Last();
+                    (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
                     VisualizeSearch.CountStates(openSet, closedSet);
 
                     string Macro = SearchOutput.GetMacro(inputs);

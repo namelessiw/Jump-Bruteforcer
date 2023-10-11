@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Immutable;
 using System.IO;
 using System.Windows;
@@ -20,10 +21,74 @@ namespace Jump_Bruteforcer
         {
             InitializeComponent();
 
-            s = new Search((127, 342.85055), (738, 247), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
+            s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
             DataContext = s;
         }
+        private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                Multiselect = true,
+            };
 
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                string[] roomFolder = dialog.FileNames.ToArray();
+                foreach (string room in roomFolder)
+                {
+                    string roomDataFile = Path.Join(room, "instances.txt");
+                    string Text = File.ReadAllText(roomDataFile);
+                    string Extension = Path.GetExtension(roomDataFile);
+                    Map Map;
+                    try
+                    {
+                        Map = Parser.Parse(Extension, Text);
+
+                        ImageJMap.Source = Map.Bmp;
+                        s.CollisionMap = Map.CollisionMap;
+                        ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
+                        s.PlayerPath = new();
+                        s.Strat = "";
+                        if(Map.hasPlayerStart)
+                        {
+                            (s.StartX, s.StartY) = Map.PlayerStart;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                        if (Map.hasWarp)
+                        {
+                            (s.GoalX, s.GoalY) = Map.Warp;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        SearchResult sr = s.RunAStar();
+                        ImageHeatMap.Source = VisualizeSearch.HeatMap();
+                        Macro = sr.Macro;
+
+                        if (sr.Success)
+                        {
+                            string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
+                            Directory.CreateDirectory(outputPath);
+                            File.WriteAllText(Path.Join(outputPath, $"{Path.GetFileName(room)}.txt"), sr.Macro);
+                        }
+                            
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Failed to import map with error:\n" + ex.Message);
+                    }
+                }
+               
+
+            }
+        }
         private void ButtonSelectJMap_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog o = new()
@@ -91,6 +156,8 @@ namespace Jump_Bruteforcer
         {
             Clipboard.SetDataObject(Macro);
         }
+
+
     }
 }
 

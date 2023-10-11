@@ -27,11 +27,31 @@ namespace Jump_Bruteforcer
         public ImageSource Bmp { get; init; }
         public CollisionMap CollisionMap { get; init; }
         public const int WIDTH = 801, HEIGHT = 609;
+        public bool hasPlayerStart { get; init; } = false;
+        public (int, int) PlayerStart { get; init; }
+        public bool hasWarp { get; init; } = false;
+        public (int, int) Warp { get; init; }
+        
 
 
         public Map(List<Object> objects)
         {
-            List<Object> platforms = new(objects.FindAll(o => o.ObjectType == ObjectType.Platform));
+            List<Object> platforms = new();
+            foreach (Object obj in objects) {
+                if (obj.ObjectType == ObjectType.PlayerStart) {
+                    PlayerStart = (obj.X + 17, obj.Y + 23);
+                    hasPlayerStart = true;
+                }
+                if(obj.ObjectType == ObjectType.Warp)
+                {
+                    Warp = (obj.X + 16, obj.Y + 16);
+                    hasWarp = true;
+                }
+                if (obj.ObjectType == ObjectType.Platform)
+                {
+                    platforms.Add(obj);
+                }
+            }
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();

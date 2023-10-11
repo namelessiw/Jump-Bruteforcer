@@ -51,6 +51,16 @@ namespace Jump_Bruteforcer
                     ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
                     s.PlayerPath = new();
                     s.Strat = "";
+                    if (Map.hasPlayerStart)
+                    {
+                        (s.StartX, s.StartY) = Map.PlayerStart;
+                    }
+
+                    if (Map.hasWarp)
+                    {
+                        (s.GoalX, s.GoalY) = Map.Warp;
+                    }
+
                 }
                 catch (Exception ex)
                 {

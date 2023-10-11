@@ -44,7 +44,7 @@ namespace Jump_Bruteforcer
                 }
                 if(obj.ObjectType == ObjectType.Warp)
                 {
-                    Warp = (obj.X, obj.Y);
+                    Warp = (obj.X + 16, obj.Y + 16);
                     hasWarp = true;
                 }
                 if (obj.ObjectType == ObjectType.Platform)

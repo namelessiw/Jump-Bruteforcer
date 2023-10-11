@@ -1,11 +1,15 @@
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.IO;
+using System.IO.Pipes;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace Jump_Bruteforcer
 {
@@ -37,6 +41,7 @@ namespace Jump_Bruteforcer
                 string[] roomFolder = dialog.FileNames.ToArray();
                 foreach (string room in roomFolder)
                 {
+                    LabelFileName.Content = Path.Join(Path.GetFileName(room), "instances.txt");
                     string roomDataFile = Path.Join(room, "instances.txt");
                     string Text = File.ReadAllText(roomDataFile);
                     string Extension = Path.GetExtension(roomDataFile);
@@ -76,9 +81,21 @@ namespace Jump_Bruteforcer
                             string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
                             Directory.CreateDirectory(outputPath);
                             File.WriteAllText(Path.Join(outputPath, $"{Path.GetFileName(room)}.txt"), sr.Macro);
-                        }
-                            
 
+                            CanvasWindow.UpdateLayout();
+                            DrawingVisual drawingVisual = new DrawingVisual();
+                            Rect renderBounds = new(CanvasWindow.RenderSize);
+                            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+                            {
+                                drawingContext.DrawRectangle(new VisualBrush(CanvasWindow), null, renderBounds);
+                            }
+                            RenderTargetBitmap target = new RenderTargetBitmap((int)renderBounds.Width, (int)renderBounds.Height, 96, 96, PixelFormats.Pbgra32);
+                            target.Render(drawingVisual);
+                            FileStream stream = new FileStream(Path.Join(outputPath, $"{Path.GetFileName(room)}.png"), FileMode.Create);
+                            BitmapEncoder encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(target));
+                            encoder.Save(stream);
+                        }
                     }
                     catch (Exception ex)
                     {

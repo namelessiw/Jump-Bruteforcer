@@ -9,7 +9,7 @@
     <Window.Resources>
         <local:CoordinatePointConverter x:Key="PointConverter"/>
     </Window.Resources>
-    <Canvas>
+    <Canvas x:Name="CanvasWindow">
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
         <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />

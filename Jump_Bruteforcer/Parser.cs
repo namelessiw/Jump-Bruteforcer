@@ -97,6 +97,7 @@ namespace Jump_Bruteforcer
             {"apple", ObjectType.Apple},
             {"cherry", ObjectType.Apple},
             {"deliciousfruit", ObjectType.Apple},
+            {"object902", ObjectType.Apple},
             {"warp", ObjectType.Warp},
             {"warpstart", ObjectType.Warp},
             {"object789", ObjectType.Warp},

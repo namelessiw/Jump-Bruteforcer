@@ -7,7 +7,8 @@
         Left = 1,
         Right = 2,
         Jump = 4,
-        Release = 8
+        Release = 8,
+        Facescraper = 16,
     }
 
     public static class Player

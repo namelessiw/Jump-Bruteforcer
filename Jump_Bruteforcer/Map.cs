@@ -55,8 +55,8 @@ namespace Jump_Bruteforcer
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
-            (var cmap, var vineDistance) = GenerateCollisionMap();
-            CollisionMap = new(cmap, platforms, vineDistance);
+            (var cmap, var scrapercmap, var vineDistance) = GenerateCollisionMap();
+            CollisionMap = new(cmap, scrapercmap, platforms, vineDistance);
         }
 
         private ImageSource GenerateCollisionImage()
@@ -83,7 +83,7 @@ namespace Jump_Bruteforcer
             return drawingImage;
         }
         
-        private (ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
+        private (ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
@@ -110,6 +110,31 @@ namespace Jump_Bruteforcer
                 collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
             }
+            //scraper
+            var scraperquery = (from o in Objects
+                         where o.CollisionType != CollisionType.None
+                         let hitbox = toScraperHitbox[o.ObjectType]
+                         from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
+                         from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
+                         where hitbox[spriteX, spriteY]
+                         let x = o.X + spriteX - 5
+                         let y = o.Y + spriteY - 8
+                         where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
+                         group new { x, y, o } by (x, y) into pixel
+                         select pixel);
+            var scrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            for (int i = 0; i < WIDTH; i++)
+            {
+                for (int j = 0; j < HEIGHT; j++)
+                {
+                    scrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                }
+            }
+            foreach (var pixel in query)
+            {
+                scrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
+                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+            }
 
             //vine distance matrix
             var vineDistances = new VineDistance[WIDTH, HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
@@ -130,7 +155,7 @@ namespace Jump_Bruteforcer
                 }
             }
 
-            return (collision, vineDistances);
+            return (collision, scrapercollision, vineDistances);
 
             static void vineDistanceArrayHelper(VineDistance[,,] vineDistances, VineArrayIdx idx, int x, int y, VineDistance distance)
             {
@@ -180,17 +205,21 @@ namespace Jump_Bruteforcer
 
         private static readonly Dictionary<ObjectType, BitmapSource> toImage;
         private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
+        private static readonly Dictionary<ObjectType, bool[,]> toScraperHitbox;
         static Map()
         {
             toImage = new Dictionary<ObjectType, BitmapSource>();
             toHitbox = new Dictionary<ObjectType, bool[,]>();
+            toScraperHitbox = new Dictionary<ObjectType, bool[,]>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
                 BitmapSource img = GetImage(e.ToLower());
+                BitmapSource scraperimg = GetImage("scraper_" + e.ToLower());
 
                 toImage.Add(o, img);
                 toHitbox.Add(o, GetHitbox(img));
+                toScraperHitbox.Add(o, GetHitbox(scraperimg));
             }
         }
 

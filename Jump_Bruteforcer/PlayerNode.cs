@@ -11,7 +11,8 @@ namespace Jump_Bruteforcer
         None = 0,
         CanDJump = 1,
         OnPlatform = 2,
-        FacingRight = 4
+        FacingRight = 4,
+        FaceScraper = 8,
     }
     public class State : IEquatable<State>
     {
@@ -43,8 +44,8 @@ namespace Jump_Bruteforcer
         }
         public bool Equals(State? other) =>
             X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight);
-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight).GetHashCode();
+            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight) & (Flags | Bools.FaceScraper) == (other.Flags | Bools.FaceScraper);
+        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight, Bools.FaceScraper).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
 
     }
@@ -54,7 +55,7 @@ namespace Jump_Bruteforcer
         public PlayerNode? Parent { get; set; }
         public uint PathCost { get; set; }
         public Input? Action { get; set; }
-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Facescraper);
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
         private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);

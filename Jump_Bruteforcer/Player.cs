@@ -30,6 +30,22 @@
         {
             return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
         }
+        private static bool PlaceFree(int x, int y, CollisionMap CollisionMap, bool facescraper, bool facingRight)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
+            }
+            return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
+        }
+        private static bool PlaceFree(int x, double y, CollisionMap CollisionMap, bool facescraper, bool facingRight)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
+            }
+            return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y)) != CollisionType.Solid;
+        }
         private static bool PlaceFree(int x, int y, CollisionMap CollisionMap)
         {
             return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
@@ -41,10 +57,18 @@
 
 
 
+
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {
             int yRounded = node.State.RoundedY;
-            bool notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded).Contains(CollisionType.Killer);
+            bool notOnKiller;
+            if ((node.State.Flags & Bools.FaceScraper) == Bools.FaceScraper)
+            {
+                notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded, (node.State.Flags & Bools.FacingRight) == Bools.FacingRight).Contains(CollisionType.Killer);
+            }
+            else { 
+                notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded).Contains(CollisionType.Killer);
+            }
             bool inbounds = node.State.X is >= 0 and <= Map.WIDTH - 1 & node.State.Y is >= 0 and <= Map.HEIGHT - 1;
             return notOnKiller & inbounds;
         }
@@ -135,12 +159,26 @@
                 }
             }
 
+            //facescraper
+            if (((input & Input.Facescraper) == Input.Facescraper))
+            {
+                if (PlaceFree(x, (int)Math.Floor(y - 3), collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                {
+                    flags |= Bools.FaceScraper;
+                }
+                else
+                {
+                    flags &= ~Bools.FaceScraper;
+                }
+            }
+           
+
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += PhysicsParams.GRAVITY;
             x += (int)hSpeed;
             y += vSpeed;
             //collision event
-            var collisionTypes = collisionMap.GetCollisionTypes(x, y);
+            var collisionTypes = ((input & Input.Facescraper) == Input.Facescraper)? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
             (var currentX, var currentY) = (x,  y);
             int minInstanceNum = 0;
             int collisionIdx = 0;
@@ -150,25 +188,25 @@
                 {
                     case CollisionType.Solid:
                         (x, y) = (xPrevious, yPrevious);
-                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
+                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                         {
                             int sign = Math.Sign(hSpeed);
                             if (sign != 0)
                             {
-                                while (PlaceFree(x + sign, y, collisionMap))
+                                while (PlaceFree(x + sign, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                                 {
                                     x += sign;
                                 }
                                 hSpeed = 0;
                             }
                         }
-                        if (!PlaceFree(x, y + vSpeed, collisionMap))
+                        if (!PlaceFree(x, y + vSpeed, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                         {
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
                                 flags |= sign > 0 ? Bools.CanDJump : Bools.None;
-                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
+                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                                 {
                                     y += sign;
                                     vSpeed -= sign;
@@ -177,13 +215,13 @@
                             }
 
                         }
-                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
+                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                         {
                             hSpeed = 0;
                         }
                         x += (int)hSpeed;
                         y += vSpeed;
-                        if (!PlaceFree(x, y, collisionMap))
+                        if (!PlaceFree(x, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                         {
                             (x, y) = (xPrevious, yPrevious);
                         }
@@ -222,7 +260,7 @@
                 {
                     //update the collision types we'll check for on this frame
                     var currentCollisionType = collisionTypes[collisionIdx];
-                    collisionTypes = collisionMap.GetCollisionTypes(x, y);
+                    collisionTypes = ((input & Input.Facescraper) == Input.Facescraper) ? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
                     CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
                     if (nextCollisionType == CollisionType.None)
                         goto collisionDone;

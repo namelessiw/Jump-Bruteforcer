@@ -34,7 +34,7 @@
         {
             if (facescraper)
             {
-                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
+                return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
             }
             return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
         }
@@ -42,7 +42,7 @@
         {
             if (facescraper)
             {
-                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
+                return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
             }
             return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y)) != CollisionType.Solid;
         }

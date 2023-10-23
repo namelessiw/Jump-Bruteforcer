@@ -23,13 +23,13 @@ namespace TestBrute
 
 
         [Theory]
-        [InlineData(1,2,3, true, false)]
-        [InlineData(0,0,0, true, true)]
-        [InlineData(0,0,0,false, false)]
+        [InlineData(1, 2, 3, true, false)]
+        [InlineData(0, 0, 0, true, true)]
+        [InlineData(0, 0, 0, false, false)]
         public void TestNodeEquals(int x, double y, double vSpeed, bool canDJump, bool shouldEqual)
         {
-            var n1 = new PlayerNode(0,0,0);
-            Bools flags = canDJump ? Bools.CanDJump : ~Bools.CanDJump | Bools.FacingRight;
+            var n1 = new PlayerNode(0, 0, 0);
+            Bools flags = canDJump ? Bools.CanDJump | Bools.FacingRight : Bools.FacingRight;
             var n2 = new PlayerNode(x, y, vSpeed, flags);
             (n1.Equals(n2)).Should().Be(shouldEqual);
 

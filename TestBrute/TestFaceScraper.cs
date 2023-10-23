@@ -37,7 +37,7 @@ namespace TestBrute
                 v = v.NewState(Input.Neutral, cmap);
             }
 
-            v.Should().BeEquivalentTo(new PlayerNode(49, 215.4, 0));
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 215.4, 0).State);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace TestBrute
                 v = v.NewState(Input.Neutral, cmap);
             }
 
-            v.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0));
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0).State);
         }
     }
 }

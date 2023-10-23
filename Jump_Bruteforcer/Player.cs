@@ -178,7 +178,7 @@
             x += (int)hSpeed;
             y += vSpeed;
             //collision event
-            var collisionTypes = ((input & Input.Facescraper) == Input.Facescraper)? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
+            var collisionTypes = ((flags & Bools.FaceScraper) == Bools.FaceScraper)? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
             (var currentX, var currentY) = (x,  y);
             int minInstanceNum = 0;
             int collisionIdx = 0;

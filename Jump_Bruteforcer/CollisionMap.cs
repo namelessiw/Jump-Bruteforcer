@@ -109,6 +109,8 @@ namespace Jump_Bruteforcer
         //TODO account for the coordinates offset caused by scraperFacingRight
         public CollisionType GetHighestPriorityCollisionType(int x, int y, bool scraperFacingRight)
         {
+            x -= (scraperFacingRight ? 8 : 12);
+            y -= 5;
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? ScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
@@ -131,11 +133,15 @@ namespace Jump_Bruteforcer
         //TODO account for the coordinates offset caused by scraperFacingRight
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool scraperFacingRight)
         {
+            x -= (scraperFacingRight ? 8 : 12);
+            y -= 3;
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? ScraperCollision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
 
         }
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight)
         {
+            x -= (scraperFacingRight ? 8 : 12);
+            y -= 3;
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? ScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
 

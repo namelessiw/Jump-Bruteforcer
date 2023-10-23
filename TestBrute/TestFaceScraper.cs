@@ -57,7 +57,7 @@ namespace TestBrute
                 v = v.NewState(Input.Neutral, cmap);
             }
 
-            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
         }
     }
 }

@@ -30,7 +30,7 @@
         {
             return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
         }
-        private static bool PlaceFree(int x, int y, CollisionMap CollisionMap, bool facescraper, bool facingRight)
+        private static bool PlaceFree(int x, int y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
             if (facescraper)
             {
@@ -38,7 +38,7 @@
             }
             return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
         }
-        private static bool PlaceFree(int x, double y, CollisionMap CollisionMap, bool facescraper, bool facingRight)
+        private static bool PlaceFree(int x, double y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
             if (facescraper)
             {

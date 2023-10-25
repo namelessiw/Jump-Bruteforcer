@@ -41,7 +41,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestNoInputsFaceScraper()
+        public void TestNoInputsFaceScraperRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -59,6 +59,29 @@ namespace TestBrute
 
             v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
         }
+
+
+        /* TODO: implement facing left
+        [Fact]
+        public void TestNoInputsFaceScraperLeft()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(49, 23, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingLeft);
+
+            // 36 frames until stable
+
+            for (int i = 0; i < 36; i++)
+            {
+                v = v.NewState(Input.Neutral, cmap);
+            }
+
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 217.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingLeft).State);
+        }
+        */
 
         [Fact]
         public void TestFaceScraperRunIntoWallRight()
@@ -105,7 +128,7 @@ namespace TestBrute
         */
 
         [Fact]
-        public void TestFaceScraperBonkCeiling()
+        public void TestFaceScraperBonkCeilingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -124,8 +147,30 @@ namespace TestBrute
             v.State.Should().BeEquivalentTo(new PlayerNode(115, 36.7, 0, flags: Bools.FaceScraper | Bools.FacingRight).State);
         }
 
+        /* TODO: implement facing left
         [Fact]
-        public void TestFaceScraperLeftEdgeHitSpike()
+        public void TestFaceScraperBonkCeilingLeft()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(115, 74.5, -0.2, Bools.CanDJump | Bools.FaceScraper | Bools.FacingLeft);
+            v = v.NewState(Input.Jump, cmap);
+
+            do
+            {
+                v = v.NewState(Input.Neutral, cmap);
+            }
+            while (v.State.VSpeed != 0);
+
+            v.State.Should().BeEquivalentTo(new PlayerNode(115, 36.7, 0, flags: Bools.FaceScraper | Bools.FacingLeft).State);
+        }
+        */
+
+        [Fact]
+        public void TestFaceScraperLeftEdgeHitSpikeFacingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -136,8 +181,22 @@ namespace TestBrute
             Player.IsAlive(cmap, v).Should().BeFalse();
         }
 
+        /* TODO: implement facing left
         [Fact]
-        public void TestFaceScraperLeftEdgeMissSpike()
+        public void TestFaceScraperLeftEdgeHitSpikeFacingLeft()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(203, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingLeft);
+            Player.IsAlive(cmap, v).Should().BeFalse();
+        }
+        */
+
+        [Fact]
+        public void TestFaceScraperLeftEdgeMissSpikeFacingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -147,5 +206,19 @@ namespace TestBrute
             var v = new PlayerNode(200, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             Player.IsAlive(cmap, v).Should().BeTrue();
         }
+
+        /* TODO: implement facing left
+        [Fact]
+        public void TestFaceScraperLeftEdgeMissSpikeFacingLeft()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(204, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingLeft);
+            Player.IsAlive(cmap, v).Should().BeTrue();
+        }
+        */
     }
 }

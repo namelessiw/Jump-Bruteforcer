@@ -260,7 +260,7 @@
                 {
                     //update the collision types we'll check for on this frame
                     var currentCollisionType = collisionTypes[collisionIdx];
-                    collisionTypes = ((input & Input.Facescraper) == Input.Facescraper) ? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
+                    collisionTypes = ((flags & Bools.FaceScraper) == Bools.FaceScraper) ? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
                     CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
                     if (nextCollisionType == CollisionType.None)
                         goto collisionDone;

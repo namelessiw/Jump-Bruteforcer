@@ -22,7 +22,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestNoInputs()
+        public void TestNoInputsFaceScraperFacingLeft()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -41,7 +41,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestNoInputsFaceScraperRight()
+        public void TestNoInputsFaceScraperFacingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -61,7 +61,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestNoInputsFaceScraperLeft()
+        public void TestNoInputsFaceScraperFacingLeft()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -81,7 +81,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestFaceScraperRunIntoWallRight()
+        public void TestFaceScraperRunIntoWallFacingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -102,7 +102,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestFaceScraperRunIntoWallLeft()
+        public void TestFaceScraperRunIntoWallFacingLeft()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -123,7 +123,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestFaceScraperBonkCeilingRight()
+        public void TestFaceScraperBonkCeilingFacingRight()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);
@@ -143,7 +143,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestFaceScraperBonkCeilingLeft()
+        public void TestFaceScraperBonkCeilingFacingLeft()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);

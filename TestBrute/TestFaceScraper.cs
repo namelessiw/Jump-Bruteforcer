@@ -22,7 +22,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestNoInputsFaceScraperFacingLeft()
+        public void TestNoInputsRegular()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);

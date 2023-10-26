@@ -106,11 +106,15 @@ namespace Jump_Bruteforcer
         {
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
         }
-        //TODO account for the coordinates offset caused by scraperFacingRight
+
         public CollisionType GetHighestPriorityCollisionType(int x, int y, bool scraperFacingRight)
         {
             x += (scraperFacingRight ? 7 : 3);
             y -= 3;
+            if (!scraperFacingRight)
+            {
+                return (uint)x < Map.WIDTH & y + 1 < Map.HEIGHT ? ScraperCollision[x, y].Union(ScraperCollision[x, y + 1]).FirstOrDefault() : CollisionType.None;
+            }
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? ScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
@@ -130,11 +134,15 @@ namespace Jump_Bruteforcer
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
 
-        //TODO account for the coordinates offset caused by scraperFacingRight
+
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool scraperFacingRight)
         {
             x += (scraperFacingRight ? 7 : 3);
             y -= 3;
+            if (!scraperFacingRight)
+            {
+                return (uint)x < Map.WIDTH & (uint)y + 1 < Map.HEIGHT ? ScraperCollision[x, y].Union(ScraperCollision[x, y + 1]) : ImmutableSortedSet<CollisionType>.Empty;
+            }
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? ScraperCollision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
 
         }
@@ -142,6 +150,10 @@ namespace Jump_Bruteforcer
         {
             x += (scraperFacingRight ? 7 : 3);
             y -= 3;
+            if (!scraperFacingRight)
+            {
+               return (uint)x < Map.WIDTH & (uint)Math.Round(y) + 1 < Map.HEIGHT ? ScraperCollision[x, (int)Math.Round(y)].Union(ScraperCollision[x, (int)Math.Round(y) + 1]) : ImmutableSortedSet<CollisionType>.Empty;
+            }
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? ScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
 

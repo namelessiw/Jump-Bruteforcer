@@ -215,7 +215,7 @@ namespace Jump_Bruteforcer
             {
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
                 BitmapSource img = GetImage(e.ToLower());
-                BitmapSource scraperimg = GetImage("scraper_" + e.ToLower());
+                BitmapSource scraperimg = GetImage("scraper" + e.ToLower());
 
                 toImage.Add(o, img);
                 toHitbox.Add(o, GetHitbox(img));

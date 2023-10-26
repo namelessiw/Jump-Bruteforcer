@@ -130,7 +130,7 @@ namespace Jump_Bruteforcer
                     scrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
                 }
             }
-            foreach (var pixel in query)
+            foreach (var pixel in scraperquery)
             {
                 scrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));

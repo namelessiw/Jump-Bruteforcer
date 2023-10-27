@@ -392,6 +392,8 @@ namespace TestBrute
 
             var v = new PlayerNode(250, 218.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(250, 218.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+            v = v.NewState(Input.Neutral, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(250, 218.4, 0, Bools.CanDJump | Bools.FacingRight).State);
         }
 
@@ -405,6 +407,8 @@ namespace TestBrute
 
             var v = new PlayerNode(250, 217.4, 0, Bools.CanDJump | Bools.FaceScraper);
             v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.CanDJump | Bools.FaceScraper).State);
+            v = v.NewState(Input.Neutral, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.CanDJump).State);
         }
 

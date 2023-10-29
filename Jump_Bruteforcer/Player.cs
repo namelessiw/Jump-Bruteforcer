@@ -30,13 +30,29 @@
         {
             return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
         }
+        private static bool PlaceMeeting(int x, int y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(type);
+            }
+            return PlaceMeeting(x, y, type, CollisionMap);
+        }
+        private static bool PlaceMeeting(int x, double y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y), facingRight).Contains(type);
+            }
+            return PlaceMeeting(x, y, type, CollisionMap);
+        }
         private static bool PlaceFree(int x, int y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
             if (facescraper)
             {
                 return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
             }
-            return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
+            return PlaceFree(x, y, CollisionMap);
         }
         private static bool PlaceFree(int x, double y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
@@ -44,7 +60,7 @@
             {
                 return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
             }
-            return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y)) != CollisionType.Solid;
+            return PlaceFree(x, y, CollisionMap);
         }
         private static bool PlaceFree(int x, int y, CollisionMap CollisionMap)
         {
@@ -113,17 +129,17 @@
             //  playerJump
             if ((input & Input.Jump) == Input.Jump)
             {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
+                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                 {
                     vSpeed = PhysicsParams.SJUMP_VSPEED;
                     flags |= Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                 {
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
                     flags &= ~Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                 {
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
                     flags |= Bools.CanDJump;

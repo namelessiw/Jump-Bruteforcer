@@ -546,11 +546,11 @@ namespace TestBrute
             Map Map = Parser.Parse(".txt", Text);
             CollisionMap cmap = Map.CollisionMap;
 
-            var v = new PlayerNode(381, 46.6, 0, Bools.FaceScraper);
+            var v = new PlayerNode(381, 45.6, 0, Bools.FaceScraper);
             v = v.NewState(Input.Facescraper, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47, 0.4, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 46, 0.4, Bools.FaceScraper).State);
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47.8, 0.8, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 46.8, 0.8, Bools.FaceScraper).State);
         }
 
         [Fact]

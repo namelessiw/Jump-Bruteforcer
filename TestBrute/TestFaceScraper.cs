@@ -490,5 +490,82 @@ namespace TestBrute
             v = v.NewState(Input.Jump, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(390, 56.6, 0.8, Bools.FaceScraper | Bools.FacingRight).State);
         }
+
+        [Fact]
+        public void TestFaceScraperInputsDuringCostumeSwitch()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(369, 215.2, 0, Bools.CanDJump);
+            v = v.NewState(Input.Jump, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(369, 207.1, -8.1, Bools.CanDJump).State);
+            v = v.NewState(Input.Facescraper | Input.Release | Input.Right, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(369, 199.4, -7.7, Bools.None).State);
+            v = v.NewState(Input.Release, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(369, 196.335, -3.065, Bools.FaceScraper).State);
+        }
+
+        [Fact]
+        public void TestSwitchToFaceScraperSuccess()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(378, 56.6, 0.8, Bools.None);
+            v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 1.2, Bools.None).State);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 0, Bools.FaceScraper).State);
+        }
+
+        [Fact]
+        public void TestSwitchToFaceScraperFail()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(378, 57.8, 1.2, Bools.None);
+            v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 59.4, 1.6, Bools.None).State);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 61.4, 2, Bools.None).State);
+        }
+
+        [Fact]
+        public void TestSwitchToRegularFail()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(381, 46.6, 0, Bools.FaceScraper);
+            v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47, 0.4, Bools.FaceScraper).State);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47.8, 0.8, Bools.FaceScraper).State);
+        }
+
+        [Fact]
+        public void TestSwitchToRegularSuccess()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(381, 47, 0.4, Bools.FaceScraper);
+            v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47.8, 0.8, Bools.FaceScraper).State);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(381, 49, 1.2, Bools.None).State);
+        }
     }
 }

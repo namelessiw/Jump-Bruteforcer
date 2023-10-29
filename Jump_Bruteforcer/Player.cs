@@ -65,6 +65,7 @@
             //step event:
             int h = (input & Input.Left) == Input.Left ? -1 : 0;
             h = (input & Input.Right) == Input.Right ? 1 : h;
+
             //vines
             VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
             VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
@@ -88,6 +89,10 @@
             //  playerJump
             if ((input & Input.Jump) == Input.Jump)
             {
+                if ((flags & Bools.CanDJump) != Bools.CanDJump)
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
                 if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = PhysicsParams.SJUMP_VSPEED;
@@ -98,7 +103,7 @@
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
                     flags &= ~Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump  || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
                 {
                     vSpeed = PhysicsParams.DJUMP_VSPEED;
                     flags |= Bools.CanDJump;
@@ -110,6 +115,7 @@
             {
                 vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
             }
+
             //more vines
             if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
             {
@@ -133,7 +139,15 @@
                     hSpeed = -15;
                 }
             }
+            //  playerJump
+            if ((input & Input.Jump) == Input.Jump)
+            {
+                if ((flags & Bools.CanDJump) != Bools.CanDJump)
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
 
+            }
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += PhysicsParams.GRAVITY;
             x += (int)hSpeed;

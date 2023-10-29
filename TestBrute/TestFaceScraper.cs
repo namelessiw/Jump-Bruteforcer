@@ -569,7 +569,7 @@ namespace TestBrute
         }
 
         [Fact]
-        public void TestHitboxChangeAfterWeirdFrame()
+        public void TestHitboxChangeAfterSwitch()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";
             string Text = File.ReadAllText(path);

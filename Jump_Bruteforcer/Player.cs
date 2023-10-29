@@ -179,7 +179,7 @@
             //facescraper
             if (((parent.Action & Input.Facescraper) == Input.Facescraper))
             {
-                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & PlaceFree(x, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight, true).Contains(CollisionType.Solid))
                 {
                     flags |= Bools.FaceScraper;
                 }

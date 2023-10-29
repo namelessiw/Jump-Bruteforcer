@@ -156,6 +156,20 @@ namespace Jump_Bruteforcer
             }
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? ScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
+        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight, bool imageAngle270)
+        {
+            if (imageAngle270)
+            {
+                x += (scraperFacingRight ? 7 : 3);
+                y -= 3;
+                if (!scraperFacingRight)
+                {
+                    return (uint)x < Map.WIDTH & (uint)Math.Round(y) + 1 < Map.HEIGHT ? ScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
+                }
+            }
+
+            return GetCollisionTypes(x, y, scraperFacingRight);
+        }
 
         /// <summary>
         /// gets the lowest instance number platform at coordinate (x, y) with an instance number greater than or equal to minInstanceNum

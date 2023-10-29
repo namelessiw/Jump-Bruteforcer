@@ -435,7 +435,7 @@ namespace TestBrute
             Map Map = Parser.Parse(".txt", Text);
             CollisionMap cmap = Map.CollisionMap;
 
-            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump);
+            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump | Bools.FacingRight);
             v = v.NewState(Input.Facescraper, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.FacingRight).State);
             v = v.NewState(Input.Neutral, cmap);

@@ -567,5 +567,22 @@ namespace TestBrute
             v = v.NewState(Input.Neutral, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(381, 49, 1.2, Bools.None).State);
         }
+
+        [Fact]
+        public void TestHitboxChangeAfterWeirdFrame()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(378, 205, 1, Bools.FaceScraper);
+            v = v.NewState(Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.FaceScraper).State);
+            Player.IsAlive(cmap, v).Should().BeTrue();
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.None).State);
+            Player.IsAlive(cmap, v).Should().BeFalse();
+        }
     }
 }

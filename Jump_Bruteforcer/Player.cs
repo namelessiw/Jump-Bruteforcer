@@ -98,8 +98,9 @@
         /// <param name="collisionMap"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public static State Update(State state, Input input, CollisionMap collisionMap)
+        public static State Update(PlayerNode parent, Input input, CollisionMap collisionMap)
         {
+            var state = parent.State;
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             // mutate state variables here:
@@ -176,9 +177,9 @@
             }
 
             //facescraper
-            if (((input & Input.Facescraper) == Input.Facescraper))
+            if (((parent.Action & Input.Facescraper) == Input.Facescraper))
             {
-                if (PlaceFree(x, (int)Math.Floor(y - 3), collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & PlaceFree(x, (int)Math.Floor(y - 3), collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
                 {
                     flags |= Bools.FaceScraper;
                 }
@@ -286,6 +287,11 @@
                 collisionIdx++;
             }
         collisionDone:
+            //more facescraper
+            if (((input & Input.Facescraper) == Input.Facescraper))
+            {
+                flags &= ~Bools.CanDJump;
+            }
 
             return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
         }

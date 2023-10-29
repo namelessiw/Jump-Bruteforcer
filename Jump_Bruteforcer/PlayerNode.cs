@@ -141,7 +141,7 @@ namespace Jump_Bruteforcer
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State newState = Player.Update(State, input, CollisionMap);
+            State newState = Player.Update(this, input, CollisionMap);
             uint newStateCost = (uint)((input & Input.Facescraper) == Input.Facescraper ? 48 : 1); 
 
             return new PlayerNode(newState, action: input, pathCost: PathCost + newStateCost, parent: this);

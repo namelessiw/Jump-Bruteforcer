@@ -179,11 +179,11 @@
             //facescraper
             if (((parent.Action & Input.Facescraper) == Input.Facescraper))
             {
-                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & PlaceFree(x, (int)Math.Floor(y - 3), collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & PlaceFree(x, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
                 {
                     flags |= Bools.FaceScraper;
                 }
-                else
+                else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), collisionMap))
                 {
                     flags &= ~Bools.FaceScraper;
                 }

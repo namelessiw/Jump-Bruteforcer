@@ -520,7 +520,7 @@ namespace TestBrute
             v = v.NewState(Input.Facescraper, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 1.2, Bools.None).State);
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 0, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 0, Bools.FaceScraper | Bools.CanDJump).State);
         }
 
         [Fact]

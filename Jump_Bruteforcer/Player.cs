@@ -104,80 +104,89 @@
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             // mutate state variables here:
-            //step event:
-            int h = (input & Input.Left) == Input.Left ? -1 : 0;
-            h = (input & Input.Right) == Input.Right ? 1 : h;
-            //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
-            if (h != 0)
+            if ((input & Input.Facescraper) != Input.Facescraper)
             {
-                if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                //step event:
+                int h = (input & Input.Left) == Input.Left ? -1 : 0;
+                h = (input & Input.Right) == Input.Right ? 1 : h;
+                //vines
+                VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+                VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+                if (h != 0)
                 {
-                    flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
-                }
-            }
-                
-            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
-            if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
-            {
-                hSpeed = h * PhysicsParams.WALKING_SPEED;
-            }
-
-            flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
-            vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
-            //  playerJump
-            if ((input & Input.Jump) == Input.Jump)
-            {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
-                {
-                    vSpeed = PhysicsParams.SJUMP_VSPEED;
-                    flags |= Bools.CanDJump;
-                }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
-                {
-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
-                    flags &= ~Bools.CanDJump;
-                }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
-                {
-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
-                    flags |= Bools.CanDJump;
+                    if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                    {
+                        flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
+                    }
                 }
 
-            }
-            //  playerVJump
-            if ((input & Input.Release) == Input.Release & vSpeed < 0)
-            {
-                vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
-            }
-            //more vines
-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
-            {
-                vSpeed = 2;
-                flags |= Bools.FacingRight;
-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if (h == 1)
+                vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+                vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+                if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
                 {
-                    vSpeed = -9;
-                    hSpeed = 15;
+                    hSpeed = h * PhysicsParams.WALKING_SPEED;
                 }
-            }
-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
-            {
-                vSpeed = 2;
-                flags &= ~Bools.FacingRight;
-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if (h == -1)
-                {
-                    vSpeed = -9;
-                    hSpeed = -15;
-                }
-            }
 
+                flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+                vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
+                //  playerJump
+                if ((input & Input.Jump) == Input.Jump)
+                {
+                    if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    {
+                        vSpeed = PhysicsParams.SJUMP_VSPEED;
+                        flags |= Bools.CanDJump;
+                    }
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    {
+                        vSpeed = PhysicsParams.DJUMP_VSPEED;
+                        flags &= ~Bools.CanDJump;
+                    }
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    {
+                        vSpeed = PhysicsParams.DJUMP_VSPEED;
+                        flags |= Bools.CanDJump;
+                    }
+
+                }
+                //  playerVJump
+                if ((input & Input.Release) == Input.Release & vSpeed < 0)
+                {
+                    vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
+                }
+                //more vines
+                if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
+                {
+                    vSpeed = 2;
+                    flags |= Bools.FacingRight;
+                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                    if (h == 1)
+                    {
+                        vSpeed = -9;
+                        hSpeed = 15;
+                    }
+                }
+                if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
+                {
+                    vSpeed = 2;
+                    flags &= ~Bools.FacingRight;
+                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                    if (h == -1)
+                    {
+                        vSpeed = -9;
+                        hSpeed = -15;
+                    }
+                }
+            }
             //facescraper
-            if (((parent.Action & Input.Facescraper) == Input.Facescraper))
+            else {
+                int h = (parent.Action & Input.Left) == Input.Left ? -1 : 0;
+                h = (parent.Action & Input.Right) == Input.Right ? 1 : h;
+                hSpeed = h * PhysicsParams.WALKING_SPEED;
+
+            }
+
+            if ((parent.Action & Input.Facescraper) == Input.Facescraper)
             {
                 if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight, true).Contains(CollisionType.Solid))
                 {
@@ -188,7 +197,7 @@
                     flags &= ~Bools.FaceScraper;
                 }
             }
-           
+
 
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += PhysicsParams.GRAVITY;

@@ -103,6 +103,7 @@
             var state = parent.State;
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
+            var facingRightAtBeginning = (flags & Bools.FacingRight) == Bools.FacingRight;
             // mutate state variables here:
             if ((input & Input.Facescraper) != Input.Facescraper)
             {
@@ -132,7 +133,7 @@
                 //  playerJump
                 if ((input & Input.Jump) == Input.Jump)
                 {
-                    if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight || facingRightAtBeginning, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
                     {
                         vSpeed = PhysicsParams.SJUMP_VSPEED;
                         flags |= Bools.CanDJump;

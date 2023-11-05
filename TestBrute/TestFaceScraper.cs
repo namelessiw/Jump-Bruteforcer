@@ -576,12 +576,12 @@ namespace TestBrute
             Map Map = Parser.Parse(".txt", Text);
             CollisionMap cmap = Map.CollisionMap;
 
-            var v = new PlayerNode(378, 205, 1, Bools.FaceScraper);
+            var v = new PlayerNode(378, 205, 1, Bools.None);
             v = v.NewState(Input.Facescraper, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.None).State);
             Player.IsAlive(cmap, v).Should().BeTrue();
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.None).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.FaceScraper).State);
             Player.IsAlive(cmap, v).Should().BeFalse();
         }
     }

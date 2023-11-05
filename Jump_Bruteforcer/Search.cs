@@ -60,7 +60,7 @@ namespace Jump_Bruteforcer
             while (openSet.Count > 0)
             {
                 PlayerNode v = openSet.Dequeue();
-                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
+                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y) || Player.PlaceMeeting(v.State.X, v.State.Y, CollisionType.Warp, CollisionMap, (v.State.Flags & Bools.FacingRight) == Bools.FacingRight, (v.State.Flags & Bools.FaceScraper) == Bools.FaceScraper))
                 {
 
                     (List<Input> inputs, PointCollection points) = v.GetPath();
@@ -81,7 +81,7 @@ namespace Jump_Bruteforcer
                     {
                         continue;
                     }
-                    uint newCost = v.PathCost + 1;
+                    uint newCost = v.PathCost + (uint)((w.Action & Input.Facescraper) == Input.Facescraper ? 48 : 1);
                     if (!openSet.Contains(w) || newCost < w.PathCost)
                     {
                         w.Parent = v;

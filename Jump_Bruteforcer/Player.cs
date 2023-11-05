@@ -30,7 +30,7 @@
         {
             return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
         }
-        private static bool PlaceMeeting(int x, int y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        public static bool PlaceMeeting(int x, int y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
             if (facescraper)
             {
@@ -38,7 +38,7 @@
             }
             return PlaceMeeting(x, y, type, CollisionMap);
         }
-        private static bool PlaceMeeting(int x, double y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        public static bool PlaceMeeting(int x, double y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
         {
             if (facescraper)
             {

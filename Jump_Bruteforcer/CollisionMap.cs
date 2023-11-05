@@ -10,7 +10,7 @@ namespace Jump_Bruteforcer
 
         private readonly VineDistance[,,] vineDistance;
         private readonly HashSet<(int x, int y)> goalPixels;
-        private readonly HashSet<(int x, int y)> scraperGoalPixels;
+
 
         public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, ImmutableSortedSet<CollisionType>[,]? ScraperCollision,  List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
@@ -19,7 +19,7 @@ namespace Jump_Bruteforcer
             this.Platforms = Platforms ?? new List<Object>();
             this.vineDistance = vineDistances;
             this.goalPixels = new();
-            this.scraperGoalPixels = new();
+
             for (int x = 0; x < Map.WIDTH; x++)
             {
                 for (int y = 0; y < Map.HEIGHT; y++)
@@ -28,10 +28,7 @@ namespace Jump_Bruteforcer
                     {
                         goalPixels.Add((x, y));
                     }
-                    if (this.ScraperCollision[x, y].Contains(CollisionType.Warp))
-                    {
-                        scraperGoalPixels.Add((x, y));
-                    }
+
                 }
             }
 
@@ -58,7 +55,7 @@ namespace Jump_Bruteforcer
 
         }
         public bool onWarp(int x, double y) => goalPixels.Contains((x, (int)Math.Round(y)));
-        public bool ScraperOnWarp(int x, double y) => scraperGoalPixels.Contains((x, (int)Math.Round(y)));
+
         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);

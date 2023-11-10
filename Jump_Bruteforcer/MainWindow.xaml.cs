@@ -91,10 +91,12 @@ namespace Jump_Bruteforcer
                             }
                             RenderTargetBitmap target = new RenderTargetBitmap((int)renderBounds.Width, (int)renderBounds.Height, 96, 96, PixelFormats.Pbgra32);
                             target.Render(drawingVisual);
-                            FileStream stream = new FileStream(Path.Join(outputPath, $"{Path.GetFileName(room)}.png"), FileMode.Create);
-                            BitmapEncoder encoder = new PngBitmapEncoder();
-                            encoder.Frames.Add(BitmapFrame.Create(target));
-                            encoder.Save(stream);
+                            using (FileStream stream = new FileStream(Path.Join(outputPath, $"{Path.GetFileName(room)}.png"), FileMode.Create))
+                            {
+                                BitmapEncoder encoder = new PngBitmapEncoder();
+                                encoder.Frames.Add(BitmapFrame.Create(target));
+                                encoder.Save(stream);
+                            }
                         }
                     }
                     catch (Exception ex)

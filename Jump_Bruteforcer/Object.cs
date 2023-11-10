@@ -85,6 +85,12 @@ namespace Jump_Bruteforcer
         CatharsisWaterMini,
         WaterDisappearMini,
         SidewaysPlatform,
+        BlackHole,
+        UpArrow,
+        DownArrow,
+        Cross,
+        BigApple,
+        YellowBullet,
     }
 
     //Must be ordered by ascending collision priority
@@ -173,6 +179,13 @@ namespace Jump_Bruteforcer
             {ObjectType.CatharsisWaterMini, CollisionType.CatharsisWater },
             {ObjectType.WaterDisappearMini, CollisionType.None },
             {ObjectType.SidewaysPlatform, CollisionType.None },
+            {ObjectType.BlackHole, CollisionType.Killer },
+            {ObjectType.UpArrow, CollisionType.Killer },
+            {ObjectType.DownArrow, CollisionType.Killer },
+            {ObjectType.Cross, CollisionType.Killer },
+            {ObjectType.BigApple, CollisionType.Killer },
+            {ObjectType.YellowBullet, CollisionType.Killer },
+
         };
 
         public Object(int X, int Y, ObjectType objectType, int instanceNum = 0)
@@ -181,6 +194,16 @@ namespace Jump_Bruteforcer
             {
                 X -= 10;
                 Y -= 12;
+            }
+            if (objectType == ObjectType.BigApple)
+            {
+                X -= 31;
+                Y -= 36;
+            }
+            if (objectType == ObjectType.YellowBullet)
+            {
+                X -= 5;
+                Y -= 5;
             }
             BoundingBox? bbox = null;
             if (objectType == ObjectType.Platform)

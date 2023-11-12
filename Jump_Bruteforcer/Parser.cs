@@ -127,7 +127,7 @@ namespace Jump_Bruteforcer
             {"object828", ObjectType.Platform},
             {"object795", ObjectType.Platform},
             {"catharsiswater", ObjectType.CatharsisWater},
-            {"blackhole", ObjectType.BlackHole},
+            {"object802", ObjectType.BlackHole},
             {"object803", ObjectType.UpArrow},
             {"object804", ObjectType.DownArrow},
             {"object805", ObjectType.Cross},

@@ -70,7 +70,7 @@ namespace Jump_Bruteforcer
                     (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
                     VisualizeSearch.CountStates(openSet, closedSet);
 
-                    string Macro = SearchOutput.GetMacro(inputs);
+                    string Macro = SearchOutput.GetMacro(inputs, (root.State.Flags & Bools.FaceScraper) == Bools.FaceScraper);
 
                     return new SearchResult(Strat, Macro, true, closedSet.Count);
                 }

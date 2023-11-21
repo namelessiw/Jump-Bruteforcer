@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Collections.Immutable;
 using System.Windows;
+using System.IO;
 
 namespace Jump_Bruteforcer
 {
@@ -16,7 +17,7 @@ namespace Jump_Bruteforcer
     }
     public class State : IEquatable<State>
     {
-        
+
         public int X { get; init; }
         public double Y { get; init; }
         public double VSpeed { get; init; }
@@ -71,6 +72,9 @@ namespace Jump_Bruteforcer
         }
 
         public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
+
+
+
 
 
 
@@ -158,6 +162,6 @@ namespace Jump_Bruteforcer
         }
 
         public override int GetHashCode() => State.GetHashCode();
-        public override string ToString() => State.ToString();
+        public override string ToString() => $"{{State: {State.ToString()}, Action: {Action.ToString()} }}";
     }
 }

@@ -584,5 +584,84 @@ namespace TestBrute
             v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.FaceScraper).State);
             Player.IsAlive(cmap, v).Should().BeFalse();
         }
+
+        [Fact]
+        public void TestCorrectHitboxFacingLeft()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            // bottom right pixel
+            var v = new PlayerNode(476, 58.3, 0, Bools.FaceScraper);
+            v = v.NewState(Input.Left, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(473, 58.3, 0, Bools.FaceScraper).State);
+            v = v.NewState(Input.Left, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(472, 58.3, 0, Bools.FaceScraper).State);
+
+            // top right missing pixels
+            v = new PlayerNode(538, 262, -5.4, Bools.FaceScraper);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(538, 261, 0, Bools.FaceScraper).State);
+
+            v = new PlayerNode(537, 262, -5.4, Bools.FaceScraper);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(537, 260, 0, Bools.FaceScraper).State);
+
+            v = new PlayerNode(536, 262, -5.4, Bools.FaceScraper);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(536, 259, 0, Bools.FaceScraper).State);
+
+            v = new PlayerNode(535, 262, -5.4, Bools.FaceScraper);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(535, 257, -5, Bools.FaceScraper).State);
+        }
+
+        [Fact]
+        public void TestCorrectHitboxFacingRight()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            // bottom right pixel
+            var v = new PlayerNode(533, 218.4, 0, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(533, 218.4, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(532, 218.4, 0, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(532, 218.8, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(531, 218.4, 0, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(531, 220.8, 1.2, Bools.FaceScraper | Bools.FacingRight).State);
+
+            // top right missing pixels
+            v = new PlayerNode(543, 262, -5.4, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(543, 261, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(542, 262, -5.4, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(542, 260, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(533, 262, -5.4, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(533, 260, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(532, 262, -5.4, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(532, 259, 0, Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = new PlayerNode(531, 262, -5.4, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(531, 257, -5, Bools.FaceScraper | Bools.FacingRight).State);
+        }
     }
 }

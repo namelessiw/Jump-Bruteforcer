@@ -663,5 +663,20 @@ namespace TestBrute
             v = v.NewState(Input.Neutral, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(531, 257, -5, Bools.FaceScraper | Bools.FacingRight).State);
         }
+
+        [Fact]
+        public void TestKale1Macro()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(374, 533.846, 4.26675, Bools.FacingRight);
+            v = v.NewState(Input.Right | Input.Facescraper, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(377, 538.51275, 4.66675, Bools.FacingRight).State);
+            v = v.NewState(Input.Left, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(374, 543.5795, 5.06675, Bools.None).State);
+        }
     }
 }

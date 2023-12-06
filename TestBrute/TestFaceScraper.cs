@@ -667,7 +667,7 @@ namespace TestBrute
         [Fact]
         public void TestKale1Macro()
         {
-            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string path = @$"..\..\..\jmaps\4_07_rKale1.txt";
             string Text = File.ReadAllText(path);
             Map Map = Parser.Parse(".txt", Text);
             CollisionMap cmap = Map.CollisionMap;

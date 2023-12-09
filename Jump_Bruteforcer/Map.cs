@@ -55,8 +55,8 @@ namespace Jump_Bruteforcer
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
-            (var cmap, var scrapercmap, var vineDistance) = GenerateCollisionMap();
-            CollisionMap = new(cmap, scrapercmap, platforms, vineDistance);
+            (var cmap, var leftscrapercmap, var rightscrapercmap, var vineDistance) = GenerateCollisionMap();
+            CollisionMap = new(cmap, leftscrapercmap, rightscrapercmap, platforms, vineDistance);
         }
 
         private ImageSource GenerateCollisionImage()
@@ -83,7 +83,7 @@ namespace Jump_Bruteforcer
             return drawingImage;
         }
         
-        private (ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
+        private (ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
@@ -110,10 +110,10 @@ namespace Jump_Bruteforcer
                 collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
             }
-            //scraper
+            //left facing scraper
             var scraperquery = (from o in Objects
                          where o.CollisionType != CollisionType.None
-                         let hitbox = toScraperHitbox[o.ObjectType]
+                         let hitbox = toLeftScraperHitbox[o.ObjectType]
                          from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
                          from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
                          where hitbox[spriteX, spriteY]
@@ -122,17 +122,42 @@ namespace Jump_Bruteforcer
                          where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                          group new { x, y, o } by (x, y) into pixel
                          select pixel);
-            var scrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            var leftscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
             for (int i = 0; i < WIDTH; i++)
             {
                 for (int j = 0; j < HEIGHT; j++)
                 {
-                    scrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                    leftscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
                 }
             }
             foreach (var pixel in scraperquery)
             {
-                scrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
+                leftscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
+                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+            }
+            //right facing scraper
+            scraperquery = (from o in Objects
+                                where o.CollisionType != CollisionType.None
+                                let hitbox = toRightScraperHitbox[o.ObjectType]
+                                from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
+                                from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
+                                where hitbox[spriteX, spriteY]
+                                let x = o.X + spriteX - 5
+                                let y = o.Y + spriteY - 8
+                                where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
+                                group new { x, y, o } by (x, y) into pixel
+                                select pixel);
+            var rightscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            for (int i = 0; i < WIDTH; i++)
+            {
+                for (int j = 0; j < HEIGHT; j++)
+                {
+                    rightscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                }
+            }
+            foreach (var pixel in scraperquery)
+            {
+                rightscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
             }
 
@@ -155,7 +180,7 @@ namespace Jump_Bruteforcer
                 }
             }
 
-            return (collision, scrapercollision, vineDistances);
+            return (collision, leftscrapercollision, rightscrapercollision, vineDistances);
 
             static void vineDistanceArrayHelper(VineDistance[,,] vineDistances, VineArrayIdx idx, int x, int y, VineDistance distance)
             {
@@ -205,21 +230,25 @@ namespace Jump_Bruteforcer
 
         private static readonly Dictionary<ObjectType, BitmapSource> toImage;
         private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
-        private static readonly Dictionary<ObjectType, bool[,]> toScraperHitbox;
+        private static readonly Dictionary<ObjectType, bool[,]> toLeftScraperHitbox;
+        private static readonly Dictionary<ObjectType, bool[,]> toRightScraperHitbox;
         static Map()
         {
             toImage = new Dictionary<ObjectType, BitmapSource>();
             toHitbox = new Dictionary<ObjectType, bool[,]>();
-            toScraperHitbox = new Dictionary<ObjectType, bool[,]>();
+            toLeftScraperHitbox = new Dictionary<ObjectType, bool[,]>();
+            toRightScraperHitbox = new Dictionary<ObjectType, bool[,]>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
                 BitmapSource img = GetImage(e.ToLower());
-                BitmapSource scraperimg = GetImage("scraper" + e.ToLower());
+                BitmapSource leftscraperimg = GetImage("scraperLeftFacing" + e.ToLower());
+                BitmapSource rightscraperimg = GetImage("scraperRightFacing" + e.ToLower());
 
                 toImage.Add(o, img);
                 toHitbox.Add(o, GetHitbox(img));
-                toScraperHitbox.Add(o, GetHitbox(scraperimg));
+                toLeftScraperHitbox.Add(o, GetHitbox(leftscraperimg));
+                toRightScraperHitbox.Add(o, GetHitbox(rightscraperimg));
             }
         }
 

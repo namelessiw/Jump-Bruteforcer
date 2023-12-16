@@ -44,7 +44,7 @@ namespace Jump_Bruteforcer
         }
         public bool Equals(State? other) =>
             X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight);
+            ApproximatelyEquals(VSpeed, other.VSpeed) & Flags == other.Flags;
         public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight).GetHashCode();
         public override string ToString() => JsonSerializer.Serialize(this);
 

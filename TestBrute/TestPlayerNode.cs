@@ -69,17 +69,17 @@ namespace TestBrute
             PlayerNode n6 = n5.NewState(Input.Right | Input.Release, cmap);
 
 
-            n1.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 567.254, 0).State);
+            n1.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 567.254, 0, Bools.CanDJump).State);
             n1.NewState(Input.Right, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 567.254, 0).State);
             
-            n2.State.Should().BeEquivalentTo(new PlayerNode(447, 559.154, -8.1).State);
+            n2.State.Should().BeEquivalentTo(new PlayerNode(447, 559.154, -8.1, Bools.CanDJump).State);
             n1.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 559.154, -8.1).State);
 
-            n3.State.Should().BeEquivalentTo(new PlayerNode(447, 563.8290000000001, -3.4250000000000003).State);
+            n3.State.Should().BeEquivalentTo(new PlayerNode(447, 563.8290000000001, -3.4250000000000003, Bools.CanDJump).State);
             n1.NewState(Input.Right | Input.Jump | Input.Release, cmap).State.Should().BeEquivalentTo(new PlayerNode(453, 563.8290000000001, -3.4250000000000003).State);
 
-            n2.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 551.454, -7.699999999999999).State);
-            n3.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 560.8040000000001, -3.0250000000000004).State);
+            n2.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 551.454, -7.699999999999999, Bools.CanDJump).State);
+            n3.NewState(Input.Neutral, cmap).State.Should().BeEquivalentTo(new PlayerNode(447, 560.8040000000001, -3.0250000000000004, Bools.CanDJump).State);
 
             n4.State.Should().BeEquivalentTo(new PlayerNode(450, 561.0790000000001, -2.75, Bools.FacingRight).State);
             n3.NewState(Input.Right | Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(450, 557.229, -6.6, Bools.FacingRight).State);
@@ -126,23 +126,23 @@ namespace TestBrute
             n2.State.Should().BeEquivalentTo(new PlayerNode(2, 1, 0).State);
             n2.NewState(Input.Jump, cmap).State.Should().BeEquivalentTo(new PlayerNode(2, -7.1, -8.1).State);
             var n3 = new PlayerNode(5, 4, -2, Bools.FacingRight);
-            n3.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, Bools.FacingRight).State);
+            n3.NewState(Input.Left, cmap).State.Should().BeEquivalentTo(new PlayerNode(5, 2.4, -1.6, Bools.None).State);
         }
 
         [Theory]
-        [InlineData(10, 13, 15, 10, 12, 13, false)] // up right
-        [InlineData(10, 7, 15, 10, 12, 13, false)] // up left
-        [InlineData(10, 13, 15, 20, 18, 17, true)] // down right
-        [InlineData(10, 7, 15, 20, 18, 17, true)] // down left
-        [InlineData(419, 422, 406.9, 416.3, 408, 406.9, true)] // down right
-        [InlineData(419, 422, 406.5, 414.25, 408, 406.5, true)] // down right vfpi
-        [InlineData(419, 422, 407.5, 415.25, 410, 408.5, true)] // down right vfpi
-        [InlineData(452, 455, 406.95, 410.325, 408, 406.95, true)] // down right
-        [InlineData(452, 455, 406.5, 409.875, 408, 406.5, true)] // down right vfpi
-        [InlineData(452, 455, 407.5, 410.875, 410, 408.5, true)] // down right vfpi
-        [InlineData(452, 455, 407.5, 410.875, 409, 410.5, true)] // down right vfpi
-        [InlineData(452, 455, 408.5, 411.875, 410, 408.5, true)] // down right vfpi
-        public void TestNewStateDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool canJump)
+        [InlineData(10, 13, 15, 10, 12, 13, false, true)] // up right
+        [InlineData(10, 7, 15, 10, 12, 13, false, false)] // up left
+        [InlineData(10, 13, 15, 20, 18, 17, true, true)] // down right
+        [InlineData(10, 7, 15, 20, 18, 17, true, false)] // down left
+        [InlineData(419, 422, 406.9, 416.3, 408, 406.9, true, true)] // down right
+        [InlineData(419, 422, 406.5, 414.25, 408, 406.5, true, true)] // down right vfpi
+        [InlineData(419, 422, 407.5, 415.25, 410, 408.5, true, true)] // down right vfpi
+        [InlineData(452, 455, 406.95, 410.325, 408, 406.95, true, true)] // down right
+        [InlineData(452, 455, 406.5, 409.875, 408, 406.5, true, true)] // down right vfpi
+        [InlineData(452, 455, 407.5, 410.875, 410, 408.5, true, true)] // down right vfpi
+        [InlineData(452, 455, 407.5, 410.875, 409, 410.5, true, true)] // down right vfpi
+        [InlineData(452, 455, 408.5, 411.875, 410, 408.5, true, true)] // down right vfpi
+        public void TestNewStateDualCollision(int startX, int targetX, double startY, double targetY, int solidY, double endY, bool canJump, bool facingRight)
         {
             int tY = (int)Math.Round(targetY);
             Dictionary<(int, int), ImmutableSortedSet<CollisionType>> collision = new()
@@ -160,7 +160,9 @@ namespace TestBrute
             double vspeed = targetY - startY - PhysicsParams.GRAVITY;
             PlayerNode n1 = new(startX, startY, vspeed, Bools.FacingRight);
             Input input = targetX - startX < 0? Input.Left : Input.Right;
-            Bools flags = canJump ? Bools.CanDJump | Bools.FacingRight : Bools.FacingRight;
+            Bools flags = Bools.None;
+            flags |= canJump ? Bools.CanDJump : Bools.None; 
+            flags |= facingRight ?  Bools.FacingRight : Bools.None;
             n1.NewState(input, cmap).State.Should().BeEquivalentTo(new PlayerNode(targetX, endY, 0, flags).State);
         }
 
@@ -171,7 +173,7 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
             Map Map = Parser.Parse(Text);
             var n1 = new PlayerNode(342, 376.845, 0);
-            n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, Bools.FacingRight).State);
+            n1.NewState(Input.Left | Input.Jump, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(341, 371.845, 0, Bools.None).State);
         }
 
         [Fact]
@@ -379,7 +381,7 @@ namespace TestBrute
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(391, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(391, 375.4, 0.4, Bools.CanDJump | Bools.OnPlatform).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(394, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
@@ -431,7 +433,7 @@ namespace TestBrute
 
             n1.NewState(Input.Neutral, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(421, 386.4, 6.4).State);
 
-            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, Bools.CanDJump | Bools.OnPlatform | Bools.FacingRight).State);
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(418, 375, 0, Bools.CanDJump | Bools.OnPlatform).State);
 
 
         }
@@ -540,7 +542,7 @@ namespace TestBrute
                 //output.WriteLine($"frame {i}\tstate: {n1.State}");
             }
 
-            n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.89575, 2, Bools.CanDJump).State);
         }
 
         [Fact]
@@ -556,7 +558,7 @@ namespace TestBrute
             for (int i = 0; i < 6; i++)
                  n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(165, 203.8, 0).State);
-            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(150, 195.2, -8.6).State);
+            n1.NewState(Input.Left, Map.CollisionMap).State.Should().BeEquivalentTo(new PlayerNode(150, 195.2, -8.6, Bools.CanDJump).State);
 
 
         }

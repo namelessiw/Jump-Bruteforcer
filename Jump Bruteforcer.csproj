@@ -22,6 +22,8 @@
     <None Remove="images\apple.png" />
     <None Remove="images\block.png" />
     <None Remove="images\catharsiswater.png" />
+    <None Remove="images\gravityarrowdown.png" />
+    <None Remove="images\gravityarrowup.png" />
     <None Remove="images\killerblock.png" />
     <None Remove="images\miniblock.png" />
     <None Remove="images\minispikedown.png" />
@@ -60,6 +62,8 @@
     <Resource Include="images\apple.png" />
     <Resource Include="images\block.png" />
     <Resource Include="images\catharsiswater.png" />
+    <Resource Include="images\gravityarrowdown.png" />
+    <Resource Include="images\gravityarrowup.png" />
     <Resource Include="images\killerblock.png" />
     <Resource Include="images\miniblock.png" />
     <Resource Include="images\minispikedown.png" />

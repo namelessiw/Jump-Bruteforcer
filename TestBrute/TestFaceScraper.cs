@@ -508,6 +508,7 @@ namespace TestBrute
             v.State.Should().BeEquivalentTo(new PlayerNode(369, 196.335, -3.065, Bools.FaceScraper).State);
         }
 
+        //image_xscale and image_angle get desynced so we get a new state for the hitbox which is not accounted for so this fails
         [Fact]
         public void TestSwitchToFaceScraperSuccess()
         {

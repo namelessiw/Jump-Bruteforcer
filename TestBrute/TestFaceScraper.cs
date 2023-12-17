@@ -681,5 +681,20 @@ namespace TestBrute
             v = v.NewState(Input.Left, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(374, 543.5795, 5.06675, Bools.None).State);
         }
+
+        [Fact]
+        public void TestFaceScraperFacingLeftBottomRightExtraPixel()
+        {
+            string path = @$"..\..\..\jmaps\rKale1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(254, 427.1, 0, Bools.FaceScraper);
+            Player.IsAlive(cmap, v).Should().BeTrue();
+
+            v = new PlayerNode(254, 428.1, 0, Bools.FaceScraper);
+            Player.IsAlive(cmap, v).Should().BeFalse();
+        }
     }
 }

@@ -672,7 +672,9 @@ namespace TestBrute
             Map Map = Parser.Parse(".jmap", Text);
             CollisionMap cmap = Map.CollisionMap;
 
-            var v = new PlayerNode(374, 533.846, 4.26675, Bools.FacingRight);
+            var v = new PlayerNode(371, 529.57925, 3.86675, Bools.FacingRight);
+            v = v.NewState(Input.Right, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(374, 533.846, 4.26675, Bools.FacingRight).State);
             v = v.NewState(Input.Right | Input.Facescraper, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(377, 538.51275, 4.66675, Bools.FacingRight).State);
             v = v.NewState(Input.Left, cmap);

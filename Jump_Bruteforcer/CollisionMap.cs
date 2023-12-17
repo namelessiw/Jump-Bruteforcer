@@ -109,11 +109,13 @@ namespace Jump_Bruteforcer
         public CollisionType GetHighestPriorityCollisionType(int x, int y, bool scraperFacingRight)
         {
             x += (scraperFacingRight ? 7 : 3);
-            y -= 3;
+            
             if (!scraperFacingRight)
             {
+                y -= 2;
                 return (uint)x < Map.WIDTH & y < Map.HEIGHT ? LeftScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
             }
+            y -= 3;
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? RightScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
@@ -137,22 +139,26 @@ namespace Jump_Bruteforcer
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool scraperFacingRight)
         {
             x += (scraperFacingRight ? 7 : 3);
-            y -= 3;
+
             if (!scraperFacingRight)
             {
+                y -= 2;
                 return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? LeftScraperCollision[x, y]: ImmutableSortedSet<CollisionType>.Empty;
             }
+            y -= 3;
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? RightScraperCollision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
 
         }
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight)
         {
             x += (scraperFacingRight ? 7 : 3);
-            y -= 3;
+
             if (!scraperFacingRight)
             {
-               return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? LeftScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
+                y -= 2;
+                return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? LeftScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
             }
+            y -= 3;
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? RightScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
         public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight, bool imageAngle270)
@@ -160,9 +166,10 @@ namespace Jump_Bruteforcer
             if (imageAngle270)
             {
                 x += (scraperFacingRight ? 7 : 3);
-                y -= 3;
+
                 if (!scraperFacingRight)
                 {
+                    y -= 2;
                     return (uint)x < Map.WIDTH & (uint)Math.Round(y) + 1 < Map.HEIGHT ? RightScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
                 }
             }

@@ -686,7 +686,7 @@ namespace TestBrute
         [Fact]
         public void TestFaceScraperFacingLeftBottomRightExtraPixel()
         {
-            string path = @$"..\..\..\jmaps\rKale1.jmap";
+            string path = @$"..\..\..\jmaps\4_07_rKale1.jmap";
             string Text = File.ReadAllText(path);
             Map Map = Parser.Parse(".jmap", Text);
             CollisionMap cmap = Map.CollisionMap;
@@ -696,6 +696,32 @@ namespace TestBrute
 
             v = new PlayerNode(254, 428.1, 0, Bools.FaceScraper);
             Player.IsAlive(cmap, v).Should().BeFalse();
+        }
+
+        [Fact]
+        public void TestFaceScraperFacingLeftTurningRightJumpOutsideOfBlock()
+        {
+            string path = @$"..\..\..\jmaps\4_07_rKale1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(372, 538.6566, 4.6144875, Bools.FaceScraper | Bools.CanDJump);
+            v = v.NewState(Input.Jump | Input.Right, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(375, 532.0566, -6.6, Bools.FaceScraper | Bools.FacingRight).State);
+        }
+
+        [Fact]
+        public void TestFaceScraperFacingLeftTurningRightJumpInsideOfBlock()
+        {
+            string path = @$"..\..\..\jmaps\4_05_rBlood1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(698, 391.32, 0, Bools.FaceScraper);
+            v = v.NewState(Input.Jump | Input.Right, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(701, 383.22, -8.1, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
         }
     }
 }

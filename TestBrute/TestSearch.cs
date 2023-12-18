@@ -138,13 +138,13 @@ namespace TestBrute
         {
             const int Size = 1000;
             long initialMemory = GC.GetTotalMemory(true);
-            object[] array = new object[Size];
+            PlayerNode[] array = new PlayerNode[Size];
             PlayerNode parent = new PlayerNode(0, 566.6500000000001, 3.374999999999999);
             
             for (int i = 0; i < Size; i++)
             {
-                //   array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left, parent : parent);
-                array[i] = 1;
+                array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left, parent : parent);
+
 
             }
             long finalMemory = GC.GetTotalMemory(true);

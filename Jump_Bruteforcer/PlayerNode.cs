@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Collections.Immutable;
 using System.Windows;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Jump_Bruteforcer
 {
@@ -14,7 +15,8 @@ namespace Jump_Bruteforcer
         OnPlatform = 2,
         FacingRight = 4
     }
-    public class State : IEquatable<State>
+    [StructLayout(LayoutKind.Auto)]
+    public readonly record struct State 
     {
 
         public int X { get; init; }
@@ -22,35 +24,14 @@ namespace Jump_Bruteforcer
         public double VSpeed { get; init; }
         public Bools Flags { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
-        const int epsilon = 10;
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
 
-            return ((State)obj).Equals(this);
-        }
 
-        private static double Quantize(double a)
-        {
-            return Math.Round(a * epsilon);
-        }
-        private static bool ApproximatelyEquals(double a, double b)
-        {
-            return Quantize(a) == Quantize(b);
-        }
-        public bool Equals(State? other) =>
-            X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & Flags == other.Flags;
-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight).GetHashCode();
-        public override string ToString() => JsonSerializer.Serialize(this);
 
     }
     public class PlayerNode : IEquatable<PlayerNode>
     {
+        const int epsilon = 10;
         public State State { get; set; }
         public PlayerNode? Parent { get; set; }
         public uint PathCost { get; set; }
@@ -156,10 +137,21 @@ namespace Jump_Bruteforcer
                 return false;
             }
 
-            return State.Equals(other.State);
+            return State.X == other.State.X & ApproximatelyEquals(State.Y, other.State.Y) &
+            ApproximatelyEquals(State.VSpeed, other.State.VSpeed) & State.Flags == other.State.Flags;
         }
 
-        public override int GetHashCode() => State.GetHashCode();
-        public override string ToString() => $"{{State: {State.ToString()}, Action: {Action.ToString()} }}";
+        private static double Quantize(double a)
+        {
+            return Math.Round(a * epsilon);
+        }
+        private static bool ApproximatelyEquals(double a, double b)
+        {
+            return Quantize(a) == Quantize(b);
+        }
+
+        public override int GetHashCode() => (State.X, Quantize(State.Y), Quantize(State.VSpeed), State.Flags).GetHashCode();
+        
+        public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}, Action: {Action.ToString()} }}";
     }
 }

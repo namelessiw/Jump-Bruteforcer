@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
         private double _aStarWeight = 1.0;
         private PointCollection playerPath = new();
         private double startingVSpeed = 0;
+        private bool scraperOn = false;
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
@@ -24,6 +25,7 @@ namespace Jump_Bruteforcer
         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
+        public bool ScraperOn { get { return scraperOn; } set { scraperOn = value; OnPropertyChanged(); } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -49,7 +51,8 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
+            Bools scraper = scraperOn ? Bools.FaceScraper : Bools.None;
+            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, Bools.CanDJump | Bools.FacingRight | scraper);
             root.PathCost = 0;
 
             var openSet = new SimplePriorityQueue<PlayerNode, uint>();

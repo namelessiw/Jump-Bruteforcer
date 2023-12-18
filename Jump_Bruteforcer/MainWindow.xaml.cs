@@ -159,6 +159,7 @@ namespace Jump_Bruteforcer
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
             SearchResult sr = s.RunAStar();
+            System.GC.Collect();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;

@@ -51,6 +51,7 @@ namespace Jump_Bruteforcer
         {
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
             root.PathCost = 0;
+            int nodesVisited = 0;
 
             var openSet = new SimplePriorityQueue<PlayerNode, uint>();
             openSet.Enqueue(root, Distance(root, goal));
@@ -70,11 +71,11 @@ namespace Jump_Bruteforcer
                     var optimalGoal = points.Last();
                     (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
                     VisualizeSearch.CountStates(openSet, closedSet);
-
+                    nodesVisited = closedSet.Count;
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
-                    return new SearchResult(Strat, Macro, true, closedSet.Count);
+                    return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -104,7 +105,8 @@ namespace Jump_Bruteforcer
             }
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
-            return new SearchResult(Strat, "", false, closedSet.Count);
+            nodesVisited = closedSet.Count;
+            return new SearchResult(Strat, "", false, nodesVisited);
         }
     }
     public class SearchResult

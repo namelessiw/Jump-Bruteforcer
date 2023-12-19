@@ -13,7 +13,8 @@ namespace Jump_Bruteforcer
         None = 0,
         CanDJump = 1,
         OnPlatform = 2,
-        FacingRight = 4
+        FacingRight = 4,
+        InvertedGravity = 8,
     }
     [StructLayout(LayoutKind.Auto)]
     public readonly record struct State 
@@ -125,7 +126,7 @@ namespace Jump_Bruteforcer
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State newState = Player.Update(State, input, CollisionMap);
+            State newState = Player.Update(this, input, CollisionMap);
 
             return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);
         }

@@ -57,10 +57,22 @@
         /// <param name="collisionMap"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public static State Update(State state, Input input, CollisionMap collisionMap)
+        public static State Update(PlayerNode node, Input input, CollisionMap collisionMap)
         {
+            State state = node.State;
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
+            bool globalGravInverted = false; //corresponds to global.grav = 1
+            bool kidUpsidedown = false; //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
+            if (node.Parent != null)
+            {
+                globalGravInverted = (node.Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+                if (node.Parent.Parent != null )
+                {
+                    kidUpsidedown = (node.Parent.Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+                }
+
+            }
             // mutate state variables here:
             //step event:
             int h = (input & Input.Left) == Input.Left ? -1 : 0;
@@ -82,60 +94,74 @@
             {
                 hSpeed = h * PhysicsParams.WALKING_SPEED;
             }
-
-            flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+            int onPlatformOffset = kidUpsidedown ? -4 : 4;
+            flags = PlaceMeeting(x, y + onPlatformOffset, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
             vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
             //  playerJump
+            int vspeedDirection = globalGravInverted ? -1 : 1;
             if ((input & Input.Jump) == Input.Jump)
             {
-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
+                double checkOffset = globalGravInverted ? -1 : 1;
+                
+                if (PlaceMeeting(x, y + checkOffset, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
                 {
-                    vSpeed = PhysicsParams.SJUMP_VSPEED;
+                    vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
                     flags |= Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, CollisionType.Water2, collisionMap))
                 {
-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                    vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags &= ~Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, CollisionType.Water3, collisionMap))
                 {
-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                    vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags |= Bools.CanDJump;
                 }
 
             }
             //  playerVJump
-            if ((input & Input.Release) == Input.Release & vSpeed < 0)
+            if ((input & Input.Release) == Input.Release & (vSpeed < 0 & !globalGravInverted | vSpeed > 0 & globalGravInverted))
             {
                 vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
             }
             //more vines
-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
+            int vineOffset = kidUpsidedown ? -1 : 1;
+            int upsidedownKidVSpeedDirection = kidUpsidedown ? -1 : 1;
+            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, collisionMap))
             {
-                vSpeed = 2;
+                vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags |= Bools.FacingRight;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == 1)
                 {
-                    vSpeed = -9;
-                    hSpeed = 15;
+                    vSpeed = -9 * upsidedownKidVSpeedDirection;
+                    hSpeed = 15 * upsidedownKidVSpeedDirection;
                 }
             }
-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
+            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, collisionMap))
             {
-                vSpeed = 2;
+                vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags &= ~Bools.FacingRight;
                 //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
                 if (h == -1)
                 {
-                    vSpeed = -9;
-                    hSpeed = -15;
+                    vSpeed = -9 * upsidedownKidVSpeedDirection;
+                    hSpeed = -15 * upsidedownKidVSpeedDirection;
                 }
+            }
+            //global.grav
+            if (globalGravInverted & !kidUpsidedown)
+            {
+                y -= 4;
+            }
+            if (!globalGravInverted & kidUpsidedown)
+            {
+                y += 4;
             }
 
             //apply friction, gravity, hspeed/vspeed:
-            vSpeed += PhysicsParams.GRAVITY;
+            vSpeed += vspeedDirection * PhysicsParams.GRAVITY;
             x += (int)hSpeed;
             y += vSpeed;
             //collision event
@@ -166,7 +192,7 @@
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
-                                flags |= sign > 0 ? Bools.CanDJump : Bools.None;
+                                flags |= sign == vspeedDirection ? Bools.CanDJump : Bools.None;
                                 while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
                                 {
                                     y += sign;
@@ -193,9 +219,10 @@
                         Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                         if (platform != null)
                         {
-                            if (y - vSpeed / 2 <= platform.Y)
+                            int invertedkidOffset = globalGravInverted ? 15 : 0; 
+                            if (y - vSpeed / 2 <= platform.Y + invertedkidOffset)
                             {
-                                y = platform.Y - 9;
+                                y = globalGravInverted ? platform.Y + 15 : platform.Y - 9;
                                 vSpeed = 0;
                                 flags |= Bools.CanDJump;
                                 flags |= Bools.OnPlatform;
@@ -203,17 +230,21 @@
                             }
                             minInstanceNum = platform.instanceNum + 1;
                         }
-
-                        
+                        break;
+                    case CollisionType.GravityArrowUp:
+                        flags |= Bools.InvertedGravity;
+                        break;
+                    case CollisionType.GravityArrowDown:
+                        flags &= ~Bools.InvertedGravity;
                         break;
                     case CollisionType.Water1:
                     case CollisionType.Water3:
                         flags |= Bools.CanDJump;
-                        vSpeed = Math.Min(2, vSpeed);
+                        vSpeed = globalGravInverted ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
                         break;
                     case CollisionType.Water2:
                     case CollisionType.CatharsisWater:
-                        vSpeed = Math.Min(2, vSpeed);
+                        vSpeed = globalGravInverted ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
                         break;
 
                 }

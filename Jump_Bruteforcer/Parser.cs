@@ -64,6 +64,7 @@ namespace Jump_Bruteforcer
             {"cherry", ObjectType.Apple},
             {"deliciousfruit", ObjectType.Apple},
             {"warp", ObjectType.Warp},
+            {"ect786", ObjectType.Warp},
             {"warpstart", ObjectType.Warp},
             {"playerstart", ObjectType.PlayerStart},
             {"water", ObjectType.Water1}, // yuuutu
@@ -88,6 +89,8 @@ namespace Jump_Bruteforcer
             {"platform", ObjectType.Platform}, // yuuutu platform hitbox is a lot smaller than the regular one, good luck distinguishing here
             {"movingplatform", ObjectType.Platform}, // like this one should have the regular hitbox but not the other one since its just supposed to be an object parent
             {"catharsiswater", ObjectType.CatharsisWater},
+            {"grav_up", ObjectType.GravityArrowUp },
+            {"grav_down", ObjectType.GravityArrowDown },
         };
     }
 }

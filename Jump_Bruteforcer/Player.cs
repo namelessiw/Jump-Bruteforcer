@@ -151,17 +151,25 @@
                 }
             }
             //global.grav
-            if (globalGravInverted & !kidUpsidedown)
+            if ((flags & Bools.InvertedGravity) == Bools.InvertedGravity & !globalGravInverted)
             {
                 y -= 4;
+                vSpeed = 0;
+                Bools facingDirection = Bools.FacingRight & flags;
+                Bools invertedGravity = Bools.InvertedGravity & flags;
+                flags = facingDirection | invertedGravity | Bools.CanDJump;
             }
-            if (!globalGravInverted & kidUpsidedown)
+            if ((flags & Bools.InvertedGravity) != Bools.InvertedGravity & globalGravInverted)
             {
                 y += 4;
+                vSpeed = 0;
+                Bools facingDirection = Bools.FacingRight & flags;
+                Bools invertedGravity = Bools.InvertedGravity & flags;
+                flags = facingDirection | invertedGravity | Bools.CanDJump;
             }
 
             //apply friction, gravity, hspeed/vspeed:
-            vSpeed += vspeedDirection * PhysicsParams.GRAVITY;
+            vSpeed += (flags & Bools.InvertedGravity) == Bools.InvertedGravity ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;
             x += (int)hSpeed;
             y += vSpeed;
             //collision event

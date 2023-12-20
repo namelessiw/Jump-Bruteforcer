@@ -64,7 +64,6 @@ namespace Jump_Bruteforcer
             {"cherry", ObjectType.Apple},
             {"deliciousfruit", ObjectType.Apple},
             {"warp", ObjectType.Warp},
-            {"ect786", ObjectType.Warp},
             {"warpstart", ObjectType.Warp},
             {"playerstart", ObjectType.PlayerStart},
             {"water", ObjectType.Water1}, // yuuutu

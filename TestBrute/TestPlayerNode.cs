@@ -507,6 +507,31 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8).State);
         }
 
+        [Fact]
+        public void TestUpsidedownGravity()
+        {
+            string path = @$"..\..\..\jmaps\gravitytest.txt";
+            string Text = File.ReadAllText(path);
+            Input[] inputs = new Input[] { Input.Right | Input.Jump, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right | Input.Jump, Input.Right, Input.Right };
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(49, 567, 0);
+
+            foreach (Input input in inputs)
+            {
+                n1 = n1.NewState(input, Map.CollisionMap);
+            }
+            n1.State.VSpeed.Should().Be(-0.4);
+            for (int i = 0; i < 50; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            //n1.State.Should().BeEquivalentTo(new PlayerNode(125, 109.50000000000017, -9.4, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            for (int i = 0; i < 8; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+        }
         // requires multiple object types per pixel
         [Fact]
         public void TestNabla2()

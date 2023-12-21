@@ -228,15 +228,29 @@
                         Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                         if (platform != null)
                         {
-                            int invertedkidOffset = kidUpsidedown ? 15 : 0; 
-                            if (y - vSpeed / 2 <= platform.Y + invertedkidOffset)
+                            if (kidUpsidedown)
                             {
-                                y = kidUpsidedown ? platform.Y + 23 : platform.Y - 9;
-                                vSpeed = 0;
-                                flags |= Bools.CanDJump;
-                                flags |= Bools.OnPlatform;
+                                if (y - vSpeed / 2 >= platform.Y + 15)
+                                {
+                                    y = platform.Y + 23;
+                                    vSpeed = 0;
+                                    flags |= Bools.CanDJump;
+                                    flags |= Bools.OnPlatform;
 
+                                }
                             }
+                            else
+                            {
+                                if (y - vSpeed / 2 <= platform.Y)
+                                {
+                                    y = platform.Y - 9;
+                                    vSpeed = 0;
+                                    flags |= Bools.CanDJump;
+                                    flags |= Bools.OnPlatform;
+
+                                }
+                            }
+
                             minInstanceNum = platform.instanceNum + 1;
                         }
                         break;

@@ -557,6 +557,23 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
             
             Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity);
+            for (int i = 0; i < 9; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(378, 477.0999999999999, 0.4, Bools.CanDJump).State);
+
+        }
+
+        [Fact]
+        public void TestTurningRightsideUpTouchingPlatform()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
             var n1 = new PlayerNode(373, 567, 0);
             n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
             for (int i = 0; i < 6; i++)
@@ -569,12 +586,6 @@ namespace TestBrute
                 n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity).State);
-            for (int i = 0; i < 9; i++)
-            {
-                n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            }
-            n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(378, 477.0999999999999, 0.4, Bools.CanDJump).State);
 
         }
         // requires multiple object types per pixel

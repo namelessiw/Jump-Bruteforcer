@@ -532,6 +532,51 @@ namespace TestBrute
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
         }
+
+        [Fact]
+        public void TestVineJumpWhileTurningUpsideDown()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+            Input[] inputs = new Input[] { Input.Jump, Input.Neutral, Input.Neutral, Input.Right, Input.Right };
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(373, 567, 0);
+
+            foreach (Input input in inputs)
+            {
+                n1 = n1.NewState(input, Map.CollisionMap);
+            }
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(363, 535.1, 8.6, Bools.CanDJump | Bools.InvertedGravity).State);
+            
+        }
+        [Fact]
+        public void TestVineJumpWhileTurningRightsideUp()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+            
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(373, 567, 0);
+            n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
+            for (int i = 0; i < 6; i++)
+            {
+                n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 518.6999999999999, -5.6999999999999975, Bools.CanDJump | Bools.InvertedGravity).State);
+            for (int i = 0; i < 5; i++)
+            {
+                n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity).State);
+            for (int i = 0; i < 9; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(378, 477.0999999999999, 0.4, Bools.CanDJump).State);
+
+        }
         // requires multiple object types per pixel
         [Fact]
         public void TestNabla2()

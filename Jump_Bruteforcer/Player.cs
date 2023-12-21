@@ -65,13 +65,14 @@
             (int xPrevious, double yPrevious) = (state.X, state.Y);
 
             //corresponds to global.grav = 1
-            bool globalGravInverted = (node.Parent?.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = (node.Parent?.Parent?.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            bool kidUpsidedown = (node.Parent?.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
                 
 
             // mutate state variables here:
             //step event:
+            beginningOfStepEvent:
             int h = (input & Input.Left) == Input.Left ? -1 : 0;
             h = (input & Input.Right) == Input.Right ? 1 : h;
             //vines
@@ -133,7 +134,7 @@
                 if (h == 1)
                 {
                     vSpeed = -9 * upsidedownKidVSpeedDirection;
-                    hSpeed = 15 * upsidedownKidVSpeedDirection;
+                    hSpeed = 15;
                 }
             }
             if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
@@ -144,33 +145,36 @@
                 if (h == -1)
                 {
                     vSpeed = -9 * upsidedownKidVSpeedDirection;
-                    hSpeed = -15 * upsidedownKidVSpeedDirection;
+                    hSpeed = -15;
                 }
             }
             //global.grav
-            if ((flags & Bools.InvertedGravity) == Bools.InvertedGravity & !globalGravInverted)
+            if (globalGravInverted& !kidUpsidedown)
             {
                 y -= 4;
                 vSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;
                 Bools invertedGravity = Bools.InvertedGravity & flags;
                 flags = facingDirection | invertedGravity | Bools.CanDJump;
+                kidUpsidedown = true;
+                goto beginningOfStepEvent;
             }
-            if ((flags & Bools.InvertedGravity) != Bools.InvertedGravity & globalGravInverted)
+            if (!globalGravInverted & kidUpsidedown)
             {
                 y += 4;
                 vSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;
                 Bools invertedGravity = Bools.InvertedGravity & flags;
                 flags = facingDirection | invertedGravity | Bools.CanDJump;
+                kidUpsidedown = false;
             }
 
             //apply friction, gravity, hspeed/vspeed:
-            vSpeed += (flags & Bools.InvertedGravity) == Bools.InvertedGravity ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;
+            vSpeed += kidUpsidedown ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;
             x += (int)hSpeed;
             y += vSpeed;
             //collision event
-            var collisionTypes = collisionMap.GetCollisionTypes(x, y, (flags & Bools.InvertedGravity) == Bools.InvertedGravity);
+            var collisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
             (var currentX, var currentY) = (x,  y);
             int minInstanceNum = 0;
             int collisionIdx = 0;
@@ -180,25 +184,25 @@
                 {
                     case CollisionType.Solid:
                         (x, y) = (xPrevious, yPrevious);
-                        if (!PlaceFree(x + (int)hSpeed, y, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                        if (!PlaceFree(x + (int)hSpeed, y, kidUpsidedown, collisionMap))
                         {
                             int sign = Math.Sign(hSpeed);
                             if (sign != 0)
                             {
-                                while (PlaceFree(x + sign, y, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                                while (PlaceFree(x + sign, y, kidUpsidedown, collisionMap))
                                 {
                                     x += sign;
                                 }
                                 hSpeed = 0;
                             }
                         }
-                        if (!PlaceFree(x, y + vSpeed, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                        if (!PlaceFree(x, y + vSpeed, kidUpsidedown, collisionMap))
                         {
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
                                 flags |= sign == vspeedDirection ? Bools.CanDJump : Bools.None;
-                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, kidUpsidedown, collisionMap))
                                 {
                                     y += sign;
                                     vSpeed -= sign;
@@ -207,13 +211,13 @@
                             }
 
                         }
-                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, kidUpsidedown, collisionMap))
                         {
                             hSpeed = 0;
                         }
                         x += (int)hSpeed;
                         y += vSpeed;
-                        if (!PlaceFree(x, y, (flags & Bools.InvertedGravity) == Bools.InvertedGravity, collisionMap))
+                        if (!PlaceFree(x, y, kidUpsidedown, collisionMap))
                         {
                             (x, y) = (xPrevious, yPrevious);
                         }
@@ -224,10 +228,10 @@
                         Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
                         if (platform != null)
                         {
-                            int invertedkidOffset = globalGravInverted ? 15 : 0; 
+                            int invertedkidOffset = kidUpsidedown ? 15 : 0; 
                             if (y - vSpeed / 2 <= platform.Y + invertedkidOffset)
                             {
-                                y = globalGravInverted ? platform.Y + 15 : platform.Y - 9;
+                                y = kidUpsidedown ? platform.Y + 23 : platform.Y - 9;
                                 vSpeed = 0;
                                 flags |= Bools.CanDJump;
                                 flags |= Bools.OnPlatform;
@@ -245,11 +249,11 @@
                     case CollisionType.Water1:
                     case CollisionType.Water3:
                         flags |= Bools.CanDJump;
-                        vSpeed = globalGravInverted ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
+                        vSpeed = kidUpsidedown ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
                         break;
                     case CollisionType.Water2:
                     case CollisionType.CatharsisWater:
-                        vSpeed = globalGravInverted ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
+                        vSpeed = kidUpsidedown ? Math.Max(-2, vSpeed) : Math.Min(2, vSpeed);
                         break;
 
                 }
@@ -257,7 +261,7 @@
                 {
                     //update the collision types we'll check for on this frame
                     var currentCollisionType = collisionTypes[collisionIdx];
-                    collisionTypes = collisionMap.GetCollisionTypes(x, y, (flags & Bools.InvertedGravity) == Bools.InvertedGravity);
+                    collisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
                     CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
                     if (nextCollisionType == CollisionType.None)
                         goto collisionDone;

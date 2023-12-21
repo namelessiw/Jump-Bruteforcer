@@ -153,6 +153,7 @@
             {
                 y -= 4;
                 vSpeed = 0;
+                hSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;
                 Bools invertedGravity = Bools.InvertedGravity & flags;
                 flags = facingDirection | invertedGravity | Bools.CanDJump;
@@ -163,6 +164,7 @@
             {
                 y += 4;
                 vSpeed = 0;
+                hSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;
                 Bools invertedGravity = Bools.InvertedGravity & flags;
                 flags = facingDirection | invertedGravity | Bools.CanDJump;

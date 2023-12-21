@@ -98,7 +98,7 @@ namespace Jump_Bruteforcer
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
             }
-            bool invertedGrav = (Parent?.Parent?.State.Flags | Bools.InvertedGravity) == Bools.InvertedGravity;
+            bool invertedGrav = (Parent?.State.Flags | Bools.InvertedGravity) == Bools.InvertedGravity;
             if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 4), invertedGrav).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 1), invertedGrav).Overlaps(jumpables))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);

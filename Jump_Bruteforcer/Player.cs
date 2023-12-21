@@ -93,8 +93,8 @@
             {
                 hSpeed = h * PhysicsParams.WALKING_SPEED;
             }
-            int onPlatformOffset = globalGravInverted ? -4 : 4;
-            flags = PlaceMeeting(x, y + onPlatformOffset, globalGravInverted, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+            int onPlatformOffset = kidUpsidedown ? -4 : 4;
+            flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
             vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
             //  playerJump
             int vspeedDirection = globalGravInverted ? -1 : 1;
@@ -102,17 +102,17 @@
             {
                 double checkOffset = globalGravInverted ? -1 : 1;
                 
-                if (PlaceMeeting(x, y + checkOffset, globalGravInverted, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, globalGravInverted, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, globalGravInverted, CollisionType.Platform, collisionMap))
+                if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
                     flags |= Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, globalGravInverted, CollisionType.Water2, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap))
                 {
                     vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags &= ~Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, globalGravInverted, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap))
                 {
                     vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags |= Bools.CanDJump;

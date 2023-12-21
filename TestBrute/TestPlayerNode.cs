@@ -532,6 +532,18 @@ namespace TestBrute
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
         }
+        [Fact]
+        public void TestRecoverDjumpUpsideDown()
+        {
+            string path = @$"..\..\..\jmaps\gravitytest.txt";
+            string Text = File.ReadAllText(path);
+         
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(149, 40.70000000000015, 0, Bools.FacingRight | Bools.InvertedGravity);
+
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+        }
 
         [Fact]
         public void TestVineJumpWhileTurningUpsideDown()

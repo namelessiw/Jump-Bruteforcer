@@ -93,16 +93,24 @@ namespace Jump_Bruteforcer
         {
             var neighbors = new HashSet<PlayerNode>();
             fillNeighbors(CollisionMap, neighbors, inputs);
+            //corresponds to global.grav = 1
+            bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
+            bool kidUpsidedown = Parent != null ? (Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
 
-            if (State.VSpeed < 0)
+            double checkOffset = globalGravInverted ? -1 : 1;
+            int onPlatformOffset = kidUpsidedown ? -4 : 4;
+            if (Math.Sign(State.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
             }
-            bool invertedGrav = (Parent?.State.Flags | Bools.InvertedGravity) == Bools.InvertedGravity;
-            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 4), invertedGrav).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 1), invertedGrav).Overlaps(jumpables))
+            
+            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + onPlatformOffset), kidUpsidedown).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown).Overlaps(jumpables))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
-            }
+            }/*
+            fillNeighbors(CollisionMap, neighbors, inputsRelease);
+            fillNeighbors(CollisionMap, neighbors, inputsJump);*/
 
             return neighbors;
 

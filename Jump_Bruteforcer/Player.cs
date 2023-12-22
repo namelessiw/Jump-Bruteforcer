@@ -69,8 +69,6 @@
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
             bool kidUpsidedown = node.Parent != null ? (node.Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
 
-                
-
             // mutate state variables here:
             //step event:
             beginningOfStepEvent:

@@ -671,6 +671,20 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(472, 518.19, -2, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
 
         }
+
+        [Fact]
+        public void TestUpsidedownHitSpike()
+        {
+            string path = @$"..\..\..\jmaps\upsidedownhitspike.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            output.WriteLine(n1.ToString());
+            Player.IsAlive(Map.CollisionMap, n1).Should().BeFalse();
+
+        }
         // requires multiple object types per pixel
         [Fact]
         public void TestNabla2()

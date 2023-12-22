@@ -43,8 +43,12 @@
         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
         {
             int yRounded = node.State.RoundedY;
-            bool invertedGrav = (node.Parent?.State.Flags | Bools.InvertedGravity) == Bools.InvertedGravity;
-            bool notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded, invertedGrav).Contains(CollisionType.Killer);
+            //corresponds to global.grav = 1
+            bool globalGravInverted = (node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
+            bool kidUpsidedown = node.Parent != null ? (node.Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
+
+            bool notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded, kidUpsidedown).Contains(CollisionType.Killer);
             bool inbounds = node.State.X is >= 0 and <= Map.WIDTH - 1 & node.State.Y is >= 0 and <= Map.HEIGHT - 1;
             return notOnKiller & inbounds;
         }

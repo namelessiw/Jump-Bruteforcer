@@ -90,6 +90,8 @@ namespace Jump_Bruteforcer
             {"catharsiswater", ObjectType.CatharsisWater},
             {"grav_up", ObjectType.GravityArrowUp },
             {"grav_down", ObjectType.GravityArrowDown },
+            {"_ue", ObjectType.GravityArrowUp },
+            {"_sita", ObjectType.GravityArrowDown },
         };
     }
 }

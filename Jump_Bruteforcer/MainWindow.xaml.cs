@@ -95,10 +95,6 @@ namespace Jump_Bruteforcer
                                 encoder.Frames.Add(BitmapFrame.Create(target));
                                 encoder.Save(stream);
                             }
-<<<<<<< HEAD
-=======
-                                
->>>>>>> ec66313 (fix images not saving properly)
                         }
                     }
                     catch (Exception ex)

@@ -95,10 +95,10 @@ namespace Jump_Bruteforcer
             {"object831", ObjectType.Warp},
             {"object833", ObjectType.Warp},
             {"playerstart", ObjectType.PlayerStart},
-            {"water", ObjectType.Water1}, // yuuutu
-            {"water1", ObjectType.Water1}, // renex
-            {"water2", ObjectType.Water2}, // renex
-            {"water3", ObjectType.Water3}, // renex
+            {"objwater", ObjectType.Water1}, // yuuutu
+            {"objwater1", ObjectType.Water1}, // renex
+            {"objwater2", ObjectType.Water2}, // renex
+            {"objwater3", ObjectType.Water3}, // renex
             {"spikedown", ObjectType.SpikeDown},
            
             {"spikeleft", ObjectType.SpikeLeft},
@@ -133,6 +133,12 @@ namespace Jump_Bruteforcer
             {"object805", ObjectType.Cross},
             {"object806", ObjectType.BigApple},
             {"object807", ObjectType.YellowBullet},
+            {"grav_up", ObjectType.GravityArrowUp },
+            {"grav_down", ObjectType.GravityArrowDown },
+            {"object799", ObjectType.GravityArrowUp },
+            {"object800", ObjectType.GravityArrowDown },
+            {"obj_ue", ObjectType.GravityArrowUp },
+            {"obj_sita", ObjectType.GravityArrowDown },
 
         };
     }

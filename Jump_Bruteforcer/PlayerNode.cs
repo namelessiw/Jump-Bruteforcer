@@ -108,9 +108,7 @@ namespace Jump_Bruteforcer
             if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + onPlatformOffset), kidUpsidedown).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown).Overlaps(jumpables))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
-            }/*
-            fillNeighbors(CollisionMap, neighbors, inputsRelease);
-            fillNeighbors(CollisionMap, neighbors, inputsJump);*/
+            }
 
             return neighbors;
 

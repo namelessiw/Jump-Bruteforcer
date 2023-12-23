@@ -52,9 +52,10 @@ namespace Jump_Bruteforcer
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
             root.PathCost = 0;
             int nodesVisited = 0;
+            uint timestamp = uint.MaxValue;
 
-            var openSet = new SimplePriorityQueue<PlayerNode, uint>();
-            openSet.Enqueue(root, Distance(root, goal));
+            var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
+            openSet.Enqueue(root, (Distance(root, goal), timestamp));
 
             var closedSet = new HashSet<PlayerNode>();
 
@@ -92,11 +93,11 @@ namespace Jump_Bruteforcer
                         uint distance = Distance(w, goal);
                         if (openSet.Contains(w))
                         {
-                            openSet.UpdatePriority(w, newCost + distance);
+                            openSet.UpdatePriority(w, (newCost + distance, timestamp));
                         }
                         else
                         {
-                            openSet.Enqueue(w, newCost + distance);
+                            openSet.Enqueue(w, (newCost + distance, --timestamp));
                         }
                     }
 

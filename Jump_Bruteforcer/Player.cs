@@ -35,7 +35,7 @@
         }
         private static bool PlaceFree(int x, double y, bool invertedGrav, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetHighestPriorityCollisionType(x, (int)Math.Round(y), invertedGrav) != CollisionType.Solid;
+            return CollisionMap.GetHighestPriorityCollisionType(x, y, invertedGrav) != CollisionType.Solid;
         }
 
 

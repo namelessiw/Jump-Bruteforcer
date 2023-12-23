@@ -83,6 +83,16 @@ namespace Jump_Bruteforcer
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
         }
 
+
+        public CollisionType GetHighestPriorityCollisionType(int x, double y, bool invertedGrav)
+        {
+            if (invertedGrav)
+            {
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)].FirstOrDefault() : CollisionType.None;
+            }
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, (int)Math.Round(y)].FirstOrDefault() : CollisionType.None;
+        }
+
         /// <summary>
         /// returns the set of CollisionTypes at pixel (x, y) in order of descending priority
         /// </summary>

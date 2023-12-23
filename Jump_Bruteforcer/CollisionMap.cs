@@ -74,9 +74,23 @@ namespace Jump_Bruteforcer
             this.Platforms = Platforms ?? new List<Object>();
         }
 
-        public CollisionType GetHighestPriorityCollisionType(int x, int y)
+        public CollisionType GetHighestPriorityCollisionType(int x, int y, bool invertedGrav)
         {
+            if (invertedGrav)
+            {
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y+3].FirstOrDefault() : CollisionType.None;
+            }
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
+        }
+
+
+        public CollisionType GetHighestPriorityCollisionType(int x, double y, bool invertedGrav)
+        {
+            if (invertedGrav)
+            {
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)].FirstOrDefault() : CollisionType.None;
+            }
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, (int)Math.Round(y)].FirstOrDefault() : CollisionType.None;
         }
 
         /// <summary>
@@ -85,13 +99,21 @@ namespace Jump_Bruteforcer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y)
+        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool invertedGrav)
         {
+            if (invertedGrav)
+            {
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y + 3] : ImmutableSortedSet<CollisionType>.Empty;
+            }
             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
 
         }
-        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y)
+        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool invertedGrav)
         {
+            if (invertedGrav)
+            {
+                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : ImmutableSortedSet<CollisionType>.Empty;
+            }
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
         }
 

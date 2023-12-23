@@ -507,6 +507,184 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(466, 493.2, 0.8).State);
         }
 
+        [Fact]
+        public void TestUpsidedownGravity()
+        {
+            string path = @$"..\..\..\jmaps\gravitytest.txt";
+            string Text = File.ReadAllText(path);
+            Input[] inputs = new Input[] { Input.Right | Input.Jump, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right | Input.Jump, Input.Right, Input.Right };
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(49, 567, 0);
+
+            foreach (Input input in inputs)
+            {
+                n1 = n1.NewState(input, Map.CollisionMap);
+            }
+            n1.State.VSpeed.Should().Be(-0.4);
+            for (int i = 0; i < 50; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            //n1.State.Should().BeEquivalentTo(new PlayerNode(125, 109.50000000000017, -9.4, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            for (int i = 0; i < 8; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+        }
+        [Fact]
+        public void TestRecoverDjumpUpsideDown()
+        {
+            string path = @$"..\..\..\jmaps\gravitytest.txt";
+            string Text = File.ReadAllText(path);
+         
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(149, 40.70000000000015, 0, Bools.FacingRight | Bools.InvertedGravity);
+
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+        }
+
+        [Fact]
+        public void TestVineJumpWhileTurningUpsideDown()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+            Input[] inputs = new Input[] { Input.Jump, Input.Neutral, Input.Neutral, Input.Right, Input.Right };
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(373, 567, 0);
+
+            foreach (Input input in inputs)
+            {
+                n1 = n1.NewState(input, Map.CollisionMap);
+            }
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(363, 535.1, 8.6, Bools.CanDJump | Bools.InvertedGravity).State);
+            
+        }
+        [Fact]
+        public void TestVineJumpWhileTurningRightsideUp()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+            
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity);
+            for (int i = 0; i < 9; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(378, 477.0999999999999, 0.4, Bools.CanDJump).State);
+
+        }
+
+        [Fact]
+        public void TestTurningRightsideUpTouchingPlatform()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(373, 567, 0);
+            n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
+            for (int i = 0; i < 6; i++)
+            {
+                n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 518.6999999999999, -5.6999999999999975, Bools.CanDJump | Bools.InvertedGravity).State);
+            for (int i = 0; i < 5; i++)
+            {
+                n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity).State);
+
+        }
+        [Fact]
+        public void TestTurningUpsideDownOnPlatform()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(373, 567, 0);
+            n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
+            for (int i = 0; i < 3; i++)
+            {
+                n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(361, 537, -6.899999999999999, Bools.CanDJump).State);
+            n1 = n1.NewState(Input.Release | Input.Left, Map.CollisionMap);
+            for (int i = 0; i < 2; i++)
+            {
+                n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 530.085, -1.9049999999999998, Bools.CanDJump | Bools.InvertedGravity).State);
+            n1 = n1.NewState(Input.Jump, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 535, 0, Bools.CanDJump | Bools.OnPlatform | Bools.InvertedGravity).State);
+
+        }
+
+        [Fact]
+        public void TestTurningRightsideUpOnPlatform()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(355, 478.0850000000001, -6.000000000000001, Bools.CanDJump | Bools.InvertedGravity);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 457.6850000000001, -7.200000000000002, Bools.CanDJump).State);
+            n1 = n1.NewState(Input.Jump, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 462.0850000000001, 0.4, Bools.CanDJump).State);
+            PlayerNode n2 = n1.NewState(Input.Jump, Map.CollisionMap);
+            n2.State.Should().BeEquivalentTo(new PlayerNode(352, 453.98500000000007, -8.1, Bools.CanDJump).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1 = n1.NewState(Input.Jump, Map.CollisionMap);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 447.0850000000001, -7.699999999999999, Bools.CanDJump).State);
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 439, 0, Bools.CanDJump | Bools.OnPlatform).State);
+        }
+
+        [Fact]
+        public void TestTurningUpsidedownInWater()
+        {
+            string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(445, 535.16, -1.685, Bools.CanDJump | Bools.FacingRight);
+            for (int i = 0; i < 2; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(451, 532.99, -0.8850000000000001, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(454, 528.59, -0.4, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            for (int i = 0; i < 6; i++)
+            {
+                n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            }
+            n1.State.Should().BeEquivalentTo(new PlayerNode(472, 518.19, -2, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+
+        }
+
+        [Fact]
+        public void TestUpsidedownHitSpike()
+        {
+            string path = @$"..\..\..\jmaps\upsidedownhitspike.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity);
+            n1 = n1.NewState(Input.Right, Map.CollisionMap);
+            output.WriteLine(n1.ToString());
+            Player.IsAlive(Map.CollisionMap, n1).Should().BeFalse();
+
+        }
         // requires multiple object types per pixel
         [Fact]
         public void TestNabla2()

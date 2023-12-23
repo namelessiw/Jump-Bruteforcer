@@ -13,7 +13,8 @@ namespace Jump_Bruteforcer
         None = 0,
         CanDJump = 1,
         OnPlatform = 2,
-        FacingRight = 4
+        FacingRight = 4,
+        InvertedGravity = 8,
     }
     [StructLayout(LayoutKind.Auto)]
     public readonly record struct State 
@@ -92,12 +93,19 @@ namespace Jump_Bruteforcer
         {
             var neighbors = new HashSet<PlayerNode>();
             fillNeighbors(CollisionMap, neighbors, inputs);
+            //corresponds to global.grav = 1
+            bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
+            bool kidUpsidedown = Parent != null ? (Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
 
-            if (State.VSpeed < 0)
+            double checkOffset = globalGravInverted ? -1 : 1;
+            int onPlatformOffset = kidUpsidedown ? -4 : 4;
+            if (Math.Sign(State.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
             }
-            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 4)).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 1)).Overlaps(jumpables))
+            
+            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + onPlatformOffset), kidUpsidedown).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown).Overlaps(jumpables))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }
@@ -125,7 +133,7 @@ namespace Jump_Bruteforcer
         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State newState = Player.Update(State, input, CollisionMap);
+            State newState = Player.Update(this, input, CollisionMap);
 
             return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);
         }

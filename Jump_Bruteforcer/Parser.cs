@@ -96,6 +96,7 @@ namespace Jump_Bruteforcer
             {"warptext", ObjectType.Warp },
             {"warpwarp", ObjectType.Warp },
             {"playerstart", ObjectType.PlayerStart},
+            {"playerstartstart", ObjectType.PlayerStart},
             {"water", ObjectType.Water1}, // yuuutu
             {"water1", ObjectType.Water1}, // renex
             {"objwater", ObjectType.Water1 },

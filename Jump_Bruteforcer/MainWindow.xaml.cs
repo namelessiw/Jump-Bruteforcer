@@ -20,15 +20,22 @@ namespace Jump_Bruteforcer
     {
         private Search s;
         private string Macro = "";
+        public static MainWindow ActiveWindow;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            ActiveWindow = this;
             s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
             DataContext = s;
         }
+
         private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        /*private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
@@ -73,7 +80,6 @@ namespace Jump_Bruteforcer
                             continue;
                         }
                         SearchResult sr = s.RunAStar();
-                        ImageHeatMap.Source = VisualizeSearch.HeatMap();
                         Macro = sr.Macro;
 
                         if (sr.Success)
@@ -107,7 +113,8 @@ namespace Jump_Bruteforcer
                
 
             }
-        }
+        }*/
+
         private void ButtonSelectJMap_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog o = new()
@@ -158,12 +165,21 @@ namespace Jump_Bruteforcer
 
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
-            SearchResult sr = s.RunAStar();
+            s.SearchFinishedEvent += OnSearchFinished;
+            s.RunAStar();
+
+            // disable buttons etc after running s.RunAStar
+        }
+
+        private void OnSearchFinished(object sender, Search.SearchFinishedEventArgs e)
+        {
+            SearchResult sr = e.SearchResult;
             System.GC.Collect();
-            ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;
             Topmost = false;
+
+            // enable buttons etc again
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)

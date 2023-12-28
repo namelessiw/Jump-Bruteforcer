@@ -1,4 +1,5 @@
 ﻿using Priority_Queue;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Text.Json;
@@ -46,8 +47,37 @@ namespace Jump_Bruteforcer
             return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / PhysicsParams.WALKING_SPEED, Math.Abs(n.State.Y - goal.y) / (PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY))));
         }
 
+        static SearchResult searchResult;
+        public class SearchFinishedEventArgs
+        {
+            public SearchResult SearchResult;
+            public SearchFinishedEventArgs(SearchResult searchResult)
+            {
+                SearchResult = searchResult;
+            }
+        }
 
-        public SearchResult RunAStar()
+        public delegate void SearchFinishedEventHandler(object sender, SearchFinishedEventArgs e);
+
+        public event SearchFinishedEventHandler SearchFinishedEvent;
+
+        protected virtual void RaiseSearchFinishedEvent()
+        {
+            MainWindow.ActiveWindow.Dispatcher.BeginInvoke(() => SearchFinishedEvent?.Invoke(this, new SearchFinishedEventArgs(searchResult)));
+        }
+
+        public void RunAStar()
+        {
+            Thread thread = new Thread(new ThreadStart(ThreadRunAStar));
+            thread.Name = "searchThread";
+            thread.Start();
+        }
+
+        public static ConcurrentDictionary<(int X, double Y), (int open, int closed)> statesPerPx;
+        public static int maxStates;
+        public static bool searchRunning = false;
+
+        private void ThreadRunAStar()
         {
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
             root.PathCost = 0;
@@ -58,6 +88,38 @@ namespace Jump_Bruteforcer
 
             var closedSet = new HashSet<PlayerNode>();
 
+            statesPerPx = new();
+            maxStates = 0;
+            searchRunning = true;
+
+            Thread visualizationThread = new Thread(new ThreadStart(() => VisualizeSearch.LiveHeatmap()));
+            visualizationThread.Name = "visualizationThread";
+            //visualizationThread.Start();
+
+            void AddState(int X, double Y, bool open)
+            {
+                (int open, int closed) stateCount = (0, 0);
+                statesPerPx.TryGetValue((X, Y), out stateCount);
+                int totalStates = stateCount.open + stateCount.closed + 1;
+
+                if (open)
+                {
+                    stateCount.open++;
+                }
+                else
+                {
+                    stateCount.closed++;
+                    stateCount.open--;
+                }
+
+                if (maxStates < totalStates)
+                {
+                    maxStates = totalStates;
+                }
+
+                statesPerPx[(X, Y)] = (stateCount.closed, stateCount.open);
+            }
+
             while (openSet.Count > 0)
             {
                 PlayerNode v = openSet.Dequeue();
@@ -67,17 +129,25 @@ namespace Jump_Bruteforcer
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = SearchOutput.GetInputString(inputs);
                     PlayerPath = points;
-                    SearchOutput.DumpPath(v);
+
+                    MainWindow.ActiveWindow.Dispatcher.Invoke(() => SearchOutput.DumpPath(v));
+
                     var optimalGoal = points.Last();
                     (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
-                    VisualizeSearch.CountStates(openSet, closedSet);
+                    //VisualizeSearch.CountStates(openSet, closedSet);
                     nodesVisited = closedSet.Count;
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
-                    return new SearchResult(Strat, Macro, true, nodesVisited);
+                    searchResult = new SearchResult(Strat, Macro, true, nodesVisited);
+                    searchRunning = false;
+                    RaiseSearchFinishedEvent();
+                    return;
                 }
                 closedSet.Add(v);
+
+                AddState(v.State.X, v.State.Y, false);
+
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
                 {
                     if (closedSet.Contains(w))
@@ -97,6 +167,7 @@ namespace Jump_Bruteforcer
                         else
                         {
                             openSet.Enqueue(w, newCost + distance);
+                            AddState(v.State.X, v.State.Y, true);
                         }
                     }
 
@@ -104,9 +175,12 @@ namespace Jump_Bruteforcer
 
             }
             Strat = "SEARCH FAILURE";
-            VisualizeSearch.CountStates(openSet, closedSet);
+            //VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;
-            return new SearchResult(Strat, "", false, nodesVisited);
+
+            searchResult = new SearchResult(Strat, "", false, nodesVisited);
+            searchRunning = false;
+            RaiseSearchFinishedEvent();
         }
     }
     public class SearchResult

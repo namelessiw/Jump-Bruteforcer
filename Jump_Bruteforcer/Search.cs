@@ -2,7 +2,9 @@
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace Jump_Bruteforcer
 {
@@ -41,22 +43,102 @@ namespace Jump_Bruteforcer
 
 
         //inadmissable heuristic because of y position rounding
-        public uint Distance(PlayerNode n, (int x, int y) goal)
+        public int Distance(PlayerNode n)
         {
-            return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / PhysicsParams.WALKING_SPEED, Math.Abs(n.State.Y - goal.y) / (PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY))));
+            int Distance = GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
+            if (Distance < -1)
+            {
+                throw new Exception($"no known floodfill distance for ({n.State.X} ,{(int)Math.Round(n.State.Y)})");
+            }
+            return Distance;
         }
 
+        public readonly int[,] GoalDistance = new int[Map.WIDTH, Map.HEIGHT];
+
+        public void FloodFill()
+        {
+            List<(int X, int Y)> GoalPixels = new List<(int X, int Y)>
+            {
+                goal,
+                (goal.x - 1, goal.y),
+                (goal.x + 1, goal.y),
+            };
+
+            for (int X = 0; X < Map.WIDTH; X++)
+            {
+                for (int Y = 0; Y < Map.HEIGHT; Y++)
+                {
+                    GoalDistance[X, Y] = -1;
+
+                    if (CollisionMap.Collision[X, Y].Contains(CollisionType.Warp))
+                    {
+                        GoalPixels.Add((X, Y));
+                    }
+                }
+            }
+
+            HashSet<(int X, int Y)> NewPositions = new(), Temp;
+
+            foreach ((int X, int Y) GoalPos in GoalPixels)
+            {
+                GoalDistance[GoalPos.X, GoalPos.Y] = 0;
+                NewPositions.Add(GoalPos);
+            }
+
+            int MaxHSpeed = PhysicsParams.WALKING_SPEED, MaxVSpeed = (int)Math.Ceiling(PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY);
+            int Distance = 1;
+
+            while (NewPositions.Count > 0)
+            {
+                Temp = new HashSet<(int X, int Y)>(NewPositions);
+                NewPositions.Clear();
+
+                // floodfill
+                foreach ((int X, int Y) Pos in Temp)
+                {
+                    int MinX = Math.Max(Pos.X - MaxHSpeed, 0),
+                        MaxX = Math.Min(Pos.X + MaxHSpeed, Map.WIDTH - 1),
+                        MinY = Math.Max(Pos.Y - MaxVSpeed, 0),
+                        MaxY = Math.Min(Pos.Y + MaxVSpeed, Map.HEIGHT - 1);
+
+                    for (int X = MinX; X <= MaxX; X++)
+                    {
+                        for (int Y = MinY; Y <= MaxY; Y++)
+                        {
+                            if (GoalDistance[X, Y] == -1 && !(CollisionMap.Collision[X, Y].Contains(CollisionType.Killer) || CollisionMap.Collision[X, Y].Contains(CollisionType.Solid)))
+                            {
+                                GoalDistance[X, Y] = Distance;
+                                NewPositions.Add((X, Y));
+                            }
+                        }
+                    }
+                }
+
+                Distance++;
+            }
+        }
 
         public SearchResult RunAStar()
         {
+            FloodFill();
+
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
+
             root.PathCost = 0;
             int nodesVisited = 0;
 
             var openSet = new SimplePriorityQueue<PlayerNode, uint>();
-            openSet.Enqueue(root, Distance(root, goal));
+            openSet.Enqueue(root, (uint)Distance(root));
 
             var closedSet = new HashSet<PlayerNode>();
+
+            if (Distance(root) == -1)
+            {
+                Strat = "SEARCH FAILURE";
+                VisualizeSearch.CountStates(openSet, closedSet);
+                nodesVisited = closedSet.Count;
+                return new SearchResult(Strat, "", false, nodesVisited);
+            }
 
             while (openSet.Count > 0)
             {
@@ -89,7 +171,7 @@ namespace Jump_Bruteforcer
                     {
                         w.Parent = v;
                         w.PathCost = newCost;
-                        uint distance = Distance(w, goal);
+                        uint distance = (uint)Distance(w);
                         if (openSet.Contains(w))
                         {
                             openSet.UpdatePriority(w, newCost + distance);

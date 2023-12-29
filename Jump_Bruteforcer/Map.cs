@@ -31,8 +31,8 @@ namespace Jump_Bruteforcer
         public (int, int) PlayerStart { get; init; }
         public bool hasWarp { get; init; } = false;
         public (int, int) Warp { get; init; }
-        
 
+        
 
         public Map(List<Object> objects)
         {

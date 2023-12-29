@@ -85,7 +85,7 @@ namespace Jump_Bruteforcer
                 NewPositions.Add(GoalPos);
             }
 
-            int MaxHSpeed = PhysicsParams.WALKING_SPEED, MaxVSpeed = (int)Math.Ceiling(PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY);
+            int MaxHSpeed = PhysicsParams.WALKING_SPEED, MaxVSpeedDown = (int)Math.Ceiling(PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY), MaxVSpeedUp = (int)Math.Abs(Math.Ceiling(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY));
             int Distance = 1;
 
             while (NewPositions.Count > 0)
@@ -98,8 +98,8 @@ namespace Jump_Bruteforcer
                 {
                     int MinX = Math.Max(Pos.X - MaxHSpeed, 0),
                         MaxX = Math.Min(Pos.X + MaxHSpeed, Map.WIDTH - 1),
-                        MinY = Math.Max(Pos.Y - MaxVSpeed, 0),
-                        MaxY = Math.Min(Pos.Y + MaxVSpeed, Map.HEIGHT - 1);
+                        MinY = Math.Max(Pos.Y - MaxVSpeedUp, 0),
+                        MaxY = Math.Min(Pos.Y + MaxVSpeedDown, Map.HEIGHT - 1);
 
                     for (int X = MinX; X <= MaxX; X++)
                     {

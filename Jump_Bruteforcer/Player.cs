@@ -175,7 +175,11 @@
             }
 
             //apply friction, gravity, hspeed/vspeed:
-            vSpeed += kidUpsidedown ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;
+            if (node.Parent != null)
+            {
+                vSpeed += kidUpsidedown ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;
+            }
+
             x += (int)hSpeed;
             y += vSpeed;
             //collision event

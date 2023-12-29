@@ -98,8 +98,8 @@ namespace Jump_Bruteforcer
                 {
                     int MinX = Math.Max(Pos.X - MaxHSpeed, 0),
                         MaxX = Math.Min(Pos.X + MaxHSpeed, Map.WIDTH - 1),
-                        MinY = Math.Max(Pos.Y - MaxVSpeedUp, 0),
-                        MaxY = Math.Min(Pos.Y + MaxVSpeedDown, Map.HEIGHT - 1);
+                        MinY = Math.Max(Pos.Y - MaxVSpeedDown, 0),
+                        MaxY = Math.Min(Pos.Y + MaxVSpeedUp, Map.HEIGHT - 1);
 
                     for (int X = MinX; X <= MaxX; X++)
                     {
@@ -157,6 +157,7 @@ namespace Jump_Bruteforcer
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
+                    MessageBox.Show($"explored: {closedSet.Count}");
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);

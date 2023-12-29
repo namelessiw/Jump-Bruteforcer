@@ -99,13 +99,12 @@ namespace Jump_Bruteforcer
             bool kidUpsidedown = Parent != null ? (Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
 
             double checkOffset = globalGravInverted ? -1 : 1;
-            int onPlatformOffset = kidUpsidedown ? -4 : 4;
             if (Math.Sign(State.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
             }
             
-            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + onPlatformOffset), kidUpsidedown).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown).Overlaps(jumpables))
+            if ((State.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown).Overlaps(jumpables))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }

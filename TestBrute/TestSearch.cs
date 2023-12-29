@@ -112,7 +112,7 @@ namespace TestBrute
             SearchResult result = s.RunAStar();
             result.Success.Should().BeTrue();
             output.WriteLine(result.ToString());
-            output.WriteLine(result.Visited.ToString());
+            output.WriteLine("Nodes visited: " + result.Visited.ToString());
         }
 
         [Fact]

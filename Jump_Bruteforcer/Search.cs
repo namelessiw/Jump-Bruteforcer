@@ -1,6 +1,7 @@
 ﻿using Priority_Queue;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Windows.Media;
 
@@ -15,6 +16,7 @@ namespace Jump_Bruteforcer
         private PointCollection playerPath = new();
         private double startingVSpeed = 0;
         private String nodesVisited = "";
+        private String timeTaken = "";
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
@@ -24,6 +26,7 @@ namespace Jump_Bruteforcer
         public String NodesVisited { get { return nodesVisited; } set { nodesVisited = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
+        public String TimeTaken { get { return timeTaken; } set { timeTaken = value; OnPropertyChanged(); } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -111,6 +114,7 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
+            var timer = Stopwatch.StartNew();
             FloodFill();
 
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
@@ -130,6 +134,8 @@ namespace Jump_Bruteforcer
                 VisualizeSearch.CountStates(openSet, closedSet);
                 nodesVisited = closedSet.Count;
                 NodesVisited = nodesVisited.ToString();
+                timer.Stop();
+                TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
                 return new SearchResult(Strat, "", false, nodesVisited);
             }
 
@@ -151,6 +157,8 @@ namespace Jump_Bruteforcer
                     string Macro = SearchOutput.GetMacro(inputs);
                     nodesVisited = closedSet.Count;
                     NodesVisited = nodesVisited.ToString();
+                    timer.Stop();
+                    TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);
@@ -183,6 +191,8 @@ namespace Jump_Bruteforcer
             VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;
             NodesVisited = nodesVisited.ToString();
+            timer.Stop();
+            TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
     }

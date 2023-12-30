@@ -11,7 +11,7 @@
     </Window.Resources>
     <Canvas x:Name="CanvasWindow">
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
-        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
+        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="977" Canvas.Top="61"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Label Canvas.Left="370" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start x" />
         <Label Canvas.Left="503" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
@@ -19,7 +19,9 @@
         <Label Canvas.Left="763" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
         <Label Canvas.Left="894" Canvas.Top="4" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start VSpeed"/>
         <Label Canvas.Left="850" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Nodes Visited"/>
-        <Label Canvas.Left="930" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding NodesVisited}"/>
+        <Label Canvas.Left="950" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding NodesVisited}"/>
+        <Label Canvas.Left="1000" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Time Taken"/>
+        <Label Canvas.Left="1100" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding TimeTaken}"/>
         <Image x:Name="ImageJMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Image x:Name="ImageHeatMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
@@ -53,7 +55,7 @@
         <TextBox Height="20" Canvas.Left="683" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="977" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        
+
         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
         <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>

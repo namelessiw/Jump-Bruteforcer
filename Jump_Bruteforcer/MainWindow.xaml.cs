@@ -1,6 +1,7 @@
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Pipes;
@@ -27,10 +28,11 @@ namespace Jump_Bruteforcer
 
             s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
             DataContext = s;
+            NodeCountLabel.Content = "";
         }
         private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            /*CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
                 IsFolderPicker = true,
                 Multiselect = true,
@@ -106,7 +108,7 @@ namespace Jump_Bruteforcer
                 }
                
 
-            }
+            }*/
         }
         private void ButtonSelectJMap_Click(object sender, RoutedEventArgs e)
         {
@@ -158,12 +160,26 @@ namespace Jump_Bruteforcer
 
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
-            SearchResult sr = s.RunAStar();
+            StartSearch();
+        }
+
+        private async void StartSearch()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            Progress<int> progress = new Progress<int>(nodes => NodeCountLabel.Content = nodes);
+            await Task.Factory.StartNew(() => s.RunAStar(progress), TaskCreationOptions.LongRunning);
+
+            sw.Stop();
+            /*
+            MessageBox.Show($"done in {sw.Elapsed}");
+
             System.GC.Collect();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;
-            Topmost = false;
+            Topmost = false;*/
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)

@@ -55,9 +55,9 @@ namespace Jump_Bruteforcer
 
         public void FloodFill()
         {
-            CollisionMap.goalPixels.Add(goal);
-            CollisionMap.goalPixels.Add((goal.x - 1, goal.y));
-            CollisionMap.goalPixels.Add((goal.x + 1, goal.y));
+            //CollisionMap.goalPixels.Add(goal);
+            //CollisionMap.goalPixels.Add((goal.x - 1, goal.y));
+            //CollisionMap.goalPixels.Add((goal.x + 1, goal.y));
 
 
             for (int X = 0; X < Map.WIDTH; X++)
@@ -109,7 +109,7 @@ namespace Jump_Bruteforcer
             }
         }
 
-        public SearchResult RunAStar()
+        public void RunAStar(IProgress<int> progress)
         {
             FloodFill();
 
@@ -129,7 +129,7 @@ namespace Jump_Bruteforcer
                 Strat = "SEARCH FAILURE";
                 VisualizeSearch.CountStates(openSet, closedSet);
                 nodesVisited = closedSet.Count;
-                return new SearchResult(Strat, "", false, nodesVisited);
+                return;
             }
 
             while (openSet.Count > 0)
@@ -141,15 +141,15 @@ namespace Jump_Bruteforcer
                     (List<Input> inputs, PointCollection points) = v.GetPath();
                     Strat = SearchOutput.GetInputString(inputs);
                     PlayerPath = points;
-                    SearchOutput.DumpPath(v);
+                    //SearchOutput.DumpPath(v);
                     var optimalGoal = points.Last();
                     (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
-                    VisualizeSearch.CountStates(openSet, closedSet);
+                    //VisualizeSearch.CountStates(openSet, closedSet);
                     nodesVisited = closedSet.Count;
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
-                    return new SearchResult(Strat, Macro, true, nodesVisited);
+                    return;
                 }
                 closedSet.Add(v);
                 foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
@@ -175,12 +175,12 @@ namespace Jump_Bruteforcer
                     }
 
                 }
-
+                //progress.Report(closedSet.Count);
             }
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;
-            return new SearchResult(Strat, "", false, nodesVisited);
+            return;
         }
     }
     public class SearchResult

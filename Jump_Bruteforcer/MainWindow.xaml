@@ -56,5 +56,6 @@
         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
         <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
+        <Label x:Name="NodeCountLabel" Content="&lt;NodeCount&gt;" Canvas.Left="977" Canvas.Top="60"/>
     </Canvas>
 </Window>

@@ -41,17 +41,17 @@ namespace Jump_Bruteforcer
 
 
         //inadmissable heuristic because of y position rounding
-        public int Distance(PlayerNode n)
+        public uint Distance(PlayerNode n)
         {
-            int Distance = GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
-            if (Distance < -1)
+            uint Distance = GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
+            if (Distance == uint.MaxValue)
             {
                 throw new Exception($"no known floodfill distance for ({n.State.X} ,{(int)Math.Round(n.State.Y)})");
             }
             return Distance;
         }
 
-        public readonly int[,] GoalDistance = new int[Map.WIDTH, Map.HEIGHT];
+        public readonly uint[,] GoalDistance = new uint[Map.WIDTH, Map.HEIGHT];
 
         public void FloodFill()
         {
@@ -64,7 +64,7 @@ namespace Jump_Bruteforcer
             {
                 for (int Y = 0; Y < Map.HEIGHT; Y++)
                 {
-                    GoalDistance[X, Y] = -1;
+                    GoalDistance[X, Y] = uint.MaxValue;
                 }
             }
 
@@ -77,7 +77,7 @@ namespace Jump_Bruteforcer
             }
 
             int MaxHSpeed = PhysicsParams.WALKING_SPEED, MaxVSpeedDown = (int)Math.Ceiling(PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY), MaxVSpeedUp = (int)Math.Abs(Math.Ceiling(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY));
-            int Distance = 1;
+            uint Distance = 1;
 
             while (NewPositions.Count > 0)
             {
@@ -96,7 +96,7 @@ namespace Jump_Bruteforcer
                     {
                         for (int Y = MinY; Y <= MaxY; Y++)
                         {
-                            if (GoalDistance[X, Y] == -1 && !(CollisionMap.Collision[X, Y].Contains(CollisionType.Killer) || CollisionMap.Collision[X, Y].Contains(CollisionType.Solid)))
+                            if (GoalDistance[X, Y] == uint.MaxValue && !(CollisionMap.Collision[X, Y].Contains(CollisionType.Killer) || CollisionMap.Collision[X, Y].Contains(CollisionType.Solid)))
                             {
                                 GoalDistance[X, Y] = Distance;
                                 NewPositions.Add((X, Y));
@@ -120,11 +120,11 @@ namespace Jump_Bruteforcer
             uint timestamp = uint.MaxValue;
 
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
-            openSet.Enqueue(root, (Distance(root, goal), timestamp));
+            openSet.Enqueue(root, (Distance(root), timestamp));
 
             var closedSet = new HashSet<PlayerNode>();
 
-            if (Distance(root) == -1)
+            if (Distance(root) == uint.MaxValue)
             {
                 Strat = "SEARCH FAILURE";
                 VisualizeSearch.CountStates(openSet, closedSet);

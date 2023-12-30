@@ -57,29 +57,22 @@ namespace Jump_Bruteforcer
 
         public void FloodFill()
         {
-            List<(int X, int Y)> GoalPixels = new List<(int X, int Y)>
-            {
-                goal,
-                (goal.x - 1, goal.y),
-                (goal.x + 1, goal.y),
-            };
+            CollisionMap.goalPixels.Add(goal);
+            CollisionMap.goalPixels.Add((goal.x - 1, goal.y));
+            CollisionMap.goalPixels.Add((goal.x + 1, goal.y));
+
 
             for (int X = 0; X < Map.WIDTH; X++)
             {
                 for (int Y = 0; Y < Map.HEIGHT; Y++)
                 {
                     GoalDistance[X, Y] = -1;
-
-                    if (CollisionMap.Collision[X, Y].Contains(CollisionType.Warp))
-                    {
-                        GoalPixels.Add((X, Y));
-                    }
                 }
             }
 
             HashSet<(int X, int Y)> NewPositions = new(), Temp;
 
-            foreach ((int X, int Y) GoalPos in GoalPixels)
+            foreach ((int X, int Y) GoalPos in CollisionMap.goalPixels)
             {
                 GoalDistance[GoalPos.X, GoalPos.Y] = 0;
                 NewPositions.Add(GoalPos);

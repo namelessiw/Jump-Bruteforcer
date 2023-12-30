@@ -18,7 +18,8 @@
         <Label Canvas.Left="633" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal x" />
         <Label Canvas.Left="763" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
         <Label Canvas.Left="894" Canvas.Top="4" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start VSpeed"/>
-        <Label Canvas.Left="870" Canvas.Top="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A* weight"/>
+        <Label Canvas.Left="850" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Nodes Visited"/>
+        <Label Canvas.Left="930" Canvas.Top="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding NodesVisited}"/>
         <Image x:Name="ImageJMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Image x:Name="ImageHeatMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
@@ -52,7 +53,7 @@
         <TextBox Height="20" Canvas.Left="683" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox Height="20" Canvas.Left="977" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
         <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>

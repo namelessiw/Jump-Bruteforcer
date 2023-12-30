@@ -114,7 +114,7 @@ namespace Jump_Bruteforcer
 
         public SearchResult RunAStar()
         {
-            var timer = Stopwatch.StartNew();
+            var startTime = Stopwatch.GetTimestamp();
             FloodFill();
 
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
@@ -134,8 +134,7 @@ namespace Jump_Bruteforcer
                 VisualizeSearch.CountStates(openSet, closedSet);
                 nodesVisited = closedSet.Count;
                 NodesVisited = nodesVisited.ToString();
-                timer.Stop();
-                TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
+                TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
                 return new SearchResult(Strat, "", false, nodesVisited);
             }
 
@@ -157,8 +156,7 @@ namespace Jump_Bruteforcer
                     string Macro = SearchOutput.GetMacro(inputs);
                     nodesVisited = closedSet.Count;
                     NodesVisited = nodesVisited.ToString();
-                    timer.Stop();
-                    TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
+                    TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);
@@ -191,8 +189,7 @@ namespace Jump_Bruteforcer
             VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;
             NodesVisited = nodesVisited.ToString();
-            timer.Stop();
-            TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
+            TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
     }

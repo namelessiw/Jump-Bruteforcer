@@ -169,17 +169,17 @@ namespace Jump_Bruteforcer
             sw.Start();
 
             Progress<int> progress = new Progress<int>(nodes => NodeCountLabel.Content = nodes);
-            await Task.Factory.StartNew(() => s.RunAStar(progress), TaskCreationOptions.LongRunning);
+            SearchResult sr = null;
+            await Task.Factory.StartNew(() => sr = s.RunAStar(progress), TaskCreationOptions.LongRunning);
 
             sw.Stop();
-            /*
             MessageBox.Show($"done in {sw.Elapsed}");
 
             System.GC.Collect();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;
-            Topmost = false;*/
+            Topmost = false;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)

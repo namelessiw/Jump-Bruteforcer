@@ -57,5 +57,6 @@
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
         <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
         <Label x:Name="NodeCountLabel" Content="&lt;NodeCount&gt;" Canvas.Left="977" Canvas.Top="60"/>
+        <Button x:Name="CancelSearchButton" Content="Cancel Search" Canvas.Left="167" Canvas.Top="6" HorizontalAlignment="Left" VerticalAlignment="Center" Width="104" Height="26" Click="CancelSearchButton_Click"/>
     </Canvas>
 </Window>

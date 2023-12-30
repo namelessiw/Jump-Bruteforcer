@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Text.Json;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Jump_Bruteforcer
 {
@@ -44,10 +45,6 @@ namespace Jump_Bruteforcer
         public uint Distance(PlayerNode n)
         {
             uint Distance = GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
-            if (Distance == uint.MaxValue)
-            {
-                throw new Exception($"no known floodfill distance for ({n.State.X} ,{(int)Math.Round(n.State.Y)})");
-            }
             return Distance;
         }
 
@@ -109,7 +106,9 @@ namespace Jump_Bruteforcer
             }
         }
 
-        public SearchResult RunAStar(IProgress<int> progress)
+        public static bool abort = false;
+
+        public SearchResult RunAStar(IProgress<int> progressNodeCount, IProgress<int> progressVisual)
         {
             FloodFill();
 
@@ -124,11 +123,14 @@ namespace Jump_Bruteforcer
 
             var closedSet = new HashSet<PlayerNode>();
 
+            int LastTick = Environment.TickCount;
+
             if (Distance(root) == uint.MaxValue)
             {
                 Strat = "SEARCH FAILURE";
                 VisualizeSearch.CountStates(openSet, closedSet);
                 nodesVisited = closedSet.Count;
+                progressNodeCount.Report(closedSet.Count);
                 return new SearchResult(Strat, "", false, nodesVisited);
             }
 
@@ -149,6 +151,7 @@ namespace Jump_Bruteforcer
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
+                    progressNodeCount.Report(closedSet.Count);
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);
@@ -163,7 +166,7 @@ namespace Jump_Bruteforcer
                     {
                         w.Parent = v;
                         w.PathCost = newCost;
-                        uint distance = (uint)Distance(w);
+                        uint distance = Distance(w);
                         if (openSet.Contains(w))
                         {
                             openSet.UpdatePriority(w, (newCost + distance, timestamp));
@@ -175,11 +178,25 @@ namespace Jump_Bruteforcer
                     }
 
                 }
-                progress.Report(closedSet.Count);
+
+                int TicksElapsed = Environment.TickCount - LastTick;
+                if (TicksElapsed >= 1000)
+                {
+                    //VisualizeSearch.CountStates(openSet, closedSet);
+                    progressNodeCount.Report(closedSet.Count);
+                    LastTick = Environment.TickCount;
+                    if (abort)
+                    {
+                        Strat = "SEARCH FAILURE";
+                        VisualizeSearch.CountStates(openSet, closedSet);
+                        return new SearchResult(Strat, "", false, nodesVisited);
+                    }
+                }
             }
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;
+            progressNodeCount.Report(closedSet.Count);
             return new SearchResult(Strat, "", false, nodesVisited);
         }
     }

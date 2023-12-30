@@ -168,18 +168,21 @@ namespace Jump_Bruteforcer
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Progress<int> progress = new Progress<int>(nodes => NodeCountLabel.Content = nodes);
+            Search.abort = false;
+            Progress<int> progressNodeCount = new Progress<int>(nodes => { NodeCountLabel.Content = nodes; });
+            Progress<int> progressVisual = new Progress<int>(nodes => { ImageHeatMap.Source = VisualizeSearch.HeatMap(); });
             SearchResult sr = null;
-            await Task.Factory.StartNew(() => sr = s.RunAStar(progress), TaskCreationOptions.LongRunning);
+            await Task.Factory.StartNew(() => sr = s.RunAStar(progressNodeCount, progressVisual), TaskCreationOptions.LongRunning);
 
+            ImageHeatMap.Source = VisualizeSearch.HeatMap();
             sw.Stop();
-            MessageBox.Show($"done in {sw.Elapsed}");
 
             System.GC.Collect();
-            ImageHeatMap.Source = VisualizeSearch.HeatMap();
             Macro = sr.Macro;
             Topmost = true;
             Topmost = false;
+
+            MessageBox.Show($"done in {sw.Elapsed}");
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
@@ -203,7 +206,10 @@ namespace Jump_Bruteforcer
             Clipboard.SetDataObject(Macro);
         }
 
-
+        private void CancelSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            Search.abort = true;
+        }
     }
 }
 

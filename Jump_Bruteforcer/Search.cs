@@ -17,6 +17,7 @@ namespace Jump_Bruteforcer
         private double startingVSpeed = 0;
         private String nodesVisited = "";
         private String timeTaken = "";
+        private String macro = "";
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
@@ -27,6 +28,7 @@ namespace Jump_Bruteforcer
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
         public String TimeTaken { get { return timeTaken; } set { timeTaken = value; OnPropertyChanged(); } }
+        public String Macro { get { return macro; } set { macro = value; } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -120,7 +122,7 @@ namespace Jump_Bruteforcer
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
 
             root.PathCost = 0;
-            int nodesVisited = 0;
+            int nodesVisited;
             uint timestamp = uint.MaxValue;
 
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
@@ -128,63 +130,58 @@ namespace Jump_Bruteforcer
 
             var closedSet = new HashSet<PlayerNode>();
 
-            if (Distance(root) == uint.MaxValue)
+            if (Distance(root) != uint.MaxValue)
             {
-                Strat = "SEARCH FAILURE";
-                VisualizeSearch.CountStates(openSet, closedSet);
-                nodesVisited = closedSet.Count;
-                NodesVisited = nodesVisited.ToString();
-                TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
-                return new SearchResult(Strat, "", false, nodesVisited);
-            }
-
-            while (openSet.Count > 0)
-            {
-                PlayerNode v = openSet.Dequeue();
-                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
+                while (openSet.Count > 0)
                 {
-
-                    (List<Input> inputs, PointCollection points) = v.GetPath();
-                    Strat = SearchOutput.GetInputString(inputs);
-                    PlayerPath = points;
-                    SearchOutput.DumpPath(v);
-                    var optimalGoal = points.Last();
-                    (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
-                    VisualizeSearch.CountStates(openSet, closedSet);
-
-
-                    string Macro = SearchOutput.GetMacro(inputs);
-                    nodesVisited = closedSet.Count;
-                    NodesVisited = nodesVisited.ToString();
-                    TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
-                    return new SearchResult(Strat, Macro, true, nodesVisited);
-                }
-                closedSet.Add(v);
-                foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
-                {
-                    if (closedSet.Contains(w))
+                    PlayerNode v = openSet.Dequeue();
+                    if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-                        continue;
+                        (List<Input> inputs, PointCollection points) = v.GetPath();
+                        TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
+                        Macro = SearchOutput.GetMacro(inputs);
+                        Strat = SearchOutput.GetInputString(inputs);
+                        PlayerPath = points;
+                        SearchOutput.DumpPath(v);
+                        var optimalGoal = points.Last();
+                        (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
+                        VisualizeSearch.CountStates(openSet, closedSet);
+
+
+                        nodesVisited = closedSet.Count;
+                        NodesVisited = nodesVisited.ToString();
+
+                        return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    uint newCost = v.PathCost + 1;
-                    if (!openSet.Contains(w) || newCost < w.PathCost)
+                    closedSet.Add(v);
+                    foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
                     {
-                        w.Parent = v;
-                        w.PathCost = newCost;
-                        uint distance = (uint)Distance(w);
-                        if (openSet.Contains(w))
+                        if (closedSet.Contains(w))
                         {
-                            openSet.UpdatePriority(w, (newCost + distance, timestamp));
+                            continue;
                         }
-                        else
+                        uint newCost = v.PathCost + 1;
+                        if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
-                            openSet.Enqueue(w, (newCost + distance, --timestamp));
+                            w.Parent = v;
+                            w.PathCost = newCost;
+                            uint distance = (uint)Distance(w);
+                            if (openSet.Contains(w))
+                            {
+                                openSet.UpdatePriority(w, (newCost + distance, timestamp));
+                            }
+                            else
+                            {
+                                openSet.Enqueue(w, (newCost + distance, --timestamp));
+                            }
                         }
+
                     }
 
                 }
-
             }
+
+            
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
             nodesVisited = closedSet.Count;

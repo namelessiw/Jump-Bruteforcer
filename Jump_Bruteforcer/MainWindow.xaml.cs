@@ -161,7 +161,6 @@ namespace Jump_Bruteforcer
             SearchResult sr = s.RunAStar();
             System.GC.Collect();
             ImageHeatMap.Source = VisualizeSearch.HeatMap();
-            Macro = sr.Macro;
             Topmost = true;
             Topmost = false;
         }
@@ -184,7 +183,7 @@ namespace Jump_Bruteforcer
 
         private void CopyMacroButton_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetDataObject(Macro);
+            Clipboard.SetDataObject(s.Macro);
         }
 
 

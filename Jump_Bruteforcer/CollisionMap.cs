@@ -8,7 +8,7 @@ namespace Jump_Bruteforcer
         public List<Object> Platforms { get; init; }
 
         private readonly VineDistance[,,] vineDistance;
-        private readonly HashSet<(int x, int y)> goalPixels;
+        public HashSet<(int x, int y)> goalPixels;
 
         public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {

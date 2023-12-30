@@ -150,7 +150,6 @@ namespace Jump_Bruteforcer
 
                     string Macro = SearchOutput.GetMacro(inputs);
 
-                    MessageBox.Show($"explored: {closedSet.Count}");
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);

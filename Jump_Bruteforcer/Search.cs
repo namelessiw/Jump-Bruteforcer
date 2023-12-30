@@ -135,7 +135,7 @@ namespace Jump_Bruteforcer
                 nodesVisited = closedSet.Count;
                 NodesVisited = nodesVisited.ToString();
                 timer.Stop();
-                TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
+                TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
                 return new SearchResult(Strat, "", false, nodesVisited);
             }
 
@@ -158,7 +158,7 @@ namespace Jump_Bruteforcer
                     nodesVisited = closedSet.Count;
                     NodesVisited = nodesVisited.ToString();
                     timer.Stop();
-                    TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
+                    TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
                     return new SearchResult(Strat, Macro, true, nodesVisited);
                 }
                 closedSet.Add(v);
@@ -192,7 +192,7 @@ namespace Jump_Bruteforcer
             nodesVisited = closedSet.Count;
             NodesVisited = nodesVisited.ToString();
             timer.Stop();
-            TimeTaken = timer.Elapsed.ToString(@"\:hh\:mm\:ss\.ff");
+            TimeTaken = timer.Elapsed.ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
     }

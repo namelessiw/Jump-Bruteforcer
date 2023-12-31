@@ -101,7 +101,7 @@ namespace Jump_Bruteforcer
             {"water1", ObjectType.Water1}, // renex
             {"objwater", ObjectType.Water1 },
             {"objwater1111111", ObjectType.Water1 },
-            {"objwater2222222", ObjectType.Water1 },
+            {"objwater2222222", ObjectType.Water2},
             {"water2", ObjectType.Water2}, // renex
             {"objWater2", ObjectType.Water2 },
             {"water3", ObjectType.Water3}, // renex

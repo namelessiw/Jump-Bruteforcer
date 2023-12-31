@@ -99,6 +99,8 @@ namespace Jump_Bruteforcer
     public enum CollisionType
     {
         None,
+        VineRight,
+        VineLeft,
         CatharsisWater,
         Water2,
         Water3,
@@ -144,8 +146,8 @@ namespace Jump_Bruteforcer
             {ObjectType.Platform,CollisionType.Platform},
             {ObjectType.Water1,CollisionType.Water1 },
             {ObjectType.Water2,CollisionType.Water2 },
-            {ObjectType.VineRight,CollisionType.None },
-            {ObjectType.VineLeft,CollisionType.None },
+            {ObjectType.VineRight,CollisionType.VineRight },
+            {ObjectType.VineLeft,CollisionType.VineLeft },
             {ObjectType.KillerBlock,CollisionType.Killer },
             {ObjectType.BulletBlocker,CollisionType.None},
             {ObjectType.PlayerStart,CollisionType.None },

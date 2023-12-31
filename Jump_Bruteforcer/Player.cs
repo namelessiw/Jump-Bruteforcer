@@ -129,7 +129,7 @@
             //more vines
             int vineOffset = globalGravInverted ? -1 : 1;
             int upsidedownKidVSpeedDirection = globalGravInverted ? -1 : 1;
-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+            if (PlaceMeeting(x-1, y, kidUpsidedown, CollisionType.VineLeft, collisionMap))
             {
                 vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags |= Bools.FacingRight;
@@ -140,7 +140,7 @@
                     hSpeed = 15;
                 }
             }
-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+            if (PlaceMeeting(x + 1, y, kidUpsidedown, CollisionType.VineLeft, collisionMap))
             {
                 vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags &= ~Bools.FacingRight;

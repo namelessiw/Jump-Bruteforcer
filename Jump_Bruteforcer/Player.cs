@@ -140,7 +140,7 @@
                     hSpeed = 15;
                 }
             }
-            if (PlaceMeeting(x + 1, y, kidUpsidedown, CollisionType.VineLeft, collisionMap))
+            if (PlaceMeeting(x + 1, y, kidUpsidedown, CollisionType.VineRight, collisionMap))
             {
                 vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags &= ~Bools.FacingRight;

@@ -21,21 +21,21 @@
         /// <param name="type"></param>
         /// <param name="CollisionMap"></param>
         /// <returns></returns>
-        private static bool PlaceMeeting(int x, int y, bool invertedGrav, CollisionType type, CollisionMap CollisionMap)
+        private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionTypes(x, y, invertedGrav).Contains(type);
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).Contains(type);
         }
-        private static bool PlaceMeeting(int x, double y, bool invertedGrav, CollisionType type, CollisionMap CollisionMap)
+        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionTypes(x, y, invertedGrav).Contains(type);
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).Contains(type);
         }
-        private static bool PlaceFree(int x, int y, bool invertedGrav, CollisionMap CollisionMap)
+        private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetHighestPriorityCollisionType(x, y, invertedGrav) != CollisionType.Solid;
+            return CollisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown) != CollisionType.Solid;
         }
-        private static bool PlaceFree(int x, double y, bool invertedGrav, CollisionMap CollisionMap)
+        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetHighestPriorityCollisionType(x, y, invertedGrav) != CollisionType.Solid;
+            return CollisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown) != CollisionType.Solid;
         }
 
 

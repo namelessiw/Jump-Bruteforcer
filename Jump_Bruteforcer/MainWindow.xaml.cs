@@ -101,7 +101,7 @@ namespace Jump_Bruteforcer
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Failed to import map with error:\n" + ex.Message);
+                        MessageBox.Show("Failed to import map with error:\n" + ex.StackTrace);
                     }
                 }
                

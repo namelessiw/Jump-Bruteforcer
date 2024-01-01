@@ -685,6 +685,20 @@ namespace TestBrute
             Player.IsAlive(Map.CollisionMap, n1).Should().BeFalse();
 
         }
+        [Fact]
+        public void testcrimsonvines()
+        {
+            string path = @$"..\..\..\jmaps\crimsonvines.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(762, 121.3570593749974, 0.6053750000000002, Bools.FacingRight);
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+            output.WriteLine(n1.ToString());
+            n1.State.Should().BeEquivalentTo(new PlayerNode(747, 112.75705937499741, -8.6, Bools.None).State);
+
+        }
+
         // requires multiple object types per pixel
         [Fact]
         public void TestNabla2()

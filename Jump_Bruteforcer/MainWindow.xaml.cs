@@ -19,7 +19,7 @@ namespace Jump_Bruteforcer
     public partial class MainWindow : Window
     {
         private Search s;
-        private string Macro = "";
+        private uint heatMapIndex = 1;
 
         public MainWindow()
         {
@@ -73,8 +73,7 @@ namespace Jump_Bruteforcer
                             continue;
                         }
                         SearchResult sr = s.RunAStar();
-                        ImageHeatMap.Source = VisualizeSearch.HeatMap();
-                        Macro = sr.Macro;
+                        ImageHeatMap.Source = VisualizeSearch.stateMap;
 
                         if (sr.Success)
                         {
@@ -160,14 +159,30 @@ namespace Jump_Bruteforcer
         {
             SearchResult sr = s.RunAStar();
             System.GC.Collect();
-            ImageHeatMap.Source = VisualizeSearch.HeatMap();
+            ImageHeatMap.Source = VisualizeSearch.stateMap;
             Topmost = true;
             Topmost = false;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
         {
-            ImageHeatMap.Visibility = ImageHeatMap.Visibility is Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            heatMapIndex = (heatMapIndex + 1) % 3;
+            switch (heatMapIndex)
+            {
+                case 0:
+                    ImageHeatMap.Visibility = Visibility.Hidden;
+                    break;
+                case 1:
+                    ImageHeatMap.Visibility = Visibility.Visible;
+                    ImageHeatMap.Source = VisualizeSearch.stateMap;
+                    break;
+                case 2:
+                    ImageHeatMap.Visibility = Visibility.Visible;
+                    ImageHeatMap.Source = VisualizeSearch.heuristicMap;
+                    break;
+            }
+            
+
         }
 
 

@@ -48,12 +48,7 @@ namespace Jump_Bruteforcer
         //inadmissable heuristic because of y position rounding
         public uint Distance(PlayerNode n)
         {
-            uint Distance = GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
-            if (Distance == uint.MaxValue)
-            {
-                throw new Exception($"no known floodfill distance for ({n.State.X} ,{(int)Math.Round(n.State.Y)})");
-            }
-            return Distance;
+            return GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
         }
 
         public readonly uint[,] GoalDistance = new uint[Map.WIDTH, Map.HEIGHT];

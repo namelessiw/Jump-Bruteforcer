@@ -138,8 +138,8 @@ namespace Jump_Bruteforcer
                         var optimalGoal = points.Last();
                         (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
                         VisualizeSearch.CountStates(openSet, closedSet);
-
-
+                        VisualizeSearch.HeuristicMap(GoalDistance);
+                        VisualizeSearch.StateMap();
                         nodesVisited = closedSet.Count;
                         NodesVisited = nodesVisited.ToString();
 
@@ -176,6 +176,8 @@ namespace Jump_Bruteforcer
             
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedSet);
+            VisualizeSearch.HeuristicMap(GoalDistance);
+            VisualizeSearch.StateMap();
             nodesVisited = closedSet.Count;
             NodesVisited = nodesVisited.ToString();
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");

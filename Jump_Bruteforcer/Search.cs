@@ -21,8 +21,8 @@ namespace Jump_Bruteforcer
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
-        public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
-        public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
+        public int GoalX { get { return goal.x; } set { goal.x = Math.Clamp(value, 0, Map.WIDTH - 1); OnPropertyChanged(); } }
+        public int GoalY { get { return goal.y; } set { goal.y = Math.Clamp(value, 0, Map.HEIGHT - 1); OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public String NodesVisited { get { return nodesVisited; } set { nodesVisited = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }

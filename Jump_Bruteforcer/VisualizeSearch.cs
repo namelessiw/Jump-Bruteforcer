@@ -69,6 +69,7 @@ namespace Jump_Bruteforcer
 
         public static void StateMap()
         {
+            stateMap = new(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
             Dictionary<(int X, int Y), (int Open, int Closed)>.Enumerator enumerator = statesPerPx.GetEnumerator();
 
             while (enumerator.MoveNext())
@@ -87,8 +88,9 @@ namespace Jump_Bruteforcer
         }
         public static void HeuristicMap(uint[,] heuristic)
         {
-           uint maxHeuristic = heuristic.Cast<uint>().MaxBy(x => x == uint.MaxValue? 0 : x);
-           for (int x = 0; x < Map.WIDTH; x++)
+            heuristicMap = new(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
+            uint maxHeuristic = heuristic.Cast<uint>().MaxBy(x => x == uint.MaxValue? 0 : x);
+            for (int x = 0; x < Map.WIDTH; x++)
             {
                 for(int y = 0; y < Map.HEIGHT; y++)
                 {

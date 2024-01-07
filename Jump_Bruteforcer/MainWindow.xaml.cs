@@ -52,7 +52,6 @@ namespace Jump_Bruteforcer
 
                         ImageJMap.Source = Map.Bmp;
                         s.CollisionMap = Map.CollisionMap;
-                        ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
                         s.PlayerPath = new();
                         s.Strat = "";
                         if(Map.hasPlayerStart)

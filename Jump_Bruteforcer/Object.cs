@@ -182,6 +182,11 @@ namespace Jump_Bruteforcer
                 X -= 10;
                 Y -= 12;
             }
+            if (objectType == ObjectType.Warp)
+            {
+                X -= 16;
+                Y -= 16;
+            }
             BoundingBox? bbox = null;
             if (objectType == ObjectType.Platform)
             {

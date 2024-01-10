@@ -88,9 +88,9 @@ namespace Jump_Bruteforcer
         {
             if (invertedGrav)
             {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)].FirstOrDefault() : CollisionType.None;
+                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)].FirstOrDefault() : CollisionType.None;
             }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, (int)Math.Round(y)].FirstOrDefault() : CollisionType.None;
+            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)].FirstOrDefault() : CollisionType.None;
         }
 
         /// <summary>

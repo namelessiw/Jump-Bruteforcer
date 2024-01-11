@@ -77,7 +77,7 @@ namespace Jump_Bruteforcer
             {"water", ObjectType.Water1}, // yuuutu
             {"water1", ObjectType.Water1}, // renex
             {"water2", ObjectType.Water2}, // renex
-            {"water3", ObjectType.Water3}, // renex
+            {"water3", ObjectType.CatharsisWater}, // catharsis water
             {"spikedown", ObjectType.SpikeDown},
             {"spikeleft", ObjectType.SpikeLeft},
             {"spikeright", ObjectType.SpikeRight},

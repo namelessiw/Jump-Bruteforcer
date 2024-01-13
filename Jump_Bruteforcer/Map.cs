@@ -72,7 +72,8 @@ namespace Jump_Bruteforcer
             foreach (Object o in query)
             {
                 BitmapSource img = toImage[o.ObjectType];
-                (int Width, int Height) = ScaleSize((int)img.Width, (int)img.Height, o.XScale, o.YScale);
+                int Width = ScaledDim((int)img.Width, PlayerWidth, o.XScale);
+                int Height = ScaledDim((int)img.Height, PlayerHeight, o.YScale);
                 Rect rect = new Rect(o.X - 5, o.Y - 8, Width, Height);
                 drawingGroup.Children.Add(new ImageDrawing(img, rect));
                 
@@ -87,28 +88,12 @@ namespace Jump_Bruteforcer
         const int PlayerWidth = 11;
         const int PlayerHeight = 21;
 
-        private (int Width, int Height) ScaleSize(int Width, int Height, double XScale, double YScale)
+        private int ScaledDim(int objectLength, int playerLength, double Scale)
         {
-            // 42, 52 => 32, 32
-            int ConvertToRegularWidth(int Width) => Width - (PlayerWidth - 1);
-            int ConvertToRegularHeight(int Height) => Height - (PlayerHeight - 1);
-
-            int ConvertToDotkidWidth(int Width) => Width + (PlayerWidth - 1);
-            int ConvertToDotkidHeight(int Height) => Height + (PlayerHeight - 1);
-
-            int RegularWidth = ConvertToRegularWidth(Width);
-            int RegularHeight = ConvertToRegularHeight(Height);
-
-            int NewWidth = (int)Math.Round(RegularWidth * XScale);
-            int NewHeight = (int)Math.Round(RegularHeight * YScale);
-
-            int NewHitboxWidth = ConvertToDotkidWidth(NewWidth);
-            int NewHitboxHeight = ConvertToDotkidHeight(NewHeight);
-
-            return (NewHitboxWidth, NewHitboxHeight);
+            return (int)Math.Round((objectLength - (playerLength - 1)) * Scale) + (playerLength - 1);
         }
 
-        // assumes x/yscale will only ever by not 1 for rectangular hitboxes aswell as regular kid hitbox!
+        // assumes standard kid hitbox!
         private bool[,] ScaleHitbox(bool[,] Hitbox, double XScale, double YScale)
         {
             if (XScale == 1 && YScale == 1)
@@ -116,7 +101,8 @@ namespace Jump_Bruteforcer
                 return Hitbox;
             }
 
-            (int NewHitboxWidth, int NewHitboxHeight) = ScaleSize(Hitbox.GetLength(0), Hitbox.GetLength(1), XScale, YScale);
+            int NewHitboxWidth = ScaledDim(Hitbox.GetLength(0), PlayerWidth, XScale);
+            int NewHitboxHeight= ScaledDim(Hitbox.GetLength(1), PlayerHeight, YScale);
 
             bool[,] NewHitbox = new bool[NewHitboxWidth, NewHitboxHeight];
             for (int X = 0; X < NewHitboxWidth; X++)

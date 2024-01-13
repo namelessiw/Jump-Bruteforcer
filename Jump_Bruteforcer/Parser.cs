@@ -90,10 +90,9 @@ namespace Jump_Bruteforcer
 
                         foreach (string Code in CodeLines)
                         {
-                            // matches image_x/yscale, captures x/y and numeric argument
-                            // for example captures "3", "7/5", "6.25", does not capture "1 + 1 / 2" (correctly)
-                            // cannot handle assignment to variables either, hopefully wont matter :3
-                            Match match = Regex.Match(Code, "image_([xy])scale\\s*=\\s*(\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)?)");
+                            // matches "image_[xy]scale =" such that capture group 1 is [xy] and capture group 2 is the argument
+                            // assumes argument is of the form a / b, will most likely crash otherwise
+                            Match match = Regex.Match(Code, "image_([xy])scale\\s*=(.*)");
                             if (match.Success)
                             {
                                 string Direction = match.Groups[1].Value;
@@ -104,12 +103,12 @@ namespace Jump_Bruteforcer
                                 double scale = 1;
                                 if (Operands.Length == 1)
                                 {
-                                    scale = double.Parse(Operands[0]);
+                                    scale = ParseDouble(Operands[0]);
                                 }
                                 else if (Operands.Length == 2)
                                 {
-                                    double a = double.Parse(Operands[0]);
-                                    double b = double.Parse(Operands[1]);
+                                    double a = ParseDouble(Operands[0]);
+                                    double b = ParseDouble(Operands[1]);
                                     scale = a / b;
                                 }
                                 else

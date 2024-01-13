@@ -106,6 +106,7 @@ namespace Jump_Bruteforcer
     public class Object
     {
         public int X, Y;
+        public double XScale, YScale;
         public ObjectType ObjectType;
         public CollisionType CollisionType;
         public BoundingBox? bbox;
@@ -175,8 +176,11 @@ namespace Jump_Bruteforcer
             {ObjectType.SidewaysPlatform, CollisionType.None },
         };
 
-        public Object(int X, int Y, ObjectType objectType, int instanceNum = 0)
+        public Object(int X, int Y, double XScale, double YScale, ObjectType objectType, int instanceNum = 0)
         {
+            this.XScale = XScale;
+            this.YScale = YScale;
+
             if (objectType == ObjectType.Apple)
             {
                 X -= 10;

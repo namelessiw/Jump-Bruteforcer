@@ -82,13 +82,52 @@ namespace Jump_Bruteforcer
 
             return drawingImage;
         }
+
+        const int PlayerWidth = 11;
+        const int PlayerHeight = 21;
+
+        // assumes x/yscale will only ever by not 1 for rectangular hitboxes aswell as regular kid hitbox!
+        private bool[,] ScaleHitbox(bool[,] Hitbox, double XScale, double YScale)
+        {
+            if (XScale == 1 && YScale == 1)
+            {
+                return Hitbox;
+            }
+
+            // 42, 52 => 32, 32
+            int ConvertToRegularWidth(int Width) => Width - (PlayerWidth - 1);
+            int ConvertToRegularHeight(int Height) => Height - (PlayerHeight - 1);
+
+            int ConvertToDotkidWidth(int Width) => Width + (PlayerWidth - 1);
+            int ConvertToDotkidHeight(int Height) => Height + (PlayerHeight - 1);
+
+            int RegularWidth = ConvertToRegularWidth(Hitbox.GetLength(0));
+            int RegularHeight = ConvertToRegularHeight(Hitbox.GetLength(1));
+
+            int NewWidth = (int)Math.Round(RegularWidth * XScale);
+            int NewHeight = (int)Math.Round(RegularHeight * YScale);
+
+            int NewHitboxWidth = ConvertToDotkidWidth(NewWidth);
+            int NewHitboxHeight = ConvertToDotkidHeight(NewHeight);
+
+            bool[,] NewHitbox = new bool[NewHitboxWidth, NewHitboxHeight];
+            for (int X = 0; X < NewHitboxWidth; X++)
+            {
+                for (int Y = 0; Y < NewHitboxHeight; Y++)
+                {
+                    NewHitbox[X, Y] = true;
+                }
+            }
+
+            return NewHitbox;
+        }
         
         private (ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
                     where o.CollisionType != CollisionType.None
-                    let hitbox = toHitbox[o.ObjectType]
+                    let hitbox = ScaleHitbox(toHitbox[o.ObjectType], o.XScale, o.YScale)
                     from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
                     from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
                     where hitbox[spriteX, spriteY]

@@ -48,7 +48,7 @@ namespace Jump_Bruteforcer
                     Map Map;
                     try
                     {
-                        Map = Parser.Parse(Extension, Text);
+                        Map = Parser.Parse(Extension, Text, room);
 
                         ImageJMap.Source = Map.Bmp;
                         s.CollisionMap = Map.CollisionMap;
@@ -126,7 +126,7 @@ namespace Jump_Bruteforcer
                 Map Map;
                 try
                 {
-                    Map = Parser.Parse(Extension, Text);
+                    Map = Parser.Parse(Extension, Text, Path.GetDirectoryName(FileName));
 
                     ImageJMap.Source = Map.Bmp;
                     s.CollisionMap = Map.CollisionMap;

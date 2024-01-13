@@ -1,13 +1,40 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Jump_Bruteforcer
 {
     public class Parser
     {
-        public static Map Parse(string Text) => Parse(".jmap", Text);
+        public static Map Parse(string Text) => Parse(".jmap", Text, "");
 
-        public static Map Parse(string Extension, string Text)
+        static readonly ObjectType[] scalableTypes =
+        [
+            ObjectType.Block,
+            ObjectType.MiniBlock,
+            ObjectType.Water1,
+            ObjectType.WaterMini,
+            ObjectType.Water2,
+            ObjectType.Water2Mini,
+            ObjectType.Water3,
+            ObjectType.Water3Mini,
+            ObjectType.CatharsisWater,
+            ObjectType.CatharsisWaterMini,
+            ObjectType.KillerBlock,
+            ObjectType.MiniKillerBlock,
+
+            // dont think these would come into play??
+            ObjectType.WaterDisappear,
+            ObjectType.WaterDisappearMini,
+            ObjectType.GravityBlockDown,
+            ObjectType.GravityBlockDownMini,
+            ObjectType.GravityBlockUp,
+            ObjectType.GravityBlockUpMini,
+
+            // could maybe add platforms?
+        ];
+
+        public static Map Parse(string Extension, string Text, string Path)
         {
             Extension = Extension.ToLower();
             List<Object> objects = new List<Object>();
@@ -20,7 +47,7 @@ namespace Jump_Bruteforcer
                 {
                     (int x, int y, int objectid) = (int.Parse(args[i]), int.Parse(args[i + 1]), int.Parse(args[i + 2]));
                     ObjectType o = Enum.IsDefined(typeof(ObjectType), objectid) ? (ObjectType)objectid : ObjectType.Unknown;
-                    objects.Add(new(x, y, o, i / 3));
+                    objects.Add(new(x, y, 1, 1, o, i / 3));
                 }
             }
             else //Extension == ".txt"
@@ -47,8 +74,72 @@ namespace Jump_Bruteforcer
                     ObjectType o = ObjectNames.GetValueOrDefault(name);
                     int x = (int)Math.Round(ParseDouble(Parameters[1]));
                     int y = (int)Math.Round(ParseDouble(Parameters[2]));
+                    string uid = Parameters[3];
+                    //0
+                    double xScale = ParseDouble(Parameters[5]);
+                    double yScale = ParseDouble(Parameters[6]);
+                    //alpha
+                    //angle
+                    bool creation_code = Parameters[9] == "1";
 
-                    objects.Add(new(x, y, o, i));
+                    if (creation_code)
+                    {
+                        string FilePath = Path + $"/{uid}.gml";
+                        string CreationCode = File.ReadAllText(FilePath);
+                        string[] CodeLines = CreationCode.Split([ '\n', ';' ]);
+
+                        foreach (string Code in CodeLines)
+                        {
+                            // matches image_x/yscale, captures x/y and numeric argument
+                            // for example captures "3", "7/5", "6.25", does not capture "1 + 1 / 2" (correctly)
+                            // cannot handle assignment to variables either, hopefully wont matter :3
+                            Match match = Regex.Match(Code, "image_([xy])scale\\s*=\\s*(\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)?)");
+                            if (match.Success)
+                            {
+                                string Direction = match.Groups[1].Value;
+                                string Scale = match.Groups[2].Value;
+
+                                string[] Operands = Scale.Split('/', StringSplitOptions.TrimEntries);
+
+                                double scale = 1;
+                                if (Operands.Length == 1)
+                                {
+                                    scale = double.Parse(Operands[0]);
+                                }
+                                else if (Operands.Length == 2)
+                                {
+                                    double a = double.Parse(Operands[0]);
+                                    double b = double.Parse(Operands[1]);
+                                    scale = a / b;
+                                }
+                                else
+                                {
+                                    throw new Exception($"expected one or two operands, got {Operands.Length} (in expression: \"{Scale}\")");
+                                }
+
+                                if (Direction == "x")
+                                {
+                                    xScale = scale;
+                                }
+                                else if (Direction == "y")
+                                {
+                                    yScale = scale;
+                                }
+                                else
+                                {
+                                    throw new Exception($"expected either \"x\" or \"y\", got {Direction} (in expression {Code})");
+                                }
+                            }
+                        }
+                    }
+
+                    if (!scalableTypes.Contains(o))
+                    {
+                        xScale = 1;
+                        yScale = 1;
+                    }
+
+                    objects.Add(new(x, y, xScale, yScale, o, i));
                 }
             }
             return new Map(objects);

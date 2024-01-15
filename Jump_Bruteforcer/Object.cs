@@ -195,16 +195,7 @@ namespace Jump_Bruteforcer
                 X -= 10;
                 Y -= 12;
             }
-            if (objectType == ObjectType.BigApple)
-            {
-                X -= 31;
-                Y -= 36;
-            }
-            if (objectType == ObjectType.YellowBullet)
-            {
-                X -= 5;
-                Y -= 5;
-            }
+
             BoundingBox? bbox = null;
             if (objectType == ObjectType.Platform)
             {

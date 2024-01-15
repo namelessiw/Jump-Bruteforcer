@@ -25,7 +25,6 @@
     <None Remove="images\block.png" />
     <None Remove="images\catharsiswater.png" />
     <None Remove="images\cross.png" />
-    <None Remove="images\downarrow.png" />
     <None Remove="images\gravityarrowdown.png" />
     <None Remove="images\gravityarrowup.png" />
     <None Remove="images\killerblock.png" />
@@ -39,7 +38,6 @@
     <None Remove="images\spikeleft.png" />
     <None Remove="images\spikeright.png" />
     <None Remove="images\spikeup.png" />
-    <None Remove="images\uparrow.png" />
     <None Remove="images\vinel.png" />
     <None Remove="images\vineleft.png" />
     <None Remove="images\viner.png" />
@@ -58,11 +56,6 @@
 
 
   <ItemGroup>
-    <Resource Include="images\bigapple.png" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
@@ -71,11 +64,8 @@
 
   <ItemGroup>
     <Resource Include="images\apple.png" />
-    <Resource Include="images\blackhole.png" />
     <Resource Include="images\block.png" />
     <Resource Include="images\catharsiswater.png" />
-    <Resource Include="images\cross.png" />
-    <Resource Include="images\downarrow.png" />
     <Resource Include="images\gravityarrowdown.png" />
     <Resource Include="images\gravityarrowup.png" />
     <Resource Include="images\killerblock.png" />
@@ -89,14 +79,12 @@
     <Resource Include="images\spikeleft.png" />
     <Resource Include="images\spikeright.png" />
     <Resource Include="images\spikeup.png" />
-    <Resource Include="images\uparrow.png" />
     <Resource Include="images\vineleft.png" />
     <Resource Include="images\vineright.png" />
     <Resource Include="images\warp.png" />
     <Resource Include="images\water1.png" />
     <Resource Include="images\water2.png" />
     <Resource Include="images\water3.png" />
-    <Resource Include="images\yellowbullet.png" />
   </ItemGroup>
 
 

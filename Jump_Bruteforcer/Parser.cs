@@ -520,7 +520,7 @@ namespace Jump_Bruteforcer
             {"object1262", ObjectType.SpikeLeft},
 
             {"spikeright", ObjectType.SpikeRight},
-         {"object1309", ObjectType.SpikeRight},
+            {"object1309", ObjectType.SpikeRight},
             {"object1021", ObjectType.SpikeRight},
             {"object1297", ObjectType.SpikeRight},
             {"object1229", ObjectType.SpikeRight},
@@ -640,15 +640,31 @@ namespace Jump_Bruteforcer
             {"walljumpr", ObjectType.VineRight},
             {"platform", ObjectType.Platform}, // yuuutu platform hitbox is a lot smaller than the regular one, good luck distinguishing here
             {"movingplatform", ObjectType.Platform}, // like this one should have the regular hitbox but not the other one since its just supposed to be an object parent
-            {"object1198", ObjectType.Platform},
-            {"object1071", ObjectType.Platform},
-            {"object1319", ObjectType.Platform},
-            {"object1078", ObjectType.Platform},
+            {"object988", ObjectType.Platform},
+
             {"catharsiswater", ObjectType.CatharsisWater},
             {"grav_up", ObjectType.GravityArrowUp },
             {"grav_down", ObjectType.GravityArrowDown },
             {"obj_ue", ObjectType.GravityArrowUp },
             {"obj_sita", ObjectType.GravityArrowDown },
+            {"object1073", ObjectType.JumboBlock },
+            {"object1199", ObjectType.JumboSpikeLeft },
+            {"object1320", ObjectType.JumboSpikeLeft },
+            {"object1072", ObjectType.JumboSpikeLeft },
+            {"object1079", ObjectType.JumboSpikeLeft },
+            {"object1069", ObjectType.JumboSpikeUp },
+            {"object1196", ObjectType.JumboSpikeUp },
+            {"object1317", ObjectType.JumboSpikeUp },
+            {"object1076", ObjectType.JumboSpikeUp },
+            {"object1070", ObjectType.JumboSpikeRight },
+            {"object1318", ObjectType.JumboSpikeRight },
+            {"object1197", ObjectType.JumboSpikeRight },
+            {"object1077", ObjectType.JumboSpikeRight },
+            {"object1198", ObjectType.JumboSpikeDown },
+            {"object1071", ObjectType.JumboSpikeDown },
+            {"object1319", ObjectType.JumboSpikeDown },
+            {"object1078", ObjectType.JumboSpikeDown },
+
 
         };
     }

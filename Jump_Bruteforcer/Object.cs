@@ -85,12 +85,11 @@ namespace Jump_Bruteforcer
         CatharsisWaterMini,
         WaterDisappearMini,
         SidewaysPlatform,
-        BlackHole,
-        UpArrow,
-        DownArrow,
-        Cross,
-        BigApple,
-        YellowBullet,
+        JumboBlock,
+        JumboSpikeUp,
+        JumboSpikeDown,
+        JumboSpikeRight,
+        JumboSpikeLeft,
     }
 
     //Must be ordered by ascending collision priority
@@ -179,12 +178,11 @@ namespace Jump_Bruteforcer
             {ObjectType.CatharsisWaterMini, CollisionType.CatharsisWater },
             {ObjectType.WaterDisappearMini, CollisionType.None },
             {ObjectType.SidewaysPlatform, CollisionType.None },
-            {ObjectType.BlackHole, CollisionType.Killer },
-            {ObjectType.UpArrow, CollisionType.Killer },
-            {ObjectType.DownArrow, CollisionType.Killer },
-            {ObjectType.Cross, CollisionType.Killer },
-            {ObjectType.BigApple, CollisionType.Killer },
-            {ObjectType.YellowBullet, CollisionType.Killer },
+            {ObjectType.JumboBlock, CollisionType.Solid },
+            {ObjectType.JumboSpikeDown, CollisionType.Killer },
+            {ObjectType.JumboSpikeUp, CollisionType.Killer },
+            {ObjectType.JumboSpikeLeft, CollisionType.Killer },
+            {ObjectType.JumboSpikeRight, CollisionType.Killer },
 
         };
 

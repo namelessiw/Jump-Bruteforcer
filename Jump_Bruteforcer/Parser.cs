@@ -213,10 +213,7 @@ namespace Jump_Bruteforcer
             {"movingplatform", ObjectType.Platform}, // like this one should have the regular hitbox but not the other one since its just supposed to be an object parent
             {"rainbow", ObjectType.Platform },
             {"catharsiswater", ObjectType.CatharsisWater},
-            {"grav_up", ObjectType.GravityArrowUp },
-            {"grav_down", ObjectType.GravityArrowDown },
-            {"_ue", ObjectType.GravityArrowUp },
-            {"_sita", ObjectType.GravityArrowDown },
+
         };
     }
 }

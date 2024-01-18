@@ -74,6 +74,7 @@ namespace Jump_Bruteforcer
                 BitmapSource img = toImage[o.ObjectType];
                 int Width = ScaledDim((int)img.Width, PlayerWidth, o.XScale);
                 int Height = ScaledDim((int)img.Height, PlayerHeight, o.YScale);
+
                 Rect rect = new Rect(o.X - 5, o.Y - 8, Width, Height);
                 drawingGroup.Children.Add(new ImageDrawing(img, rect));
                 

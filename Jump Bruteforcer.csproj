@@ -41,8 +41,14 @@
     <None Remove="images\vineright.png" />
     <None Remove="images\warp.png" />
     <None Remove="images\water1.png" />
+    <None Remove="images\Water1CurveLeft.png" />
+    <None Remove="images\Water1CurveRight.png" />
     <None Remove="images\water2.png" />
+    <None Remove="images\Water2CurveLeft.png" />
+    <None Remove="images\Water2CurveRight.png" />
     <None Remove="images\water3.png" />
+    <None Remove="images\Water3CurveLeft.png" />
+    <None Remove="images\Water3CurveRight.png" />
   </ItemGroup>
 
 
@@ -79,8 +85,14 @@
     <Resource Include="images\vineright.png" />
     <Resource Include="images\warp.png" />
     <Resource Include="images\water1.png" />
+    <Resource Include="images\water1curveleft.png" />
+    <Resource Include="images\water1curveright.png" />
     <Resource Include="images\water2.png" />
+    <Resource Include="images\water2curveleft.png" />
+    <Resource Include="images\water2curveright.png" />
     <Resource Include="images\water3.png" />
+    <Resource Include="images\water3curveleft.png" />
+    <Resource Include="images\water3curveright.png" />
   </ItemGroup>
 
 

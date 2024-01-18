@@ -200,7 +200,10 @@ namespace Jump_Bruteforcer
             Clipboard.SetDataObject(s.Macro);
         }
 
+        private void NewHeuristicButton_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }
 

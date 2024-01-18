@@ -202,7 +202,8 @@ namespace Jump_Bruteforcer
 
         private void NewHeuristicButton_Click(object sender, RoutedEventArgs e)
         {
-
+            RangePlayer p = new RangePlayer(s.StartX, (int)Math.Round(s.StartY));
+            MessageBox.Show(p.ToString());
         }
     }
 }

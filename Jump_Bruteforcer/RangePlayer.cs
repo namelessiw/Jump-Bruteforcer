@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jump_Bruteforcer.Jump_Bruteforcer
+namespace Jump_Bruteforcer
 {
     internal class RangePlayer
     {
@@ -15,7 +15,7 @@ namespace Jump_Bruteforcer.Jump_Bruteforcer
         public RangePlayer(int X, int Y)
         {
             this.X = X;
-            (YUpper, YLower) = GetRoundingBounds(Y);
+            (YUpper, YLower) = GetPixelBounds(Y);
             VSpeed = 0;
             Frame = 0;
             DoubleJump = true;
@@ -36,27 +36,27 @@ namespace Jump_Bruteforcer.Jump_Bruteforcer
             DoubleJump = p.DoubleJump;
         }
 
-        // y 407 => [406.5, 407.5)
-        // y 406 => (405.5, 406.5]
-        (double YUpper, double YLower) GetRoundingBounds(int Y)
+        // y 407 => (406.5, 407.5)
+        // y 406 => [405.5, 406.5]
+        static (double YUpper, double YLower) GetPixelBounds(int Y)
         {
             // naming logic:
             // lower y value => higher position on screen
             double YUpper = Y - 0.5;
             double YLower = Y + 0.5;
 
-            if (Y % 2 == 0)
+            if (Y % 2 != 0)
             {
                 YUpper = double.BitIncrement(YUpper);
-            }
-            else
-            {
                 YLower = double.BitDecrement(YLower);
             }
 
             return (YUpper, YLower);
         }
 
-
+        public override string ToString()
+        {
+            return $"({X}, [{YUpper}, {YLower}]), Frame {Frame}";
+        }
     }
 }

@@ -231,7 +231,7 @@
                     case CollisionType.Platform:
                         
                         Object? platform = collisionMap.GetCollidingPlatform(x, y, minInstanceNum);
-                        if (platform != null)
+                        while (platform != null)
                         {
                             if (kidUpsidedown)
                             {
@@ -257,6 +257,7 @@
                             }
 
                             minInstanceNum = platform.instanceNum + 1;
+                            platform = collisionMap.GetCollidingPlatform(x, (int)Math.Round(y), minInstanceNum);
                         }
                         break;
                     case CollisionType.GravityArrowUp:

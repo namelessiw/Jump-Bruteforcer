@@ -130,6 +130,7 @@ namespace Jump_Bruteforcer
 
                     ImageJMap.Source = Map.Bmp;
                     s.CollisionMap = Map.CollisionMap;
+                    RangePlayer.SetCollisionMap(Map.CollisionMap);
                     ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
                     s.PlayerPath = new();
                     s.Strat = "";
@@ -202,8 +203,9 @@ namespace Jump_Bruteforcer
 
         private void NewHeuristicButton_Click(object sender, RoutedEventArgs e)
         {
-            RangePlayer p = new RangePlayer(s.StartX, (int)Math.Round(s.StartY));
-            MessageBox.Show(p.ToString());
+            RangePlayer p = new RangePlayer(s.StartX, s.StartY - 0.4, s.StartY + 0.4, false, false, s.StartingVSpeed);
+            RangePlayer p2 = p.Advance(Input.Neutral);
+            MessageBox.Show(p.ToString() + "\n" + p2);
         }
     }
 }

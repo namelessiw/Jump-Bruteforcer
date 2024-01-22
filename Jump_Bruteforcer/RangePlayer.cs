@@ -105,8 +105,8 @@ namespace Jump_Bruteforcer
         // assumes range never spans more than 2px
         public RangePlayer SplitOnPixelBoundary()
         {
-            (double _, double newYLower) = GetPixelBounds((int)Math.Round(YUpper));
-            (double newYUpper, double _) = GetPixelBounds((int)Math.Round(YLower));
+            double newYLower = GetLowerPixelBound((int)Math.Round(YUpper));
+            double newYUpper = GetUpperPixelBound((int)Math.Round(YLower));
 
             RangePlayer newPlayer = new RangePlayer(this);
             newPlayer.YLower = newYLower;
@@ -122,14 +122,14 @@ namespace Jump_Bruteforcer
         {
             // assume always at least two pixels of floor
             // in case of 1x1 dotkid this could be different
-            (double YUpper, double YLower) = (GetPixelBounds(Y).YUpper, GetPixelBounds(Y + 1).YLower);
+            (double YUpper, double YLower) = (GetUpperPixelBound(Y), GetLowerPixelBound(Y + 1));
 
             YUpper -= 1;
             YLower -= 1;
 
             // remove positions that would be inside of the floor
-            (double _, double OverFloor) = GetPixelBounds(Y - 1);
-            YLower = Math.Min(YLower, OverFloor);
+            double OnFloorBound = GetLowerPixelBound(Y - 1);
+            YLower = Math.Min(YLower, OnFloorBound);
 
             return new RangePlayer(X, YUpper, YLower);
         }
@@ -150,6 +150,30 @@ namespace Jump_Bruteforcer
             }
 
             return (YUpper, YLower);
+        }
+
+        static double GetUpperPixelBound(int Y)
+        {
+            double YUpper = Y - 0.5;
+
+            if (Y % 2 != 0)
+            {
+                YUpper = double.BitIncrement(YUpper);
+            }
+
+            return YUpper;
+        }
+
+        static double GetLowerPixelBound(int Y)
+        {
+            double YLower = Y + 0.5;
+
+            if (Y % 2 != 0)
+            {
+                YLower = double.BitDecrement(YLower);
+            }
+
+            return YLower;
         }
 
         public override string ToString()

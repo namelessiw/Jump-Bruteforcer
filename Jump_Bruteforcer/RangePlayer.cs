@@ -103,6 +103,7 @@ namespace Jump_Bruteforcer
         }
 
         // assumes range never spans more than 2px
+        // this becomes lower, new becomes upper range
         public RangePlayer SplitOnPixelBoundary()
         {
             double newYLower = GetLowerPixelBound((int)Math.Round(YUpper));

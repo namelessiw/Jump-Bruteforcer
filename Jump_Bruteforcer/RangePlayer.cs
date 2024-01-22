@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace Jump_Bruteforcer
 
         double yUpper, yLower, vSpeed;
         bool canSingleJump, canDoubleJump;
+
+        static CollisionMap collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
 
         public int X
         {
@@ -55,6 +58,11 @@ namespace Jump_Bruteforcer
             set => canDoubleJump = value;
         }
 
+        public static void SetCollisionMap(CollisionMap CollisionMap)
+        {
+            collisionMap = CollisionMap;
+        }
+
         public RangePlayer(int X, int Y)
         {
             x = X;
@@ -92,6 +100,19 @@ namespace Jump_Bruteforcer
             frame = p.frame;
             canSingleJump = p.canSingleJump;
             canDoubleJump = p.canDoubleJump;
+        }
+
+        // assumes range never spans more than 2px
+        public RangePlayer SplitOnPixelBoundary()
+        {
+            (double _, double newYLower) = GetPixelBounds((int)Math.Round(YUpper));
+            (double newYUpper, double _) = GetPixelBounds((int)Math.Round(YLower));
+
+            RangePlayer newPlayer = new RangePlayer(this);
+            newPlayer.YLower = newYLower;
+            YUpper = newYUpper;
+
+            return newPlayer;
         }
 
         // returns player on floor (full sjump range)

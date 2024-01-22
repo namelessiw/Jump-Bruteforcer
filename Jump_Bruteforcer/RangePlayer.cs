@@ -8,47 +8,90 @@ namespace Jump_Bruteforcer
 {
     internal class RangePlayer
     {
-        int X, Frame;
-        double YUpper, YLower, VSpeed;
-        bool CanSingleJump, CanDoubleJump;
+        int x, frame;
+
+        double yUpper, yLower, vSpeed;
+        bool canSingleJump, canDoubleJump;
+
+        public int X
+        {
+            get => x;
+            set => x = value;
+        }
+
+        public int Frame
+        {
+            get => frame;
+            set => frame = value;
+        }
+
+        public double YUpper
+        {
+            get => yUpper;
+            set => yUpper = value;
+        }
+
+        public double YLower
+        {
+            get => yLower;
+            set => yLower = value;
+        }
+
+        public double VSpeed
+        {
+            get => vSpeed;
+            set => vSpeed = value;
+        }
+
+        public bool CanSingleJump
+        {
+            get => canSingleJump;
+            set => canSingleJump = value;
+        }
+
+        public bool CanDoubleJump
+        {
+            get => canDoubleJump;
+            set => canDoubleJump = value;
+        }
 
         public RangePlayer(int X, int Y)
         {
-            this.X = X;
-            (YUpper, YLower) = GetPixelBounds(Y);
-            VSpeed = 0;
-            Frame = 0;
-            CanSingleJump = false;
-            CanDoubleJump = true;
+            x = X;
+            (yUpper, yLower) = GetPixelBounds(Y);
+            vSpeed = 0;
+            frame = 0;
+            canSingleJump = false;
+            canDoubleJump = true;
         }
 
         public RangePlayer(int X, double YUpper, double YLower)
         {
-            this.X = X;
-            this.YUpper = YUpper;
-            this.YLower = YLower;
-            VSpeed = 0;
-            Frame = 0;
-            CanSingleJump = false;
-            CanDoubleJump = true;
+            x = X;
+            yUpper = YUpper;
+            yLower = YLower;
+            vSpeed = 0;
+            frame = 0;
+            canSingleJump = false;
+            canDoubleJump = true;
         }
 
         public RangePlayer(int X, int Y, bool CanSingleJump, bool CanDoubleJump, double VSpeed) : this(X, Y)
         {
-            this.CanDoubleJump = CanDoubleJump;
-            this.CanSingleJump = CanSingleJump;
-            this.VSpeed = VSpeed;
+            canDoubleJump = CanDoubleJump;
+            canSingleJump = CanSingleJump;
+            vSpeed = VSpeed;
         }
 
         public RangePlayer(RangePlayer p)
         {
-            X = p.X;
-            YUpper = p.YUpper;
-            YLower = p.YLower;
-            VSpeed = p.VSpeed;
-            Frame = p.Frame;
-            CanSingleJump = p.CanSingleJump;
-            CanDoubleJump = p.CanDoubleJump;
+            x = p.x;
+            yUpper = p.yUpper;
+            yLower = p.yLower;
+            vSpeed = p.vSpeed;
+            frame = p.frame;
+            canSingleJump = p.canSingleJump;
+            canDoubleJump = p.canDoubleJump;
         }
 
         // returns player on floor (full sjump range)
@@ -90,7 +133,7 @@ namespace Jump_Bruteforcer
 
         public override string ToString()
         {
-            return $"({X}, [{YUpper}, {YLower}]), Frame {Frame}";
+            return $"({x}, [{yUpper}, {yLower}]), Frame {frame}";
         }
     }
 }

@@ -130,7 +130,7 @@ namespace Jump_Bruteforcer
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
                         (List<Input> inputs, PointCollection points) = v.GetPath();
-                        TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
+                        TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
                         Strat = SearchOutput.GetInputString(inputs);
                         PlayerPath = points;

@@ -109,6 +109,7 @@ namespace Jump_Bruteforcer
         public SearchResult RunAStar()
         {
             var startTime = Stopwatch.GetTimestamp();
+            uint memoryLimit = 1_000_000;
             FloodFill();
 
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
@@ -119,6 +120,7 @@ namespace Jump_Bruteforcer
 
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             openSet.Enqueue(root, (Distance(root), timestamp));
+            uint nodesInMemory = 1;
 
             var closedSet = new HashSet<PlayerNode>();
 
@@ -126,6 +128,7 @@ namespace Jump_Bruteforcer
             {
                 while (openSet.Count > 0)
                 {
+                    uint vcost = openSet.GetPriority(openSet.First).Item1;
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
@@ -144,9 +147,21 @@ namespace Jump_Bruteforcer
                         NodesVisited = nodesVisited.ToString();
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
+                    }else if (vcost == uint.MaxValue)
+                    {
+                        Strat = "SEARCH FAILURE";
+                        VisualizeSearch.CountStates(openSet, closedSet);
+                        VisualizeSearch.HeuristicMap(GoalDistance);
+                        VisualizeSearch.StateMap();
+                        nodesVisited = closedSet.Count;
+                        NodesVisited = nodesVisited.ToString();
+                        TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
+                        return new SearchResult(Strat, "", false, nodesVisited);
                     }
                     closedSet.Add(v);
-                    foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
+                    HashSet<PlayerNode> neighbors = v.forgottenFCosts.Count > 0 ? v.forgottenFCosts.Keys.ToHashSet() : v.GetNeighbors(CollisionMap);
+
+                    foreach (PlayerNode w in neighbors)
                     {
                         if (closedSet.Contains(w))
                         {

@@ -119,6 +119,7 @@ namespace Jump_Bruteforcer
             uint timestamp = uint.MaxValue;
 
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
+            var cullList = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             openSet.Enqueue(root, (Distance(root), timestamp));
             uint nodesInMemory = 1;
 
@@ -163,25 +164,33 @@ namespace Jump_Bruteforcer
 
                     foreach (PlayerNode w in neighbors)
                     {
-                        if (closedSet.Contains(w))
+                        uint newCost;
+                        if (v.forgottenFCosts.ContainsKey(w)){
+                            newCost = v.forgottenFCosts[w];
+                        }else if (!(w.IsGoal(goal) || CollisionMap.onWarp(w.State.X, w.State.Y)) && w.GetNeighbors(CollisionMap).Count == 0)
                         {
-                            continue;
+                            newCost = uint.MaxValue;
                         }
-                        uint newCost = v.PathCost + 1;
-                        if (!openSet.Contains(w) || newCost < w.PathCost)
+                        else
                         {
-                            w.Parent = v;
-                            w.PathCost = newCost;
-                            uint distance = (uint)Distance(w);
-                            if (openSet.Contains(w))
-                            {
-                                openSet.UpdatePriority(w, (newCost + distance, timestamp));
-                            }
-                            else
-                            {
-                                openSet.Enqueue(w, (newCost + distance, --timestamp));
-                            }
+                            newCost = Math.Max(v.PathCost + Distance(v), w.PathCost + Distance(w));
                         }
+
+                        if (openSet.Contains(w))
+                        {
+                            openSet.UpdatePriority(w, (newCost, timestamp));
+                        }
+                        else
+                        {
+                            openSet.Enqueue(w, (newCost, --timestamp));
+                        }
+                        nodesInMemory++;
+
+                    }
+                    while (nodesInMemory > memoryLimit)
+                    {
+                        cullWorstLeaf(openSet, cullList);
+                        nodesInMemory--;
 
                     }
 
@@ -197,6 +206,25 @@ namespace Jump_Bruteforcer
             NodesVisited = nodesVisited.ToString();
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
+        }
+
+        private void cullWorstLeaf(SimplePriorityQueue<PlayerNode, (uint, uint)> openSet, SimplePriorityQueue<PlayerNode, (uint, uint)> cullList)
+        {
+            PlayerNode w = worstLeaf(openSet, cullList);
+            openSet.Remove(w);
+            PlayerNode p = w.Parent;
+
+        }
+
+        private PlayerNode worstLeaf(SimplePriorityQueue<PlayerNode, (uint, uint)> openSet, SimplePriorityQueue<PlayerNode, (uint, uint)> cullList)
+        {
+            PlayerNode w = cullList.First;
+            if (w == openSet.First)
+            {
+                cullList.Dequeue();
+                w = cullList.First;
+            }
+            return w;
         }
     }
     public class SearchResult

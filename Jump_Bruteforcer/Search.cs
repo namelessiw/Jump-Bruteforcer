@@ -211,9 +211,19 @@ namespace Jump_Bruteforcer
         private void cullWorstLeaf(SimplePriorityQueue<PlayerNode, (uint, uint)> openSet, SimplePriorityQueue<PlayerNode, (uint, uint)> cullList)
         {
             PlayerNode w = worstLeaf(openSet, cullList);
+            (uint forgottenPriority, uint timestamp) = openSet.GetPriority(w);
             openSet.Remove(w);
             PlayerNode p = w.Parent;
-
+            p.forgottenFCosts.Add(w, forgottenPriority);
+            p.lowestForgottenFCost = (uint)Math.Min(p.lowestForgottenFCost, forgottenPriority);
+            if (openSet.Contains(p))
+            {
+                openSet.UpdatePriority(p, (p.lowestForgottenFCost, timestamp));
+            }
+            else
+            {
+                openSet.Enqueue(p, (p.lowestForgottenFCost, timestamp));
+            }
         }
 
         private PlayerNode worstLeaf(SimplePriorityQueue<PlayerNode, (uint, uint)> openSet, SimplePriorityQueue<PlayerNode, (uint, uint)> cullList)
@@ -221,8 +231,10 @@ namespace Jump_Bruteforcer
             PlayerNode w = cullList.First;
             if (w == openSet.First)
             {
-                cullList.Dequeue();
+                (uint, uint) worstPriority = cullList.GetPriority(w);
+                PlayerNode worst = cullList.Dequeue();
                 w = cullList.First;
+                cullList.Enqueue(worst, worstPriority);
             }
             return w;
         }

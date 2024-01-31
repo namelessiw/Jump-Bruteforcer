@@ -121,6 +121,7 @@ namespace Jump_Bruteforcer
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             var cullList = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             openSet.Enqueue(root, (Distance(root), timestamp));
+            cullList.Enqueue(root, (Distance(root), timestamp));
             uint nodesInMemory = 1;
 
             var closedSet = new HashSet<PlayerNode>();
@@ -131,6 +132,7 @@ namespace Jump_Bruteforcer
                 {
                     uint vcost = openSet.GetPriority(openSet.First).Item1;
                     PlayerNode v = openSet.Dequeue();
+                    cullList.Remove(v);
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
                         (List<Input> inputs, PointCollection points) = v.GetPath();
@@ -161,7 +163,6 @@ namespace Jump_Bruteforcer
                     }
                     closedSet.Add(v);
                     HashSet<PlayerNode> neighbors = v.forgottenFCosts.Count > 0 ? v.forgottenFCosts.Keys.ToHashSet() : v.GetNeighbors(CollisionMap);
-
                     foreach (PlayerNode w in neighbors)
                     {
                         uint newCost;
@@ -179,10 +180,12 @@ namespace Jump_Bruteforcer
                         if (openSet.Contains(w))
                         {
                             openSet.UpdatePriority(w, (newCost, timestamp));
+                            cullList.UpdatePriority(w, (newCost, timestamp));
                         }
                         else
                         {
                             openSet.Enqueue(w, (newCost, --timestamp));
+                            cullList.Enqueue(w, (newCost, timestamp));
                         }
                         nodesInMemory++;
 
@@ -213,16 +216,20 @@ namespace Jump_Bruteforcer
             PlayerNode w = worstLeaf(openSet, cullList);
             (uint forgottenPriority, uint timestamp) = openSet.GetPriority(w);
             openSet.Remove(w);
+            cullList.Remove(w);
             PlayerNode p = w.Parent;
             p.forgottenFCosts.Add(w, forgottenPriority);
             p.lowestForgottenFCost = (uint)Math.Min(p.lowestForgottenFCost, forgottenPriority);
             if (openSet.Contains(p))
             {
                 openSet.UpdatePriority(p, (p.lowestForgottenFCost, timestamp));
+                cullList.UpdatePriority(p, (p.lowestForgottenFCost, timestamp));
+                
             }
             else
             {
                 openSet.Enqueue(p, (p.lowestForgottenFCost, timestamp));
+                cullList.Enqueue(p, (p.lowestForgottenFCost, timestamp));
             }
         }
 

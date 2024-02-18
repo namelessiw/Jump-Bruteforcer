@@ -103,7 +103,11 @@
             if ((input & Input.Jump) == Input.Jump)
             {
                 double checkOffset = globalGravInverted ? -1 : 1;
-                
+                if ((flags & Bools.CanDJump) != Bools.CanDJump)
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
+
                 if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
                 {
                     vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
@@ -151,6 +155,18 @@
                     hSpeed = -15;
                 }
             }
+
+            //  playerJump
+            if ((input & Input.Jump) == Input.Jump)
+            {
+                if ((flags & Bools.CanDJump) != Bools.CanDJump)
+                {
+                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+                }
+
+
+            }
+
             //global.grav
             if (globalGravInverted& !kidUpsidedown)
             {

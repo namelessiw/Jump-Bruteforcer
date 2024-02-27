@@ -155,6 +155,7 @@
             if (globalGravInverted& !kidUpsidedown)
             {
                 y -= 4;
+                (xPrevious, yPrevious) = (x, y);
                 vSpeed = 0;
                 hSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;
@@ -166,6 +167,7 @@
             if (!globalGravInverted & kidUpsidedown)
             {
                 y += 4;
+                (xPrevious, yPrevious) = (x, y);
                 vSpeed = 0;
                 hSpeed = 0;
                 Bools facingDirection = Bools.FacingRight & flags;

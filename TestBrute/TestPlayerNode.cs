@@ -671,6 +671,22 @@ namespace TestBrute
             n1.State.Should().BeEquivalentTo(new PlayerNode(472, 518.19, -2, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
 
         }
+        [Fact]
+        public void TestTurningRightsideUpWhileCollidingWithSolid()
+        {
+            string path = @$"..\..\..\jmaps\room773.txt";
+            string Text = File.ReadAllText(path);
+
+            Map Map = Parser.Parse("txt", Text);
+            var n1 = new PlayerNode(634, 152.16981250000063, 7.448687500000003, Bools.CanDJump );
+            
+            
+            n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(634, 160.01850000000064, 7.848687500000003, Bools.CanDJump | Bools.InvertedGravity).State);
+            n1 = n1.NewState(Input.Jump | Input.Right, Map.CollisionMap);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(634, 162.61850000000064, 6.6, Bools.FacingRight | Bools.InvertedGravity).State);
+
+        }
 
         [Fact]
         public void TestUpsidedownHitSpike()

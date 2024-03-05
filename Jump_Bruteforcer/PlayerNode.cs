@@ -115,7 +115,7 @@ namespace Jump_Bruteforcer
             {
                 foreach (var neighbor in from Input input in inputs
                                          let neighbor = NewState(input, CollisionMap)
-                                         where Player.IsAlive(CollisionMap, neighbor)
+                                         where Player.IsAlive(neighbor)
                                          select neighbor)
                 {
                     neighbors.Add(neighbor);
@@ -129,12 +129,16 @@ namespace Jump_Bruteforcer
         /// <param name="input"></param> the inputs for the next frame
         /// <param name="CollisionMap"></param> the game field
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
-        public PlayerNode NewState(Input input, CollisionMap CollisionMap)
+        public PlayerNode? NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State newState = Player.Update(this, input, CollisionMap);
-
-            return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);
+            State? newState = Player.Update(this, input, CollisionMap);
+            if (newState != null)
+            {
+                return new PlayerNode(newState.Value, action: input, pathCost: PathCost + 1, parent: this);
+            }
+            return null;
+            
         }
 
         public bool Equals(PlayerNode? other)

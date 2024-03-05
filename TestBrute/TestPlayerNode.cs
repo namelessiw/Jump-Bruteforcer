@@ -697,8 +697,7 @@ namespace TestBrute
             Map Map = Parser.Parse("txt", Text);
             var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            output.WriteLine(n1.ToString());
-            Player.IsAlive(Map.CollisionMap, n1).Should().BeFalse();
+            Player.IsAlive(n1).Should().BeFalse();
 
         }
         // requires multiple object types per pixel
@@ -737,6 +736,27 @@ namespace TestBrute
             }
 
             n1.State.Should().BeEquivalentTo(new PlayerNode(431, 585.8956999999999, 2, Bools.CanDJump).State);
+        }
+
+        [Fact]
+        public void TestNabla2PlatformSpikeDeath()
+        {
+            string path = @$"..\..\..\jmaps\nabla_2.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(Text);
+            var n1 = new PlayerNode(741, 105.66000000000003, -6.199999999999999);
+
+            Input[] inputs = new Input[]
+            {
+                Input.Jump | Input.Release | Input.Left,
+            };
+
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                n1 = n1.NewState(inputs[i], Map.CollisionMap);
+                //output.WriteLine($"frame {i}\tstate: {n1.State}");
+            }
+            n1.Should().BeNull();
         }
 
         [Fact]

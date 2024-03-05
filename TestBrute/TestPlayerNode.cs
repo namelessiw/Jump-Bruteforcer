@@ -760,6 +760,20 @@ namespace TestBrute
         }
 
         [Fact]
+        public void TestNabla2NoPlatformSnap()
+        {
+            string path = @$"..\..\..\jmaps\nabla_2.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(Text);
+            var n1 = new PlayerNode(744, 111.86000000000003, -6.6);
+
+            n1 = n1.NewState(Input.Left, Map.CollisionMap);
+
+            n1.State.Should().BeEquivalentTo(new PlayerNode(741, 105.66000000000003, -6.199999999999999, Bools.None).State);
+        }
+
+
+        [Fact]
         public void TestVineClip()
         {
 

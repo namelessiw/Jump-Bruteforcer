@@ -765,7 +765,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\nabla_2.jmap";
             string Text = File.ReadAllText(path);
             Map Map = Parser.Parse(Text);
-            var n1 = new PlayerNode(744, 111.86000000000003, -6.6);
+            var n1 = new PlayerNode(744, 111.86000000000003, -6.6, Bools.None);
 
             n1 = n1.NewState(Input.Left, Map.CollisionMap);
 

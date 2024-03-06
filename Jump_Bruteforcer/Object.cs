@@ -185,7 +185,7 @@ namespace Jump_Bruteforcer
             BoundingBox? bbox = null;
             if (objectType == ObjectType.Platform)
             {
-                bbox = new BoundingBox(X - 5, Y - 10, 42, 36);
+                bbox = new BoundingBox(X - 5, Y - 8, 41, 35);
             }
             this.X = X;
             this.Y = Y;

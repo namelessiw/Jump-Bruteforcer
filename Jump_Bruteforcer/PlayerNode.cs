@@ -41,15 +41,15 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
         private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
-        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, parent, pathCost, action);
+        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, PlayerNode? parent = null) =>
+            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, parent, uint.MaxValue, action);
 
-        public PlayerNode(State state, PlayerNode? parent, uint pathCost, Input? action)
+        public PlayerNode(State state, PlayerNode? parent, Input? action)
         {
             State = state;
             Parent = parent;
-            PathCost = pathCost;
             Action = action;
+            PathCost = uint.MaxValue;
         }
 
         public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
@@ -135,7 +135,7 @@ namespace Jump_Bruteforcer
             State? newState = Player.Update(this, input, CollisionMap);
             if (newState != null)
             {
-                return new PlayerNode(newState.Value, action: input, pathCost: PathCost + 1, parent: this);
+                return new PlayerNode(newState.Value, action: input, parent: this);
             }
             return null;
             

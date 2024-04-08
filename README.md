@@ -13,8 +13,8 @@ Or you can type the coordinates into the textboxes.
 Then you can click 'Start search' and get up and grab a cup of coffee. Hopefully it will be done when you get back.
 You can right click the inputs list to copy it to the clipboard.
 
-The bruteforcer supports solids, playerkillers, water (1, 2, & 3), platforms, and vines. 
-Notable unsupported objects include gravity flippers and anything dynamic (jump refreshers, apple animations, etc.).
+The bruteforcer supports solids, playerkillers, water (1, 2, & 3), platforms, vines, and gravity flippers. 
+Notable unsupported objects include anything dynamic (jump refreshers, apple animations, etc.).
 
 ## Limitations
 - Memory and time intensive for large-screens

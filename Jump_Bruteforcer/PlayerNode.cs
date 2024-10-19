@@ -32,6 +32,7 @@ namespace Jump_Bruteforcer
     }
     public class PlayerNode : IEquatable<PlayerNode>
     {
+        static XxHash64 hasher = new();
         const int epsilon = 10;
         public State State { get; set; }
         public PlayerNode? Parent { get; set; }
@@ -164,16 +165,14 @@ namespace Jump_Bruteforcer
         public override int GetHashCode() => Hash().GetHashCode();
         public ulong Hash()
         {
-            var x_state = BitConverter.GetBytes(State.X);
-            var y_state = BitConverter.GetBytes(Quantize(State.Y));
-            var vspeed_state = BitConverter.GetBytes(Quantize(State.VSpeed));
-            var flags_state = new byte[] { (byte)State.Flags };
-            byte[] input = new byte[x_state.Length + y_state.Length + vspeed_state.Length + flags_state.Length];
-            x_state.CopyTo(input, 0);
-            y_state.CopyTo(input, x_state.Length);
-            vspeed_state.CopyTo(input, x_state.Length + y_state.Length);
-            flags_state.CopyTo(input, x_state.Length + y_state.Length + vspeed_state.Length);
-            return XxHash64.HashToUInt64(input);
+
+            hasher.Append(BitConverter.GetBytes(State.X));
+            hasher.Append(BitConverter.GetBytes(Quantize(State.Y)));
+            hasher.Append(BitConverter.GetBytes(Quantize(State.VSpeed)));
+            hasher.Append(new byte[] { (byte)State.Flags });
+            ulong hash = hasher.GetCurrentHashAsUInt64();
+            hasher.Reset();
+            return hash;
         }
         
         public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}, Action: {Action.ToString()} }}";

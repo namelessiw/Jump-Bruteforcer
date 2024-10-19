@@ -2,13 +2,13 @@
 using System.Text.Json;
 using System.Collections.Immutable;
 using System.Windows;
-using System.IO;
 using System.Runtime.InteropServices;
+using System.IO.Hashing;
 
 namespace Jump_Bruteforcer
 {
     [Flags]
-    public enum Bools
+    public enum Bools: byte
     {
         None = 0,
         CanDJump = 1,
@@ -161,7 +161,20 @@ namespace Jump_Bruteforcer
             return Quantize(a) == Quantize(b);
         }
 
-        public override int GetHashCode() => (State.X, Quantize(State.Y), Quantize(State.VSpeed), State.Flags).GetHashCode();
+        public override int GetHashCode() => Hash().GetHashCode();
+        public ulong Hash()
+        {
+            var x_state = BitConverter.GetBytes(State.X);
+            var y_state = BitConverter.GetBytes(Quantize(State.Y));
+            var vspeed_state = BitConverter.GetBytes(Quantize(State.VSpeed));
+            var flags_state = new byte[] { (byte)State.Flags };
+            byte[] input = new byte[x_state.Length + y_state.Length + vspeed_state.Length + flags_state.Length];
+            x_state.CopyTo(input, 0);
+            y_state.CopyTo(input, x_state.Length);
+            vspeed_state.CopyTo(input, x_state.Length + y_state.Length);
+            flags_state.CopyTo(input, x_state.Length + y_state.Length + vspeed_state.Length);
+            return XxHash64.HashToUInt64(input);
+        }
         
         public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}, Action: {Action.ToString()} }}";
     }

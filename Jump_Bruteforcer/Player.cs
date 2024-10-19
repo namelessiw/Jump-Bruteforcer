@@ -1,7 +1,7 @@
 ﻿namespace Jump_Bruteforcer
 {
     [Flags]
-    public enum Input
+    public enum Input:byte
     {
         Neutral = 0,
         Left = 1,

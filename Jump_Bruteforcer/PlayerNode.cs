@@ -35,21 +35,19 @@ namespace Jump_Bruteforcer
         static XxHash64 hasher = new();
         const int epsilon = 10;
         public State State { get; set; }
-        public PlayerNode? Parent { get; set; }
+        public uint NodeIndex { get; set; }
         public uint PathCost { get; set; }
-        public Input? Action { get; set; }
+
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
         private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
-        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, parent, uint.MaxValue, action);
+        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, uint nodeIndex = 0) =>
+            (State, NodeIndex, PathCost) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, nodeIndex, uint.MaxValue);
 
-        public PlayerNode(State state, PlayerNode? parent, Input? action)
+        public PlayerNode(State state)
         {
             State = state;
-            Parent = parent;
-            Action = action;
             PathCost = uint.MaxValue;
         }
 
@@ -60,44 +58,21 @@ namespace Jump_Bruteforcer
 
 
 
-        /// <summary>
-        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
-        /// </summary>
-        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
-        public (List<Input> Inputs, PointCollection Points) GetPath()
-        {
-            List<Input> inputs = new List<Input>();
-            List<Point> points = new List<Point>();
-            PlayerNode? currentNode = this;
 
-            while (currentNode != null)
-            {
-                if (currentNode.Action != null)
-                {
-                    inputs.Add((Input)currentNode.Action);
-                }
-                points.Add(new Point(currentNode.State.X, currentNode.State.RoundedY));
-                currentNode = currentNode.Parent;
-            }
-            inputs.Reverse();
-            points.Reverse();
-
-            return (inputs, new PointCollection(points));
-        }
 
         /// <summary>
         /// creates the set of all unique states that can be reached in one frame from the current state with arbitrary inputs.
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap)
+        public IEnumerable<(PlayerNode, Input)> GetNeighbors(CollisionMap CollisionMap)
         {
-            var neighbors = new HashSet<PlayerNode>();
+            var neighbors = new List<(PlayerNode, Input)>();
             fillNeighbors(CollisionMap, neighbors, inputs);
             //corresponds to global.grav = 1
             bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = Parent != null ? (Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
+            bool kidUpsidedown = false; //todo replace with correct calculation
 
             double checkOffset = globalGravInverted ? -1 : 1;
             if (Math.Sign(State.VSpeed) == -checkOffset)
@@ -110,16 +85,16 @@ namespace Jump_Bruteforcer
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }
 
-            return neighbors;
+            return neighbors.Distinct();
 
-            void fillNeighbors(CollisionMap CollisionMap, HashSet<PlayerNode> neighbors, ImmutableArray<Input> inputs)
+            void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode, Input)> neighbors, ImmutableArray<Input> inputs)
             {
-                foreach (var neighbor in from Input input in inputs
+                foreach (var (neighbor, input) in from Input input in inputs
                                          let neighbor = NewState(input, CollisionMap)
                                          where Player.IsAlive(neighbor)
-                                         select neighbor)
+                                         select (neighbor, input))
                 {
-                    neighbors.Add(neighbor);
+                    neighbors.Add((neighbor, input));
                 }
             }
         }
@@ -136,7 +111,7 @@ namespace Jump_Bruteforcer
             State? newState = Player.Update(this, input, CollisionMap);
             if (newState != null)
             {
-                return new PlayerNode(newState.Value, action: input, parent: this);
+                return new PlayerNode(newState.Value);
             }
             return null;
             
@@ -175,6 +150,6 @@ namespace Jump_Bruteforcer
             return hash;
         }
         
-        public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}, Action: {Action.ToString()} }}";
+        public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}}}";
     }
 }

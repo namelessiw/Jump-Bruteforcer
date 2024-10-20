@@ -1,4 +1,5 @@
 ﻿using Priority_Queue;
+using System.Collections;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -120,7 +121,9 @@ namespace Jump_Bruteforcer
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             openSet.Enqueue(root, (Distance(root), timestamp));
 
-            var closedSet = new HashSet<ulong>();
+            var nodeParentIndices = new List<uint>();
+            var nodeInputs = new List<Input>();
+            var visitedNodeHashes = new HashSet<ulong>();
 
             if (Distance(root) != uint.MaxValue)
             {
@@ -129,33 +132,31 @@ namespace Jump_Bruteforcer
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-                        (List<Input> inputs, PointCollection points) = v.GetPath();
+
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
-                        Macro = SearchOutput.GetMacro(inputs);
-                        Strat = SearchOutput.GetInputString(inputs);
-                        PlayerPath = points;
-                        SearchOutput.DumpPath(v);
-                        var optimalGoal = points.Last();
-                        (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
+
+
 
                         VisualizeSearch.HeuristicMap(GoalDistance);
                         VisualizeSearch.StateMap();
-                        nodesVisited = closedSet.Count;
+                        nodesVisited = visitedNodeHashes.Count;
                         NodesVisited = nodesVisited.ToString();
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    closedSet.Add(v.Hash());
-                    foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
+                    visitedNodeHashes.Add(v.Hash());
+                    foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
                     {
-                        if (closedSet.Contains(w.Hash()))
+                        if (visitedNodeHashes.Contains(w.Hash()))
                         {
                             continue;
                         }
+                        w.NodeIndex = (uint)nodeInputs.Count;
+                        nodeInputs.Add(input);
+                        nodeParentIndices.Add(v.NodeIndex);
                         uint newCost = v.PathCost + 1;
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
-                            w.Parent = v;
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
                             if (openSet.Contains(w))
@@ -178,7 +179,7 @@ namespace Jump_Bruteforcer
 
             VisualizeSearch.HeuristicMap(GoalDistance);
             VisualizeSearch.StateMap();
-            nodesVisited = closedSet.Count;
+            nodesVisited = visitedNodeHashes.Count;
             NodesVisited = nodesVisited.ToString();
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);

@@ -5,26 +5,7 @@ namespace Jump_Bruteforcer
 {
     internal static class SearchOutput
     {
-        /// <summary>
-        /// For a given PlayerNode, writes to a file the states of all nodes on the path through the game space ending at the current node
-        /// </summary>
-        public static void DumpPath(PlayerNode node)
-        {
-            List<PlayerNode> path = new List<PlayerNode>();
-            PlayerNode? currentNode = node;
 
-            while (currentNode != null)
-            {
-                path.Add(currentNode);
-                currentNode = currentNode.Parent;
-            }
-            path.Reverse();
-            string states = string.Join<PlayerNode>("\n", path.ToArray());
-            string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
-            Directory.CreateDirectory(outputPath);
-            File.WriteAllText(Path.Join(outputPath, $"states.txt"), states);
-
-        }
         public static string GetInputString(List<Input> inputs)
         {
             if (inputs.Count == 0)

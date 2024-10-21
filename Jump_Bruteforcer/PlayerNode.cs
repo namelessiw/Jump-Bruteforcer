@@ -35,7 +35,7 @@ namespace Jump_Bruteforcer
         static XxHash64 hasher = new();
         const int epsilon = 10;
         public State State { get; set; }
-        public uint NodeIndex { get; set; }
+        public int NodeIndex { get; set; }
         public uint PathCost { get; set; }
 
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);

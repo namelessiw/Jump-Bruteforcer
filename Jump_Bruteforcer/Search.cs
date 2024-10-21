@@ -121,7 +121,7 @@ namespace Jump_Bruteforcer
             var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
             openSet.Enqueue(root, (Distance(root), timestamp));
 
-            var nodeParentIndices = new List<uint>();
+            var nodeParentIndices = new List<int>();
             var nodeInputs = new List<Input>();
             var visitedNodeHashes = new HashSet<ulong>();
 
@@ -158,7 +158,7 @@ namespace Jump_Bruteforcer
                         {
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
-                            w.NodeIndex = (uint)nodeInputs.Count;
+                            w.NodeIndex = nodeInputs.Count;
                             nodeInputs.Add(input);
                             nodeParentIndices.Add(v.NodeIndex);
                             if (openSet.Contains(w))

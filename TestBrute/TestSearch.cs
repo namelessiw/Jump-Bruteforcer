@@ -126,7 +126,7 @@ namespace TestBrute
             
             for (int i = 0; i < Size; i++)
             {
-                array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left, parent : parent);
+                array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left);
 
 
             }
@@ -134,6 +134,30 @@ namespace TestBrute
             GC.KeepAlive(array);
             long total = finalMemory - initialMemory;
             uint classSize = (uint)((double)total / Size);
+            output.WriteLine("Measured size of each element: {0:0.000} bytes",
+                              classSize);
+            classSize.Should().Be(88);
+
+        }
+
+        [Fact]
+        private void InstanceOverheadTest2()
+        {
+            const int Size = 1000;
+            long initialMemory = GC.GetTotalMemory(true);
+            List<Input> array = new(Size);
+
+
+            for (int i = 0; i < Size; i++)
+            {
+                array.Add(Input.Right);
+
+
+            }
+            long finalMemory = GC.GetTotalMemory(true);
+            GC.KeepAlive(array);
+            long total = finalMemory - initialMemory;
+            double classSize = ((double)total / Size);
             output.WriteLine("Measured size of each element: {0:0.000} bytes",
                               classSize);
             classSize.Should().Be(88);

@@ -105,10 +105,11 @@ namespace Jump_Bruteforcer
                     collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
                 }
             }
+            var comparer = Comparer<CollisionType>.Create((a, b) => b.CompareTo(a));
             foreach (var pixel in query)
             {
                 collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
-                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+                    .ToImmutableSortedSet(comparer);
             }
 
             //vine distance matrix

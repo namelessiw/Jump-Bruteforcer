@@ -145,20 +145,22 @@ namespace Jump_Bruteforcer
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
                     visitedNodeHashes.Add(v.Hash());
+
                     foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
                     {
                         if (visitedNodeHashes.Contains(w.Hash()))
                         {
                             continue;
                         }
-                        w.NodeIndex = (uint)nodeInputs.Count;
-                        nodeInputs.Add(input);
-                        nodeParentIndices.Add(v.NodeIndex);
+
                         uint newCost = v.PathCost + 1;
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
+                            w.NodeIndex = (uint)nodeInputs.Count;
+                            nodeInputs.Add(input);
+                            nodeParentIndices.Add(v.NodeIndex);
                             if (openSet.Contains(w))
                             {
                                 openSet.UpdatePriority(w, (newCost + distance, timestamp));

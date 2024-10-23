@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer
@@ -106,7 +107,29 @@ namespace Jump_Bruteforcer
                 Distance++;
             }
         }
+        /// <summary>
+        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
+        /// </summary>
+        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
+        public static (List<Input> Inputs, PointCollection Points) GetPath(int endNode, List<int> nodeParentIndices, List<Input> nodeInputs) 
+        {
+            List<Input> inputs = new List<Input>();
+            List<Point> points = new List<Point>();
+            int currentNodeIndex = endNode;
+            Input currentInput;
 
+
+            while (currentNodeIndex != 0)
+            {
+                currentInput = nodeInputs[currentNodeIndex];
+                inputs.Add(currentInput);
+                currentNodeIndex = nodeParentIndices[currentNodeIndex];
+            }
+            inputs.Reverse();
+            points.Reverse();
+
+            return (inputs, new PointCollection(points));
+        }
         public SearchResult RunAStar()
         {
             var startTime = Stopwatch.GetTimestamp();
@@ -132,10 +155,10 @@ namespace Jump_Bruteforcer
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-
+                        (List<Input> inputs, PointCollection points) = GetPath(v.NodeIndex, nodeParentIndices, nodeInputs);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
 
-
+                        Strat = SearchOutput.GetInputString(inputs);
 
                         VisualizeSearch.HeuristicMap(GoalDistance);
                         VisualizeSearch.StateMap();

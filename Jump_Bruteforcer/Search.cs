@@ -107,37 +107,8 @@ namespace Jump_Bruteforcer
                 Distance++;
             }
         }
-        /// <summary>
-        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
-        /// </summary>
-        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
-        public (List<Input> Inputs, PointCollection Points) GetPath(PlayerNode root, int endNode, List<int> nodeParentIndices, List<Input> nodeInputs) 
-        {
-            List<Input> inputs = new List<Input>();
-            List<Point> points = new List<Point>();
-            int currentNodeIndex = endNode;
-            Input currentInput;
 
 
-            while (currentNodeIndex != 0)
-            {
-                currentInput = nodeInputs[currentNodeIndex];
-                inputs.Add(currentInput);
-                currentNodeIndex = nodeParentIndices[currentNodeIndex];
-            }
-            inputs.Reverse();
-            PlayerNode curr = root;
-            points.Add(new Point(curr.State.X, curr.State.RoundedY));
-            foreach (Input input in inputs)
-            {
-                curr = curr.NewState(input, CollisionMap);
-                points.Add(new Point(curr.State.X, curr.State.RoundedY));
-            }
-
-
-
-            return (inputs, new PointCollection(points));
-        }
         public SearchResult RunAStar()
         {
             var startTime = Stopwatch.GetTimestamp();
@@ -163,12 +134,11 @@ namespace Jump_Bruteforcer
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-                        (List<Input> inputs, PointCollection points) = GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs);
+                        (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
                         Strat = SearchOutput.GetInputString(inputs);
                         PlayerPath = points;
-
 
                         var optimalGoal = points.Last();
                         (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
@@ -179,7 +149,7 @@ namespace Jump_Bruteforcer
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    visitedNodeHashes.Add(v.Hash()); //maybe move inside if statement?
+                    visitedNodeHashes.Add(v.Hash());
 
 
                     foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
@@ -192,7 +162,7 @@ namespace Jump_Bruteforcer
                         uint newCost = v.PathCost + 1;
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
-                            visitedNodeHashes.Add(w.Hash()); //maybe move inside if statement?
+                            visitedNodeHashes.Add(w.Hash());
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
                             w.NodeIndex = nodeInputs.Count;

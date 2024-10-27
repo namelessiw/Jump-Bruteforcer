@@ -221,7 +221,7 @@ namespace TestBrute
                 players[i] = n1.NewState(inputs[i], cmap);
             }
 
-            n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+            (from n in n1.GetNeighbors(cmap) select n.Item1).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
 
         }
         [Fact]
@@ -237,7 +237,7 @@ namespace TestBrute
                 players[i] = n1.NewState(PlayerNode.inputs[i], cmap);
             }
 
-            n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+            (from n in n1.GetNeighbors(cmap) select n.Item1).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
 
         }
 
@@ -256,7 +256,7 @@ namespace TestBrute
                 players[i] = n1.NewState(inputs[i], cmap);
             }
 
-            n1.GetNeighbors(cmap).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
+            (from n in n1.GetNeighbors(cmap) select n.Item1).Should().BeEquivalentTo(new HashSet<PlayerNode>(players));
 
         }
 

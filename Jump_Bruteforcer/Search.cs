@@ -111,7 +111,7 @@ namespace Jump_Bruteforcer
         /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
         /// </summary>
         /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
-        public static (List<Input> Inputs, PointCollection Points) GetPath(int endNode, List<int> nodeParentIndices, List<Input> nodeInputs) 
+        public (List<Input> Inputs, PointCollection Points) GetPath(PlayerNode root, int endNode, List<int> nodeParentIndices, List<Input> nodeInputs) 
         {
             List<Input> inputs = new List<Input>();
             List<Point> points = new List<Point>();
@@ -126,14 +126,15 @@ namespace Jump_Bruteforcer
                 currentNodeIndex = nodeParentIndices[currentNodeIndex];
             }
             inputs.Reverse();
-            //PlayerNode curr = root;
-            //foreach (Input input in inputs)
-            //{
-            //    points.Add(new Point());
-            //    curr = root.NewState(input);
-            //}
-            
-            
+            PlayerNode curr = root;
+            points.Add(new Point(curr.State.X, curr.State.RoundedY));
+            foreach (Input input in inputs)
+            {
+                curr = curr.NewState(input, CollisionMap);
+                points.Add(new Point(curr.State.X, curr.State.RoundedY));
+            }
+
+
 
             return (inputs, new PointCollection(points));
         }
@@ -162,11 +163,15 @@ namespace Jump_Bruteforcer
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-                        (List<Input> inputs, PointCollection points) = GetPath(v.NodeIndex, nodeParentIndices, nodeInputs);
+                        (List<Input> inputs, PointCollection points) = GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
                         Strat = SearchOutput.GetInputString(inputs);
+                        PlayerPath = points;
 
+
+                        var optimalGoal = points.Last();
+                        (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
                         VisualizeSearch.HeuristicMap(GoalDistance);
                         VisualizeSearch.StateMap();
                         nodesVisited = visitedNodeHashes.Count;

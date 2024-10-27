@@ -530,7 +530,7 @@ namespace TestBrute
             {
                 n1 = n1.NewState(Input.Right, Map.CollisionMap);
             }
-            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
         }
         [Fact]
         public void TestRecoverDjumpUpsideDown()
@@ -539,10 +539,10 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
          
             Map Map = Parser.Parse("txt", Text);
-            var n1 = new PlayerNode(149, 40.70000000000015, 0, Bools.FacingRight | Bools.InvertedGravity);
+            var n1 = new PlayerNode(149, 40.70000000000015, 0, Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity);
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(149, 40.70000000000015, 0, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
         }
 
         [Fact]
@@ -559,7 +559,7 @@ namespace TestBrute
                 n1 = n1.NewState(input, Map.CollisionMap);
             }
             n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(363, 535.1, 8.6, Bools.CanDJump | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(363, 535.1, 8.6, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
             
         }
         [Fact]
@@ -569,7 +569,7 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
             
             Map Map = Parser.Parse("txt", Text);
-            var n1 = new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity);
+            var n1 = new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             for (int i = 0; i < 9; i++)
             {
                 n1 = n1.NewState(Input.Right, Map.CollisionMap);
@@ -597,7 +597,7 @@ namespace TestBrute
             {
                 n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             }
-            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
 
         }
         [Fact]
@@ -621,7 +621,7 @@ namespace TestBrute
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(352, 530.085, -1.9049999999999998, Bools.CanDJump | Bools.InvertedGravity).State);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 535, 0, Bools.CanDJump | Bools.OnPlatform | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 535, 0, Bools.CanDJump | Bools.OnPlatform | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
 
         }
 
@@ -632,11 +632,11 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
 
             Map Map = Parser.Parse("txt", Text);
-            var n1 = new PlayerNode(355, 478.0850000000001, -6.000000000000001, Bools.CanDJump | Bools.InvertedGravity);
+            var n1 = new PlayerNode(355, 478.0850000000001, -6.000000000000001, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1 = n1.NewState(Input.Left, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 457.6850000000001, -7.200000000000002, Bools.CanDJump).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(352, 457.6850000000001, -7.200000000000002, Bools.CanDJump | Bools.ParentInvertedGravity).State);
             n1 = n1.NewState(Input.Jump, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(352, 462.0850000000001, 0.4, Bools.CanDJump).State);
             PlayerNode n2 = n1.NewState(Input.Jump, Map.CollisionMap);
@@ -663,12 +663,12 @@ namespace TestBrute
             }
             n1.State.Should().BeEquivalentTo(new PlayerNode(451, 532.99, -0.8850000000000001, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(454, 528.59, -0.4, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(454, 528.59, -0.4, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
             for (int i = 0; i < 6; i++)
             {
                 n1 = n1.NewState(Input.Right, Map.CollisionMap);
             }
-            n1.State.Should().BeEquivalentTo(new PlayerNode(472, 518.19, -2, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(472, 518.19, -2, Bools.CanDJump | Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
 
         }
         [Fact]
@@ -684,7 +684,7 @@ namespace TestBrute
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1.State.Should().BeEquivalentTo(new PlayerNode(634, 160.01850000000064, 7.848687500000003, Bools.CanDJump | Bools.InvertedGravity).State);
             n1 = n1.NewState(Input.Jump | Input.Right, Map.CollisionMap);
-            n1.State.Should().BeEquivalentTo(new PlayerNode(634, 162.61850000000064, 6.6, Bools.FacingRight | Bools.InvertedGravity).State);
+            n1.State.Should().BeEquivalentTo(new PlayerNode(634, 162.61850000000064, 6.6, Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity).State);
 
         }
 
@@ -695,7 +695,7 @@ namespace TestBrute
             string Text = File.ReadAllText(path);
 
             Map Map = Parser.Parse("txt", Text);
-            var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity);
+            var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
             Player.IsAlive(n1).Should().BeFalse();
 

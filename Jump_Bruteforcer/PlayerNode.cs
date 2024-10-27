@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
         OnPlatform = 2,
         FacingRight = 4,
         InvertedGravity = 8,
+        ParentInvertedGravity = 16
     }
     [StructLayout(LayoutKind.Auto)]
     public readonly record struct State 
@@ -72,7 +73,7 @@ namespace Jump_Bruteforcer
             //corresponds to global.grav = 1
             bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = false; //todo replace with correct calculation
+            bool kidUpsidedown = (this.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
 
             double checkOffset = globalGravInverted ? -1 : 1;
             if (Math.Sign(State.VSpeed) == -checkOffset)

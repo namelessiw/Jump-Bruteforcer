@@ -85,7 +85,7 @@ namespace Jump_Bruteforcer
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }
 
-            return neighbors.Distinct();
+            return neighbors.DistinctBy(n => n.Item1.Hash());
 
             void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode, Input)> neighbors, ImmutableArray<Input> inputs)
             {

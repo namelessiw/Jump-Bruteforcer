@@ -126,7 +126,14 @@ namespace Jump_Bruteforcer
                 currentNodeIndex = nodeParentIndices[currentNodeIndex];
             }
             inputs.Reverse();
-            points.Reverse();
+            //PlayerNode curr = root;
+            //foreach (Input input in inputs)
+            //{
+            //    points.Add(new Point());
+            //    curr = root.NewState(input);
+            //}
+            
+            
 
             return (inputs, new PointCollection(points));
         }
@@ -157,7 +164,7 @@ namespace Jump_Bruteforcer
                     {
                         (List<Input> inputs, PointCollection points) = GetPath(v.NodeIndex, nodeParentIndices, nodeInputs);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
-
+                        Macro = SearchOutput.GetMacro(inputs);
                         Strat = SearchOutput.GetInputString(inputs);
 
                         VisualizeSearch.HeuristicMap(GoalDistance);
@@ -167,7 +174,8 @@ namespace Jump_Bruteforcer
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    visitedNodeHashes.Add(v.Hash());
+                    visitedNodeHashes.Add(v.Hash()); //maybe move inside if statement?
+
 
                     foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
                     {
@@ -179,6 +187,7 @@ namespace Jump_Bruteforcer
                         uint newCost = v.PathCost + 1;
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
+                            visitedNodeHashes.Add(w.Hash()); //maybe move inside if statement?
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
                             w.NodeIndex = nodeInputs.Count;

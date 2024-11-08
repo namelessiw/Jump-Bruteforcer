@@ -1,30 +1,49 @@
 ﻿using System.IO;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Jump_Bruteforcer
 {
     internal static class SearchOutput
     {
         /// <summary>
+        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
         /// For a given PlayerNode, writes to a file the states of all nodes on the path through the game space ending at the current node
         /// </summary>
-        public static void DumpPath(PlayerNode node)
+        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
+        public static (List<Input> Inputs, PointCollection Points) GetPath(PlayerNode root, int endNode, List<int> nodeParentIndices, List<Input> nodeInputs, CollisionMap collisionMap)
         {
+            List<Input> inputs = new List<Input>();
+            List<Point> points = new List<Point>();
             List<PlayerNode> path = new List<PlayerNode>();
-            PlayerNode? currentNode = node;
+            int currentNodeIndex = endNode;
+            Input currentInput;
 
-            while (currentNode != null)
+
+            while (currentNodeIndex != 0)
             {
-                path.Add(currentNode);
-                currentNode = currentNode.Parent;
+                currentInput = nodeInputs[currentNodeIndex];
+                inputs.Add(currentInput);
+                currentNodeIndex = nodeParentIndices[currentNodeIndex];
             }
-            path.Reverse();
+            inputs.Reverse();
+            PlayerNode curr = root;
+            points.Add(new Point(curr.State.X, curr.State.RoundedY));
+            path.Add(curr);
+            foreach (Input input in inputs)
+            {
+                curr = curr.NewState(input, collisionMap);
+                points.Add(new Point(curr.State.X, curr.State.RoundedY));
+                path.Add(curr);
+            }
             string states = string.Join<PlayerNode>("\n", path.ToArray());
             string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
             Directory.CreateDirectory(outputPath);
             File.WriteAllText(Path.Join(outputPath, $"states.txt"), states);
-
+            return (inputs, new PointCollection(points));
         }
+
         public static string GetInputString(List<Input> inputs)
         {
             if (inputs.Count == 0)

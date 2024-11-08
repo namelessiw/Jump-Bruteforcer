@@ -1,7 +1,7 @@
 ﻿namespace Jump_Bruteforcer
 {
     [Flags]
-    public enum Input
+    public enum Input:byte
     {
         Neutral = 0,
         Left = 1,
@@ -65,7 +65,7 @@
             //corresponds to global.grav = 1
             bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = node.Parent != null ? (node.Parent.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity : globalGravInverted;
+            bool kidUpsidedown = (node.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; //TODO replace with the correct calculation
 
             // mutate state variables here:
             //step event:
@@ -146,6 +146,10 @@
                 }
             }
             //global.grav
+            if ((node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
+            {
+                flags |= Bools.ParentInvertedGravity;
+            }
             if (globalGravInverted& !kidUpsidedown)
             {
                 y -= 4;
@@ -169,6 +173,7 @@
                 flags = facingDirection | invertedGravity | Bools.CanDJump;
                 kidUpsidedown = false;
             }
+
 
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += kidUpsidedown ? -PhysicsParams.GRAVITY : PhysicsParams.GRAVITY;

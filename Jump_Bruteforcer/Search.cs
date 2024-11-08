@@ -126,7 +126,7 @@ namespace Jump_Bruteforcer
             var nodeParentIndices = new List<int>();
             var nodeInputs = new List<Input>();
             var visitedNodeHashes = new HashSet<ulong>();
-
+            int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
             if (Distance(root) != uint.MaxValue)
             {
                 while (openSet.Count > 0)
@@ -142,6 +142,7 @@ namespace Jump_Bruteforcer
 
                         var optimalGoal = points.Last();
                         (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
+                        VisualizeSearch.CountStates(openSet, closedStates);
                         VisualizeSearch.HeuristicMap(GoalDistance);
                         VisualizeSearch.StateMap();
                         nodesVisited = visitedNodeHashes.Count;
@@ -150,8 +151,6 @@ namespace Jump_Bruteforcer
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
                     visitedNodeHashes.Add(v.Hash());
-
-
                     foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
                     {
                         if (visitedNodeHashes.Contains(w.Hash()))
@@ -162,6 +161,7 @@ namespace Jump_Bruteforcer
                         uint newCost = v.PathCost + 1;
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
+                            closedStates[w.State.X, w.State.RoundedY] += 1;
                             visitedNodeHashes.Add(w.Hash());
                             w.PathCost = newCost;
                             uint distance = (uint)Distance(w);
@@ -185,7 +185,7 @@ namespace Jump_Bruteforcer
 
             
             Strat = "SEARCH FAILURE";
-
+            VisualizeSearch.CountStates(openSet, closedStates);
             VisualizeSearch.HeuristicMap(GoalDistance);
             VisualizeSearch.StateMap();
             nodesVisited = visitedNodeHashes.Count;

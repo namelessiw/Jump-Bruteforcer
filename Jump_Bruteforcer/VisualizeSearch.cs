@@ -37,7 +37,7 @@ namespace Jump_Bruteforcer
     public static class VisualizeSearch
     {
         private static int[,] closedStates;
-        private static int[,] openStates = new int[Map.WIDTH,Map.HEIGHT];
+        private static int[,] openStates;
         public static WriteableBitmap heuristicMap = new (Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
         public static WriteableBitmap stateMap = new(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
         private static int maxStatesPerPx = 0;
@@ -45,6 +45,7 @@ namespace Jump_Bruteforcer
 
         public static void CountStates(SimplePriorityQueue<PlayerNode, (uint,uint)> openSet, int[,] closedSet)
         {
+            openStates = new int[Map.WIDTH, Map.HEIGHT];
             foreach (PlayerNode node in openSet)
             {
                 openStates[node.State.X, node.State.RoundedY] += 1;
@@ -68,7 +69,10 @@ namespace Jump_Bruteforcer
                 {
 
                     int sum = openStates[x,y] + closedStates[x,y];
-
+                    if (sum == 0)
+                    {
+                        continue;
+                    }
                     int i = (int)((double)sum / maxStatesPerPx * 255);
                     Color c = (Color)ColorConverter.ConvertFromString(cmap[i]);
                     double Brightness = (double)closedStates[x, y] / Math.Max(openStates[x, y], closedStates[x, y]);

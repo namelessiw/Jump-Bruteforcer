@@ -1,18 +1,19 @@
 ﻿using System.Collections.Immutable;
+using System.Numerics;
 
 namespace Jump_Bruteforcer
 {
     public class CollisionMap
     {
-        public ImmutableSortedSet<CollisionType>[,] Collision { get; init; }
+        public CollisionType[,] Collision { get; init; }
         public List<Object> Platforms { get; init; }
 
         private readonly VineDistance[,,] vineDistance;
         public readonly HashSet<(int x, int y)> goalPixels;
 
-        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
+        public CollisionMap(CollisionType[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
-            this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
+            this.Collision = Collision ?? new CollisionType[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
             this.vineDistance = vineDistances;
             this.goalPixels = new();
@@ -20,7 +21,7 @@ namespace Jump_Bruteforcer
             {
                 for (int y = 0; y < Map.HEIGHT; y++)
                 {
-                    if (this.Collision[x, y].Contains(CollisionType.Warp))
+                    if (this.Collision[x, y].HasFlag(CollisionType.Warp))
                     {
                         goalPixels.Add((x, y));
                     }
@@ -52,14 +53,14 @@ namespace Jump_Bruteforcer
                     return vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGLEFT];
             }
         }
-        public CollisionMap(Dictionary<(int, int), ImmutableSortedSet<CollisionType>>? Collision, List<Object>? Platforms)
+        public CollisionMap(Dictionary<(int, int), CollisionType>? Collision, List<Object>? Platforms)
         {
-            this.Collision = new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
+            this.Collision = new CollisionType[Map.WIDTH, Map.HEIGHT];
             for (int i = 0; i < Map.WIDTH; i++)
             {
                 for (int j = 0; j < Map.HEIGHT; j++)
                 {
-                    this.Collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                    this.Collision[i, j] = CollisionType.None;
                 }
             }
             if (Collision != null)
@@ -73,14 +74,24 @@ namespace Jump_Bruteforcer
             this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
             this.Platforms = Platforms ?? new List<Object>();
         }
+        public static int UnsetAllBitsExceptMSB(int x)
+        {
+            x |= x >> 16;
+            x |= x >> 8;
+            x |= x >> 4;
+            x |= x >> 2;
+            x |= x >> 1;
+            x ^= x >> 1;
+            return x;
+        }
 
         public CollisionType GetHighestPriorityCollisionType(int x, int y, bool invertedGrav)
         {
             if (invertedGrav)
             {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y+3].FirstOrDefault() : CollisionType.None;
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB( (int)Collision[x, y + 3]) : CollisionType.None;
             }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)Collision[x, y]) : CollisionType.None;
         }
 
 
@@ -88,9 +99,9 @@ namespace Jump_Bruteforcer
         {
             if (invertedGrav)
             {
-                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)].FirstOrDefault() : CollisionType.None;
+                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)Collision[x, (int)Math.Round(y + 3)]) : CollisionType.None;
             }
-            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)].FirstOrDefault() : CollisionType.None;
+            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)Collision[x, (int)Math.Round(y)]) : CollisionType.None;
         }
 
         /// <summary>
@@ -99,22 +110,22 @@ namespace Jump_Bruteforcer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool invertedGrav)
+        public CollisionType GetCollisionTypes(int x, int y, bool invertedGrav)
         {
             if (invertedGrav)
             {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y + 3] : ImmutableSortedSet<CollisionType>.Empty;
+                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y + 3] : CollisionType.None;
             }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
+            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y] : CollisionType.None;
 
         }
-        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool invertedGrav)
+        public CollisionType GetCollisionTypes(int x, double y, bool invertedGrav)
         {
             if (invertedGrav)
             {
-                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : ImmutableSortedSet<CollisionType>.Empty;
+                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : CollisionType.None;
             }
-            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
+            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : CollisionType.None;
         }
 
         /// <summary>

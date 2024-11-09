@@ -25,7 +25,7 @@ namespace Jump_Bruteforcer
         {
             InitializeComponent();
 
-            s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
+            s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), CollisionType>(), null));
             DataContext = s;
         }
         private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)

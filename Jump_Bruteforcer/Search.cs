@@ -14,7 +14,7 @@ namespace Jump_Bruteforcer
         private (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
-        private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
+        private CollisionMap _collisionMap = new(new Dictionary<(int, int), CollisionType>(), null);
         private PointCollection playerPath = new();
         private double startingVSpeed = 0;
         private String nodesVisited = "";
@@ -95,7 +95,7 @@ namespace Jump_Bruteforcer
                     {
                         for (int Y = MinY; Y <= MaxY; Y++)
                         {
-                            if (GoalDistance[X, Y] == uint.MaxValue && !(CollisionMap.Collision[X, Y].Contains(CollisionType.Killer) || CollisionMap.Collision[X, Y].Contains(CollisionType.Solid)))
+                            if (GoalDistance[X, Y] == uint.MaxValue && !(CollisionMap.Collision[X, Y].HasFlag(CollisionType.Killer) || CollisionMap.Collision[X, Y].HasFlag(CollisionType.Solid)))
                             {
                                 GoalDistance[X, Y] = Distance;
                                 NewPositions.Add((X, Y));
@@ -144,7 +144,6 @@ namespace Jump_Bruteforcer
                         (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
                         VisualizeSearch.CountStates(openSet, closedStates);
                         VisualizeSearch.HeuristicMap(GoalDistance);
-                        VisualizeSearch.StateMap();
                         nodesVisited = visitedNodeHashes.Count;
                         NodesVisited = nodesVisited.ToString();
 
@@ -187,7 +186,6 @@ namespace Jump_Bruteforcer
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedStates);
             VisualizeSearch.HeuristicMap(GoalDistance);
-            VisualizeSearch.StateMap();
             nodesVisited = visitedNodeHashes.Count;
             NodesVisited = nodesVisited.ToString();
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");

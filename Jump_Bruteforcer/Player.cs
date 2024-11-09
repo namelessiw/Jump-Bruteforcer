@@ -1,4 +1,6 @@
-﻿namespace Jump_Bruteforcer
+﻿using System.Numerics;
+
+namespace Jump_Bruteforcer
 {
     [Flags]
     public enum Input:byte
@@ -23,19 +25,19 @@
         /// <returns></returns>
         private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).Contains(type);
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
         }
         private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).Contains(type);
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
         }
         private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown) != CollisionType.Solid;
+            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
         }
         private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
-            return CollisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown) != CollisionType.Solid;
+            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
         }
 
 
@@ -183,10 +185,10 @@
             var collisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
             (var currentX, var currentY) = (x,  y);
             int minInstanceNum = 0;
-            int collisionIdx = 0;
-            while (collisionIdx < collisionTypes.Count)
+            CollisionType currentCollision = collisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown);
+            while (currentCollision > CollisionType.None)
             {
-                switch (collisionTypes[collisionIdx])
+                switch (currentCollision)
                 {
                     case CollisionType.Solid:
                         (x, y) = (xPrevious, yPrevious);
@@ -284,15 +286,17 @@
                 if ((x,y) != (currentX, currentY))
                 {
                     //update the collision types we'll check for on this frame
-                    var currentCollisionType = collisionTypes[collisionIdx];
-                    collisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
-                    CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
-                    if (nextCollisionType == CollisionType.None)
+                    CollisionType nextCollisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
+                    currentCollision = (CollisionType)CollisionMap.UnsetAllBitsExceptMSB((int)nextCollisionTypes % (int)currentCollision);
+                    if (currentCollision == CollisionType.None)
                         goto collisionDone;
-                    collisionIdx = collisionTypes.IndexOf((CollisionType)nextCollisionType) - 1;
                     (currentX, currentY) = (x, y);
                 }
-                collisionIdx++;
+                else
+                {
+                    currentCollision = (CollisionType)CollisionMap.UnsetAllBitsExceptMSB((int)collisionTypes % (int)currentCollision);
+                }
+                
             }
         collisionDone:
 

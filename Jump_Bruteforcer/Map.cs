@@ -83,7 +83,7 @@ namespace Jump_Bruteforcer
             return drawingImage;
         }
         
-        private (ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
+        private (CollisionType[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
@@ -97,19 +97,18 @@ namespace Jump_Bruteforcer
                     where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                     group new { x, y, o } by (x, y) into pixel
                     select pixel);
-            var collision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            var collision = new CollisionType[WIDTH, HEIGHT];
             for (int i = 0; i < WIDTH; i++)
             {
                 for (int j = 0; j < HEIGHT; j++)
                 {
-                    collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                    collision[i, j] = CollisionType.None;
                 }
             }
             var comparer = Comparer<CollisionType>.Create((a, b) => b.CompareTo(a));
             foreach (var pixel in query)
             {
-                collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
-                    .ToImmutableSortedSet(comparer);
+                collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType).Aggregate((a, b) => a | b);
             }
 
             //vine distance matrix

@@ -88,19 +88,20 @@ namespace Jump_Bruteforcer
     }
 
     //Must be ordered by ascending collision priority
-    public enum CollisionType
+    [Flags]
+    public enum CollisionType:ushort
     {
-        None,
-        CatharsisWater,
-        Water2,
-        Water3,
-        Water1,
-        GravityArrowDown,
-        GravityArrowUp,
-        Warp,
-        Platform,
-        Killer,
-        Solid
+        None = 0,
+        CatharsisWater = 1,
+        Water2 = 4,
+        Water3 = 8,
+        Water1 = 16,
+        GravityArrowDown = 32,
+        GravityArrowUp = 64,
+        Warp = 128,
+        Platform = 256,
+        Killer = 512,
+        Solid = 1024
     }
 
     public class Object

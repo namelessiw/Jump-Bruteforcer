@@ -1,58 +1,69 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Jump_Bruteforcer
 {
     public class Parser
     {
-        public static Map Parse(string Text) => Parse(".jmap", Text);
+        public static Map Parse(string text) => Parse(".jmap", text);
 
-        public static Map Parse(string Extension, string Text)
+        public static Map Parse(string extension, string text)
         {
-            Extension = Extension.ToLower();
-            List<Object> objects = new List<Object>();
-            if (Extension == ".cmap" || Extension == ".jmap")
+
+            return extension.ToLower() switch
             {
-                int datalinenum = 5;
-                string[] args = Text.Split('\n')[datalinenum - 1].Trim().Split(' ');
+                ".cmap" or ".jmap" => new Map(parseJmap(text)),
+                ".txt" => new Map(parseTxt(text)),
+                _ => throw new Exception($"Unrecognized map file extension: {extension}")
+            };
 
-                for (int i = 0; i < args.Length; i += 3)
-                {
-                    (int x, int y, int objectid) = (int.Parse(args[i]), int.Parse(args[i + 1]), int.Parse(args[i + 2]));
-                    ObjectType o = Enum.IsDefined(typeof(ObjectType), objectid) ? (ObjectType)objectid : ObjectType.Unknown;
-                    objects.Add(new(x, y, o, i / 3));
-                }
-            }
-            else //Extension == ".txt"
+        }
+
+        private static List<Object> parseTxt(string Text)
+        {
+            const int MinParams = 10;
+            const NumberStyles Style = NumberStyles.Float;
+
+            static double ParseDouble(string s) => double.Parse(s, Style, CultureInfo.InvariantCulture);
+
+            string[] Lines = Text.Split('\n');
+            List<Object> objects = new();
+
+            for (int i = 0; i < Lines.Length; i++)
             {
-                const int MinParams = 10;
-                const NumberStyles Style = NumberStyles.Float;
-
-                static double ParseDouble(string s) => double.Parse(s, Style, CultureInfo.InvariantCulture);
-
-                string[] Lines = Text.Split('\n');
-
-                for (int i = 0; i < Lines.Length; i++)
+                if (Lines[i].Trim() == string.Empty)
                 {
-                    if (Lines[i].Trim() == string.Empty)
-                    {
-                        continue;
-                    }
-                    string[] Parameters = Lines[i].Split(',');
-                    if (Parameters.Length < MinParams)
-                    {
-                        throw new Exception($"Expected {MinParams} parameters, found {Parameters.Length} (Line {i + 1})");
-                    }
-                    string name = Regex.Replace(Parameters[0].ToLower(), "^obj", "");
-                    ObjectType o = ObjectNames.GetValueOrDefault(name);
-                    int x = (int)Math.Round(ParseDouble(Parameters[1]));
-                    int y = (int)Math.Round(ParseDouble(Parameters[2]));
-
-                    objects.Add(new(x, y, o, i));
+                    continue;
                 }
-            }
-            return new Map(objects);
+                string[] Parameters = Lines[i].Split(',');
+                if (Parameters.Length < MinParams)
+                {
+                    throw new Exception($"Expected {MinParams} parameters, found {Parameters.Length} (Line {i + 1})");
+                }
+                string name = Regex.Replace(Parameters[0].ToLower(), "^obj", "");
+                ObjectType o = ObjectNames.GetValueOrDefault(name);
+                int x = (int)Math.Round(ParseDouble(Parameters[1]));
+                int y = (int)Math.Round(ParseDouble(Parameters[2]));
 
+                objects.Add(new(x, y, o, i));
+            }
+            return objects;
+        }
+
+        private static List<Object> parseJmap(string Text)
+        {
+            List <Object> objects = new();
+            int datalinenum = 5;
+            string[] args = Text.Split('\n')[datalinenum - 1].Trim().Split(' ');
+
+            for (int i = 0; i < args.Length; i += 3)
+            {
+                (int x, int y, int objectid) = (int.Parse(args[i]), int.Parse(args[i + 1]), int.Parse(args[i + 2]));
+                ObjectType o = Enum.IsDefined(typeof(ObjectType), objectid) ? (ObjectType)objectid : ObjectType.Unknown;
+                objects.Add(new(x, y, o, i / 3));
+            }
+            return objects;
         }
 
         static readonly Dictionary<string, ObjectType> ObjectNames = new()

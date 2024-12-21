@@ -513,7 +513,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravitytest.txt";
             string Text = File.ReadAllText(path);
             Input[] inputs = new Input[] { Input.Right | Input.Jump, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right, Input.Right | Input.Jump, Input.Right, Input.Right };
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(49, 567, 0);
 
             foreach (Input input in inputs)
@@ -538,7 +538,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravitytest.txt";
             string Text = File.ReadAllText(path);
          
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(149, 40.70000000000015, 0, Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity);
 
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
@@ -551,7 +551,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
             Input[] inputs = new Input[] { Input.Jump, Input.Neutral, Input.Neutral, Input.Right, Input.Right };
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(373, 567, 0);
 
             foreach (Input input in inputs)
@@ -568,7 +568,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
             
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(352, 508.69999999999993, -2, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             for (int i = 0; i < 9; i++)
             {
@@ -585,7 +585,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
 
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(373, 567, 0);
             n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
             for (int i = 0; i < 6; i++)
@@ -605,8 +605,8 @@ namespace TestBrute
         {
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
-
-            Map Map = Parser.Parse("txt", Text);
+            
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(373, 567, 0);
             n1 = n1.NewState(Input.Jump | Input.Left, Map.CollisionMap);
             for (int i = 0; i < 3; i++)
@@ -631,7 +631,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
 
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(355, 478.0850000000001, -6.000000000000001, Bools.CanDJump | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
             n1 = n1.NewState(Input.Neutral, Map.CollisionMap);
@@ -655,7 +655,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\gravflippervineplatform.txt";
             string Text = File.ReadAllText(path);
 
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(445, 535.16, -1.685, Bools.CanDJump | Bools.FacingRight);
             for (int i = 0; i < 2; i++)
             {
@@ -677,7 +677,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\room773.txt";
             string Text = File.ReadAllText(path);
 
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(634, 152.16981250000063, 7.448687500000003, Bools.CanDJump );
             
             
@@ -694,7 +694,7 @@ namespace TestBrute
             string path = @$"..\..\..\jmaps\upsidedownhitspike.txt";
             string Text = File.ReadAllText(path);
 
-            Map Map = Parser.Parse("txt", Text);
+            Map Map = Parser.Parse(".txt", Text);
             var n1 = new PlayerNode(485, 187.81249999999996, -1.6485000000000003, Bools.FacingRight | Bools.InvertedGravity | Bools.ParentInvertedGravity);
             n1 = n1.NewState(Input.Right, Map.CollisionMap);
             Player.IsAlive(n1).Should().BeFalse();

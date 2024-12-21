@@ -82,21 +82,21 @@ namespace Jump_Bruteforcer
 
             return drawingImage;
         }
-        
+
         private (CollisionType[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
-                    where o.CollisionType != CollisionType.None
-                    let hitbox = toHitbox[o.ObjectType]
-                    from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
-                    from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
-                    where hitbox[spriteX, spriteY]
-                    let x = o.X + spriteX - 5
-                    let y = o.Y + spriteY - 8
-                    where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
-                    group new { x, y, o } by (x, y) into pixel
-                    select pixel);
+                         where o.CollisionType != CollisionType.None
+                         let hitbox = toHitbox[o.ObjectType]
+                         from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
+                         from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
+                         where hitbox[spriteX, spriteY]
+                         let x = o.X + spriteX - 5
+                         let y = o.Y + spriteY - 8
+                         where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
+                         group new { x, y, o } by (x, y) into pixel
+                         select pixel);
             var collision = new CollisionType[WIDTH, HEIGHT];
             for (int i = 0; i < WIDTH; i++)
             {
@@ -116,7 +116,7 @@ namespace Jump_Bruteforcer
             var query2 = from o in Objects
                          where o.ObjectType == ObjectType.VineLeft || o.ObjectType == ObjectType.VineRight
                          select o;
-            foreach(Object vine in query2)
+            foreach (Object vine in query2)
             {
                 if (vine.ObjectType == ObjectType.VineRight)
                 {
@@ -163,6 +163,8 @@ namespace Jump_Bruteforcer
                 }
             }
         }
+
+
 
         public override string ToString()
         {

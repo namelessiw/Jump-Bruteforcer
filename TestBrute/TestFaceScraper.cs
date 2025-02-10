@@ -782,5 +782,31 @@ namespace TestBrute
             v = v.NewState(Input.Jump | Input.Left, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(627, 497.3, -8.1, Bools.FaceScraper | Bools.CanDJump).State);
         }
+
+        [Fact]
+        public void TestFaceScraperFacingLeftNotInWall()
+        {
+            string path = @$"..\..\..\jmaps\4_05_rBlood1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(631, 570.3, 0, Bools.FaceScraper | Bools.CanDJump);
+            v = v.NewState(Input.Jump, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(631, 562.2, -8.1, Bools.FaceScraper | Bools.CanDJump).State);
+        }
+
+        [Fact]
+        public void TestFaceScraperFacingRightNotInWall()
+        {
+            string path = @$"..\..\..\jmaps\4_05_rBlood1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(680, 570.3, 0, Bools.FaceScraper | Bools.CanDJump | Bools.FacingRight);
+            v = v.NewState(Input.Jump, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(680, 562.2, -8.1, Bools.FaceScraper | Bools.CanDJump | Bools.FacingRight).State);
+        }
     }
 }

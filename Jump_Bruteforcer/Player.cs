@@ -113,11 +113,14 @@
                 //vines
                 VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
                 VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+
+                bool turnAround = false;
+
                 if (h != 0)
                 {
                     if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
                     {
-                        flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
+                        turnAround = true;
                     }
                 }
 
@@ -178,6 +181,11 @@
                         hSpeed = -15;
                     }
                 }
+
+                if (turnAround)
+                {
+                    flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
+                }
             }
             //facescraper
             else {
@@ -198,7 +206,6 @@
                     flags &= ~Bools.FaceScraper;
                 }
             }
-
 
             //apply friction, gravity, hspeed/vspeed:
             vSpeed += PhysicsParams.GRAVITY;

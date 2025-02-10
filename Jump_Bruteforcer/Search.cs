@@ -1,7 +1,10 @@
 ﻿using Priority_Queue;
+using System.Collections;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer
@@ -11,21 +14,23 @@ namespace Jump_Bruteforcer
         private (int x, double y) start;
         private (int x, int y) goal;
         private string _strat = "";
-        private CollisionMap _collisionMap = new(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null);
-        private double _aStarWeight = 1.0;
+        private CollisionMap _collisionMap = new(new Dictionary<(int, int), CollisionType>(), null);
         private PointCollection playerPath = new();
         private double startingVSpeed = 0;
-        private bool scraperOn = false;
+        private String nodesVisited = "";
+        private String timeTaken = "";
+        private String macro = "";
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
-        public int GoalX { get { return goal.x; } set { goal.x = value; OnPropertyChanged(); } }
-        public int GoalY { get { return goal.y; } set { goal.y = value; OnPropertyChanged(); } }
+        public int GoalX { get { return goal.x; } set { goal.x = Math.Clamp(value, 0, Map.WIDTH - 1); OnPropertyChanged(); } }
+        public int GoalY { get { return goal.y; } set { goal.y = Math.Clamp(value, 0, Map.HEIGHT - 1); OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
-        public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
+        public String NodesVisited { get { return nodesVisited; } set { nodesVisited = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
-        public bool ScraperOn { get { return scraperOn; } set { scraperOn = value; OnPropertyChanged(); } }
+        public String TimeTaken { get { return timeTaken; } set { timeTaken = value; OnPropertyChanged(); } }
+        public String Macro { get { return macro; } set { macro = value; } }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -43,70 +48,148 @@ namespace Jump_Bruteforcer
 
 
         //inadmissable heuristic because of y position rounding
-        public uint Distance(PlayerNode n, (int x, int y) goal)
+        public uint Distance(PlayerNode n)
         {
-            return (uint)(AStarWeight * Math.Ceiling(Math.Max(Math.Abs(n.State.X - goal.x) / 3.0, Math.Abs(n.State.Y - goal.y) / 9.4)));
+            return GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
+        }
+
+        public readonly uint[,] GoalDistance = new uint[Map.WIDTH, Map.HEIGHT];
+
+        public void FloodFill()
+        {
+            var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x - 1, goal.y) }, { (goal.x + 1, goal.y) } };
+
+            for (int X = 0; X < Map.WIDTH; X++)
+            {
+                for (int Y = 0; Y < Map.HEIGHT; Y++)
+                {
+                    GoalDistance[X, Y] = uint.MaxValue;
+                }
+            }
+
+            HashSet<(int X, int Y)> NewPositions = new(), Temp;
+
+            foreach ((int X, int Y) GoalPos in CollisionMap.goalPixels.Union(CurrentGoalPixels))
+            {
+                GoalDistance[GoalPos.X, GoalPos.Y] = 0;
+                NewPositions.Add(GoalPos);
+            }
+
+            int MaxHSpeed = PhysicsParams.WALKING_SPEED, MaxVSpeedDown = (int)Math.Ceiling(PhysicsParams.MAX_VSPEED + PhysicsParams.GRAVITY), MaxVSpeedUp = (int)Math.Abs(Math.Ceiling(PhysicsParams.SJUMP_VSPEED + PhysicsParams.GRAVITY));
+            uint Distance = 1;
+
+            while (NewPositions.Count > 0)
+            {
+                Temp = new HashSet<(int X, int Y)>(NewPositions);
+                NewPositions.Clear();
+
+                // floodfill
+                foreach ((int X, int Y) Pos in Temp)
+                {
+                    int MinX = Math.Max(Pos.X - MaxHSpeed, 0),
+                        MaxX = Math.Min(Pos.X + MaxHSpeed, Map.WIDTH - 1),
+                        MinY = Math.Max(Pos.Y - MaxVSpeedDown, 0),
+                        MaxY = Math.Min(Pos.Y + MaxVSpeedUp, Map.HEIGHT - 1);
+
+                    for (int X = MinX; X <= MaxX; X++)
+                    {
+                        for (int Y = MinY; Y <= MaxY; Y++)
+                        {
+                            if (GoalDistance[X, Y] == uint.MaxValue && !(CollisionMap.Collision[X, Y].HasFlag(CollisionType.Killer) || CollisionMap.Collision[X, Y].HasFlag(CollisionType.Solid)))
+                            {
+                                GoalDistance[X, Y] = Distance;
+                                NewPositions.Add((X, Y));
+                            }
+                        }
+                    }
+                }
+
+                Distance++;
+            }
         }
 
 
         public SearchResult RunAStar()
         {
-            Bools scraper = scraperOn ? Bools.FaceScraper : Bools.None;
-            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, Bools.CanDJump | Bools.FacingRight | scraper);
+            var startTime = Stopwatch.GetTimestamp();
+            FloodFill();
+
+            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
+
             root.PathCost = 0;
+            int nodesVisited;
+            uint timestamp = uint.MaxValue;
 
-            var openSet = new SimplePriorityQueue<PlayerNode, uint>();
-            openSet.Enqueue(root, Distance(root, goal));
+            var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
+            openSet.Enqueue(root, (Distance(root), timestamp));
 
-            var closedSet = new HashSet<PlayerNode>();
-
-            while (openSet.Count > 0)
+            var nodeParentIndices = new List<int>();
+            var nodeInputs = new List<Input>();
+            var visitedNodeHashes = new HashSet<ulong>();
+            int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
+            if (Distance(root) != uint.MaxValue)
             {
-                PlayerNode v = openSet.Dequeue();
-                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y) || Player.PlaceMeeting(v.State.X, v.State.Y, CollisionType.Warp, CollisionMap, (v.State.Flags & Bools.FacingRight) == Bools.FacingRight, (v.State.Flags & Bools.FaceScraper) == Bools.FaceScraper))
+                while (openSet.Count > 0)
                 {
-
-                    (List<Input> inputs, PointCollection points) = v.GetPath();
-                    Strat = SearchOutput.GetInputString(inputs);
-                    PlayerPath = points;
-                    SearchOutput.DumpPath(v);
-                    var optimalGoal = points.Last();
-                    (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
-                    VisualizeSearch.CountStates(openSet, closedSet);
-
-                    string Macro = SearchOutput.GetMacro(inputs, (root.State.Flags & Bools.FaceScraper) == Bools.FaceScraper);
-
-                    return new SearchResult(Strat, Macro, true, closedSet.Count);
-                }
-                closedSet.Add(v);
-                foreach (PlayerNode w in v.GetNeighbors(CollisionMap))
-                {
-                    if (closedSet.Contains(w))
+                    PlayerNode v = openSet.Dequeue();
+                    if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
-                        continue;
+                        (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
+                        TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
+                        Macro = SearchOutput.GetMacro(inputs);
+                        Strat = SearchOutput.GetInputString(inputs);
+                        PlayerPath = points;
+
+                        var optimalGoal = points.Last();
+                        (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
+                        VisualizeSearch.CountStates(openSet, closedStates);
+                        VisualizeSearch.HeuristicMap(GoalDistance);
+                        nodesVisited = visitedNodeHashes.Count;
+                        NodesVisited = nodesVisited.ToString();
+
+                        return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    uint newCost = v.PathCost + (uint)((w.Action & Input.Facescraper) == Input.Facescraper ? 48 : 1);
-                    if (!openSet.Contains(w) || newCost < w.PathCost)
+                    visitedNodeHashes.Add(v.Hash());
+                    foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
                     {
-                        w.Parent = v;
-                        w.PathCost = newCost;
-                        uint distance = Distance(w, goal);
-                        if (openSet.Contains(w))
+                        if (visitedNodeHashes.Contains(w.Hash()))
                         {
-                            openSet.UpdatePriority(w, newCost + distance);
+                            continue;
                         }
-                        else
+
+                        uint newCost = v.PathCost + 1;
+                        if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
-                            openSet.Enqueue(w, newCost + distance);
+                            closedStates[w.State.X, w.State.RoundedY] += 1;
+                            visitedNodeHashes.Add(w.Hash());
+                            w.PathCost = newCost;
+                            uint distance = (uint)Distance(w);
+                            w.NodeIndex = nodeInputs.Count;
+                            nodeInputs.Add(input);
+                            nodeParentIndices.Add(v.NodeIndex);
+                            if (openSet.Contains(w))
+                            {
+                                openSet.UpdatePriority(w, (newCost + distance, timestamp));
+                            }
+                            else
+                            {
+                                openSet.Enqueue(w, (newCost + distance, --timestamp));
+                            }
                         }
+
                     }
 
                 }
-
             }
+
+            
             Strat = "SEARCH FAILURE";
-            VisualizeSearch.CountStates(openSet, closedSet);
-            return new SearchResult(Strat, "", false, closedSet.Count);
+            VisualizeSearch.CountStates(openSet, closedStates);
+            VisualizeSearch.HeuristicMap(GoalDistance);
+            nodesVisited = visitedNodeHashes.Count;
+            NodesVisited = nodesVisited.ToString();
+            TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
+            return new SearchResult(Strat, "", false, nodesVisited);
         }
     }
     public class SearchResult

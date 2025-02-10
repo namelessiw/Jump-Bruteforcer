@@ -88,17 +88,20 @@ namespace Jump_Bruteforcer
     }
 
     //Must be ordered by ascending collision priority
-    public enum CollisionType
+    [Flags]
+    public enum CollisionType:ushort
     {
-        None,
-        CatharsisWater,
-        Water2,
-        Water3,
-        Water1,
-        Warp,
-        Platform,
-        Killer,
-        Solid
+        None = 0,
+        CatharsisWater = 1,
+        Water2 = 4,
+        Water3 = 8,
+        Water1 = 16,
+        GravityArrowDown = 32,
+        GravityArrowUp = 64,
+        Warp = 128,
+        Platform = 256,
+        Killer = 512,
+        Solid = 1024
     }
 
     public class Object
@@ -134,8 +137,8 @@ namespace Jump_Bruteforcer
             {ObjectType.Warp,CollisionType.Warp },
             {ObjectType.JumpRefresher,CollisionType.None },
             {ObjectType.Water3,CollisionType.Water3 },
-            {ObjectType.GravityArrowUp,CollisionType.None },
-            {ObjectType.GravityArrowDown,CollisionType.None },
+            {ObjectType.GravityArrowUp,CollisionType.GravityArrowUp },
+            {ObjectType.GravityArrowDown,CollisionType.GravityArrowDown },
             {ObjectType.SaveUpsideDown,CollisionType.None },
             {ObjectType.MiniKillerBlock, CollisionType.None},
             {ObjectType.Booster, CollisionType.None },
@@ -183,7 +186,7 @@ namespace Jump_Bruteforcer
             BoundingBox? bbox = null;
             if (objectType == ObjectType.Platform)
             {
-                bbox = new BoundingBox(X - 5, Y - 10, 42, 36);
+                bbox = new BoundingBox(X - 5, Y - 8, 41, 35);
             }
             this.X = X;
             this.Y = Y;

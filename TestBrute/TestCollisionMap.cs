@@ -37,7 +37,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
             cmap.Platforms.Should().HaveCountGreaterThan(0);
             cmap.Platforms.Should().BeInDescendingOrder(x => x.X);
-            (int x, int y) = (384, 350);
+            (int x, int y) = (384, 352);
             int minInstanceNum = 0;
             Jump_Bruteforcer.Object? platform =  cmap.GetCollidingPlatform(x, y, minInstanceNum);
             platform.Should().NotBeNull();
@@ -62,10 +62,10 @@ namespace TestBrute
             Jump_Bruteforcer.Object? platform = cmap.GetCollidingPlatform(x, y, minInstanceNum);
             platform.Should().NotBeNull();
             platform.Y.Should().Be(328);
-            platform = cmap.GetCollidingPlatform(x, 354, minInstanceNum);
+            platform = cmap.GetCollidingPlatform(x, 355, minInstanceNum);
             platform.Should().NotBeNull();
             platform.Y.Should().Be(328);
-            platform = cmap.GetCollidingPlatform(x, 355, minInstanceNum);
+            platform = cmap.GetCollidingPlatform(x, 356, minInstanceNum);
             platform.Should().NotBeNull();
             platform.Y.Should().Be(336);
 

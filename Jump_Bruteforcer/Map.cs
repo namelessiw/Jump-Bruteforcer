@@ -55,8 +55,8 @@ namespace Jump_Bruteforcer
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
             Objects = ImmutableArray.CreateRange(objects);
             Bmp = GenerateCollisionImage();
-            (var cmap, var leftscrapercmap, var rightscrapercmap, var vineDistance) = GenerateCollisionMap();
-            CollisionMap = new(cmap, leftscrapercmap, rightscrapercmap, platforms, vineDistance);
+            (var cmap, var vineDistance) = GenerateCollisionMap();
+            CollisionMap = new(cmap, platforms, vineDistance);
         }
 
         private ImageSource GenerateCollisionImage()
@@ -82,38 +82,13 @@ namespace Jump_Bruteforcer
 
             return drawingImage;
         }
-        
-        private (ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
+
+        private (CollisionType[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
             var query = (from o in Objects
-                    where o.CollisionType != CollisionType.None
-                    let hitbox = toHitbox[o.ObjectType]
-                    from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
-                    from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
-                    where hitbox[spriteX, spriteY]
-                    let x = o.X + spriteX - 5
-                    let y = o.Y + spriteY - 8
-                    where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
-                    group new { x, y, o } by (x, y) into pixel
-                    select pixel);
-            var collision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
-            for (int i = 0; i < WIDTH; i++)
-            {
-                for (int j = 0; j < HEIGHT; j++)
-                {
-                    collision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
-                }
-            }
-            foreach (var pixel in query)
-            {
-                collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
-                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
-            }
-            //left facing scraper
-            var scraperquery = (from o in Objects
                          where o.CollisionType != CollisionType.None
-                         let hitbox = toLeftScraperHitbox[o.ObjectType]
+                         let hitbox = toHitbox[o.ObjectType]
                          from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
                          from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
                          where hitbox[spriteX, spriteY]
@@ -122,43 +97,18 @@ namespace Jump_Bruteforcer
                          where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                          group new { x, y, o } by (x, y) into pixel
                          select pixel);
-            var leftscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
+            var collision = new CollisionType[WIDTH, HEIGHT];
             for (int i = 0; i < WIDTH; i++)
             {
                 for (int j = 0; j < HEIGHT; j++)
                 {
-                    leftscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
+                    collision[i, j] = CollisionType.None;
                 }
             }
-            foreach (var pixel in scraperquery)
+            var comparer = Comparer<CollisionType>.Create((a, b) => b.CompareTo(a));
+            foreach (var pixel in query)
             {
-                leftscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
-                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
-            }
-            //right facing scraper
-            scraperquery = (from o in Objects
-                                where o.CollisionType != CollisionType.None
-                                let hitbox = toRightScraperHitbox[o.ObjectType]
-                                from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
-                                from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
-                                where hitbox[spriteX, spriteY]
-                                let x = o.X + spriteX - 5
-                                let y = o.Y + spriteY - 8
-                                where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
-                                group new { x, y, o } by (x, y) into pixel
-                                select pixel);
-            var rightscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
-            for (int i = 0; i < WIDTH; i++)
-            {
-                for (int j = 0; j < HEIGHT; j++)
-                {
-                    rightscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
-                }
-            }
-            foreach (var pixel in scraperquery)
-            {
-                rightscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
-                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+                collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType).Aggregate((a, b) => a | b);
             }
 
             //vine distance matrix
@@ -166,7 +116,7 @@ namespace Jump_Bruteforcer
             var query2 = from o in Objects
                          where o.ObjectType == ObjectType.VineLeft || o.ObjectType == ObjectType.VineRight
                          select o;
-            foreach(Object vine in query2)
+            foreach (Object vine in query2)
             {
                 if (vine.ObjectType == ObjectType.VineRight)
                 {
@@ -180,7 +130,7 @@ namespace Jump_Bruteforcer
                 }
             }
 
-            return (collision, leftscrapercollision, rightscrapercollision, vineDistances);
+            return (collision, vineDistances);
 
             static void vineDistanceArrayHelper(VineDistance[,,] vineDistances, VineArrayIdx idx, int x, int y, VineDistance distance)
             {
@@ -214,6 +164,8 @@ namespace Jump_Bruteforcer
             }
         }
 
+
+
         public override string ToString()
         {
             StringBuilder sb = new("");
@@ -230,25 +182,17 @@ namespace Jump_Bruteforcer
 
         private static readonly Dictionary<ObjectType, BitmapSource> toImage;
         private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
-        private static readonly Dictionary<ObjectType, bool[,]> toLeftScraperHitbox;
-        private static readonly Dictionary<ObjectType, bool[,]> toRightScraperHitbox;
         static Map()
         {
             toImage = new Dictionary<ObjectType, BitmapSource>();
             toHitbox = new Dictionary<ObjectType, bool[,]>();
-            toLeftScraperHitbox = new Dictionary<ObjectType, bool[,]>();
-            toRightScraperHitbox = new Dictionary<ObjectType, bool[,]>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
                 BitmapSource img = GetImage(e.ToLower());
-                BitmapSource leftscraperimg = GetImage("scraperLeftFacing" + e.ToLower());
-                BitmapSource rightscraperimg = GetImage("scraperRightFacing" + e.ToLower());
 
                 toImage.Add(o, img);
                 toHitbox.Add(o, GetHitbox(img));
-                toLeftScraperHitbox.Add(o, GetHitbox(leftscraperimg));
-                toRightScraperHitbox.Add(o, GetHitbox(rightscraperimg));
             }
         }
 

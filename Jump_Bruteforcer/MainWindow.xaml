@@ -11,14 +11,26 @@
     </Window.Resources>
     <Canvas x:Name="CanvasWindow">
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
-        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="990" Canvas.Top="61"/>
+        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="977" Canvas.Top="61"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Label Canvas.Left="370" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start x" />
-        <Label Canvas.Left="503" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
-        <Label Canvas.Left="633" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal x" />
-        <Label Canvas.Left="763" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Goal y"/>
-        <Label Canvas.Left="894" Canvas.Top="4" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start VSpeed"/>
-        <Label Canvas.Left="870" Canvas.Top="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="A* weight"/>
+        <StackPanel Orientation="Horizontal" Canvas.Left="400" Canvas.Top="5">
+            <Label Content="Start x" />
+            <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartX}" Width="79"/>
+            <Label Content="Start y"/>
+            <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartY}" Width="79"/>
+            <Label Content="Goal x" />
+            <TextBox Height="20" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79"/>
+            <Label Content="Goal y"/>
+            <TextBox Height="20" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78"/>
+            <Label Content="Start VSpeed"/>
+            <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Canvas.Top="30" Canvas.Left="870">
+            <Label Content="Nodes Visited"/>
+            <Label Content="{Binding NodesVisited}"/>
+            <Label Content="Time Taken"/>
+            <Label Content="{Binding TimeTaken}"/>
+        </StackPanel>
         <Image x:Name="ImageJMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Image x:Name="ImageHeatMap"  Width="801" Height="609" Canvas.Left="50" Canvas.Top="38" MouseLeftButtonDown="ImageJMap_MouseLeftButtonDown" MouseRightButtonDown="ImageJMap_MouseRightButtonDown"/>
         <Polyline x:Name="SolutionPath" Stroke="Green" StrokeThickness="2" Canvas.Left="50" Canvas.Top="38" Points="{Binding PlayerPath}"/>
@@ -47,15 +59,9 @@
             </Path.Data>
         </Path>
         <Button Content="Start Search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="276" Canvas.Top="5" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="418" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="553" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="683" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="977" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
-        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1100" Canvas.Top="61" Click="CopyMacroButton_Click"/>
-        <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
-        <CheckBox Content="Face Scraper" IsChecked="{Binding ScraperOn}"  Canvas.Left="1063" Canvas.Top="9"/>
+        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
+        <Button Content="Bruteforce Project" Height="19" Canvas.Left="870" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
     </Canvas>
 </Window>

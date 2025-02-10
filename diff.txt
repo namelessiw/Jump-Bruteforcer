@@ -1,0 +1,2098 @@
+diff --git a/Jump Bruteforcer.csproj b/Jump Bruteforcer.csproj
+index c7d431d..a6fff07 100644
+--- a/Jump Bruteforcer.csproj	
++++ b/Jump Bruteforcer.csproj	
+@@ -29,6 +29,57 @@
+     <None Remove="images\minispikeright.png" />
+     <None Remove="images\minispikeup.png" />
+     <None Remove="images\platform.png" />
++    <None Remove="images\scraperblock.png" />
++    <None Remove="images\scraperLeftFacingapple.png" />
++    <None Remove="images\scraperLeftFacingblock.png" />
++    <None Remove="images\scraperLeftFacingkillerblock.png" />
++    <None Remove="images\scraperLeftFacingminiblock.png" />
++    <None Remove="images\scraperLeftFacingminidown.png" />
++    <None Remove="images\scraperLeftFacingminileft.png" />
++    <None Remove="images\scraperLeftFacingminiright.png" />
++    <None Remove="images\scraperLeftFacingminispikedown.png" />
++    <None Remove="images\scraperLeftFacingminispikeleft.png" />
++    <None Remove="images\scraperLeftFacingminispikeright.png" />
++    <None Remove="images\scraperLeftFacingminispikeup.png" />
++    <None Remove="images\scraperLeftFacingminiup.png" />
++    <None Remove="images\scraperLeftFacingplatform.png" />
++    <None Remove="images\scraperLeftFacingspikedown.png" />
++    <None Remove="images\scraperLeftFacingspikeleft.png" />
++    <None Remove="images\scraperLeftFacingspikeright.png" />
++    <None Remove="images\scraperLeftFacingspikeup.png" />
++    <None Remove="images\scraperLeftFacingwarp.png" />
++    <None Remove="images\scraperLeftFacingwater1.png" />
++    <None Remove="images\scraperLeftFacingwater2.png" />
++    <None Remove="images\scraperLeftFacingwater3.png" />
++    <None Remove="images\scraperminispikedown.png" />
++    <None Remove="images\scraperminispikeleft.png" />
++    <None Remove="images\scraperminispikeright.png" />
++    <None Remove="images\scraperminispikeup.png" />
++    <None Remove="images\scraperRightFacingapple.png" />
++    <None Remove="images\scraperRightFacingblock.png" />
++    <None Remove="images\scraperRightFacingkillerblock.png" />
++    <None Remove="images\scraperRightFacingminiblock.png" />
++    <None Remove="images\scraperRightFacingminidown.png" />
++    <None Remove="images\scraperRightFacingminileft.png" />
++    <None Remove="images\scraperRightFacingminiright.png" />
++    <None Remove="images\scraperRightFacingminispikedown.png" />
++    <None Remove="images\scraperRightFacingminispikeleft.png" />
++    <None Remove="images\scraperRightFacingminispikeright.png" />
++    <None Remove="images\scraperRightFacingminispikeup.png" />
++    <None Remove="images\scraperRightFacingminiup.png" />
++    <None Remove="images\scraperRightFacingplatform.png" />
++    <None Remove="images\scraperRightFacingspikedown.png" />
++    <None Remove="images\scraperRightFacingspikeleft.png" />
++    <None Remove="images\scraperRightFacingspikeright.png" />
++    <None Remove="images\scraperRightFacingspikeup.png" />
++    <None Remove="images\scraperRightFacingwarp.png" />
++    <None Remove="images\scraperRightFacingwater1.png" />
++    <None Remove="images\scraperRightFacingwater2.png" />
++    <None Remove="images\scraperRightFacingwater3.png" />
++    <None Remove="images\scraperspikedown.png" />
++    <None Remove="images\scraperspikeleft.png" />
++    <None Remove="images\scraperspikeright.png" />
++    <None Remove="images\scraperspikeup.png" />
+     <None Remove="images\spikedown.png" />
+     <None Remove="images\spikeleft.png" />
+     <None Remove="images\spikeright.png" />
+@@ -67,6 +118,41 @@
+     <Resource Include="images\minispikeright.png" />
+     <Resource Include="images\minispikeup.png" />
+     <Resource Include="images\platform.png" />
++    <Resource Include="images\scraperblock.png" />
++    <Resource Include="images\scraperLeftFacingapple.png" />
++    <Resource Include="images\scraperLeftFacingblock.png" />
++    <Resource Include="images\scraperLeftFacingkillerblock.png" />
++    <Resource Include="images\scraperLeftFacingminiblock.png" />
++    <Resource Include="images\scraperLeftFacingminispikedown.png" />
++    <Resource Include="images\scraperLeftFacingminispikeleft.png" />
++    <Resource Include="images\scraperLeftFacingminispikeright.png" />
++    <Resource Include="images\scraperLeftFacingminispikeup.png" />
++    <Resource Include="images\scraperLeftFacingplatform.png" />
++    <Resource Include="images\scraperLeftFacingspikedown.png" />
++    <Resource Include="images\scraperLeftFacingspikeleft.png" />
++    <Resource Include="images\scraperLeftFacingspikeright.png" />
++    <Resource Include="images\scraperLeftFacingspikeup.png" />
++    <Resource Include="images\scraperLeftFacingwarp.png" />
++    <Resource Include="images\scraperLeftFacingwater1.png" />
++    <Resource Include="images\scraperLeftFacingwater2.png" />
++    <Resource Include="images\scraperLeftFacingwater3.png" />
++    <Resource Include="images\scraperRightFacingapple.png" />
++    <Resource Include="images\scraperRightFacingblock.png" />
++    <Resource Include="images\scraperRightFacingkillerblock.png" />
++    <Resource Include="images\scraperRightFacingminiblock.png" />
++    <Resource Include="images\scraperRightFacingminispikedown.png" />
++    <Resource Include="images\scraperRightFacingminispikeleft.png" />
++    <Resource Include="images\scraperRightFacingminispikeright.png" />
++    <Resource Include="images\scraperRightFacingminispikeup.png" />
++    <Resource Include="images\scraperRightFacingplatform.png" />
++    <Resource Include="images\scraperRightFacingspikedown.png" />
++    <Resource Include="images\scraperRightFacingspikeleft.png" />
++    <Resource Include="images\scraperRightFacingspikeright.png" />
++    <Resource Include="images\scraperRightFacingspikeup.png" />
++    <Resource Include="images\scraperRightFacingwarp.png" />
++    <Resource Include="images\scraperRightFacingwater1.png" />
++    <Resource Include="images\scraperRightFacingwater2.png" />
++    <Resource Include="images\scraperRightFacingwater3.png" />
+     <Resource Include="images\spikedown.png" />
+     <Resource Include="images\spikeleft.png" />
+     <Resource Include="images\spikeright.png" />
+diff --git a/Jump_Bruteforcer/CollisionMap.cs b/Jump_Bruteforcer/CollisionMap.cs
+index 2809055..21047b1 100644
+--- a/Jump_Bruteforcer/CollisionMap.cs
++++ b/Jump_Bruteforcer/CollisionMap.cs
+@@ -5,17 +5,23 @@ namespace Jump_Bruteforcer
+     public class CollisionMap
+     {
+         public ImmutableSortedSet<CollisionType>[,] Collision { get; init; }
++        public ImmutableSortedSet<CollisionType>[,] LeftScraperCollision { get; init; }
++        public ImmutableSortedSet<CollisionType>[,] RightScraperCollision { get; init; }
+         public List<Object> Platforms { get; init; }
+ 
+         private readonly VineDistance[,,] vineDistance;
+         private readonly HashSet<(int x, int y)> goalPixels;
+ 
+-        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
++
++        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, ImmutableSortedSet<CollisionType>[,]? LeftScraperCollision, ImmutableSortedSet<CollisionType>[,]? RightScraperCollision, List<Object>? Platforms, VineDistance[,,] vineDistances)
+         {
+             this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
++            this.LeftScraperCollision = LeftScraperCollision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
++            this.RightScraperCollision = RightScraperCollision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
+             this.Platforms = Platforms ?? new List<Object>();
+             this.vineDistance = vineDistances;
+             this.goalPixels = new();
++
+             for (int x = 0; x < Map.WIDTH; x++)
+             {
+                 for (int y = 0; y < Map.HEIGHT; y++)
+@@ -28,8 +34,30 @@ namespace Jump_Bruteforcer
+                 }
+             }
+ 
++        }
++        public CollisionMap(ImmutableSortedSet<CollisionType>[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
++        {
++            this.Collision = Collision ?? new ImmutableSortedSet<CollisionType>[Map.WIDTH, Map.HEIGHT];
++
++            this.Platforms = Platforms ?? new List<Object>();
++            this.vineDistance = vineDistances;
++            this.goalPixels = new();
++
++            for (int x = 0; x < Map.WIDTH; x++)
++            {
++                for (int y = 0; y < Map.HEIGHT; y++)
++                {
++                    if (this.Collision[x, y].Contains(CollisionType.Warp))
++                    {
++                        goalPixels.Add((x, y));
++                    }
++ 
++                }
++            }
++
+         }
+         public bool onWarp(int x, double y) => goalPixels.Contains((x, (int)Math.Round(y)));
++
+         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
+         {
+             int yRounded = (int)Math.Round(y);
+@@ -73,12 +101,24 @@ namespace Jump_Bruteforcer
+             this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
+             this.Platforms = Platforms ?? new List<Object>();
+         }
+-
+         public CollisionType GetHighestPriorityCollisionType(int x, int y)
+         {
+             return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y].FirstOrDefault() : CollisionType.None;
+         }
+ 
++        public CollisionType GetHighestPriorityCollisionType(int x, int y, bool scraperFacingRight)
++        {
++            x += (scraperFacingRight ? 7 : 3);
++            
++            if (!scraperFacingRight)
++            {
++                y -= 2;
++                return (uint)x < Map.WIDTH & y < Map.HEIGHT ? LeftScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
++            }
++            y -= 3;
++            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? RightScraperCollision[x, y].FirstOrDefault() : CollisionType.None;
++        }
++
+         /// <summary>
+         /// returns the set of CollisionTypes at pixel (x, y) in order of descending priority
+         /// </summary>
+@@ -95,6 +135,48 @@ namespace Jump_Bruteforcer
+             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
+         }
+ 
++
++        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, int y, bool scraperFacingRight)
++        {
++            x += (scraperFacingRight ? 7 : 3);
++
++            if (!scraperFacingRight)
++            {
++                y -= 2;
++                return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? LeftScraperCollision[x, y]: ImmutableSortedSet<CollisionType>.Empty;
++            }
++            y -= 3;
++            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? RightScraperCollision[x, y] : ImmutableSortedSet<CollisionType>.Empty;
++
++        }
++        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight)
++        {
++            x += (scraperFacingRight ? 7 : 3);
++
++            if (!scraperFacingRight)
++            {
++                y -= 2;
++                return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? LeftScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
++            }
++            y -= 3;
++            return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? RightScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
++        }
++        public ImmutableSortedSet<CollisionType> GetCollisionTypes(int x, double y, bool scraperFacingRight, bool imageAngle270)
++        {
++            if (imageAngle270)
++            {
++                x += (scraperFacingRight ? 7 : 3);
++
++                if (!scraperFacingRight)
++                {
++                    y -= 2;
++                    return (uint)x < Map.WIDTH & (uint)Math.Round(y) + 1 < Map.HEIGHT ? RightScraperCollision[x, (int)Math.Round(y)] : ImmutableSortedSet<CollisionType>.Empty;
++                }
++            }
++
++            return GetCollisionTypes(x, y, scraperFacingRight);
++        }
++
+         /// <summary>
+         /// gets the lowest instance number platform at coordinate (x, y) with an instance number greater than or equal to minInstanceNum
+         /// </summary>
+diff --git a/Jump_Bruteforcer/MainWindow.xaml b/Jump_Bruteforcer/MainWindow.xaml
+index 4b7c3ae..0d763a3 100644
+--- a/Jump_Bruteforcer/MainWindow.xaml
++++ b/Jump_Bruteforcer/MainWindow.xaml
+@@ -11,7 +11,7 @@
+     </Window.Resources>
+     <Canvas x:Name="CanvasWindow">
+         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
+-        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="1020" Canvas.Top="35"/>
++        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="990" Canvas.Top="61"/>
+         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
+         <Label Canvas.Left="370" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start x" />
+         <Label Canvas.Left="503" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start y"/>
+@@ -50,11 +50,12 @@
+         <TextBox Height="20" Canvas.Left="418" TextWrapping="Wrap" Text="{Binding StartX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <TextBox Height="20" Canvas.Left="553" TextWrapping="Wrap" Text="{Binding StartY}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <TextBox Height="20" Canvas.Left="683" TextWrapping="Wrap" Text="{Binding GoalX}" Width="79" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+-        <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="9" HorizontalAlignment="Left" VerticalAlignment="Top"/>
++        <TextBox Height="20" Canvas.Left="811" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <TextBox Height="20" Canvas.Left="977" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78" Canvas.Top="8" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <TextBox Height="20" Canvas.Left="932" TextWrapping="Wrap" Text="{Binding AStarWeight}" Width="79" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
+-        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
++        <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1100" Canvas.Top="61" Click="CopyMacroButton_Click"/>
+         <Button Content="Bruteforce Project" Height="19" Canvas.Left="872" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
++        <CheckBox Content="Face Scraper" IsChecked="{Binding ScraperOn}"  Canvas.Left="1063" Canvas.Top="9"/>
+     </Canvas>
+ </Window>
+diff --git a/Jump_Bruteforcer/Map.cs b/Jump_Bruteforcer/Map.cs
+index 3a487d3..4ed099c 100644
+--- a/Jump_Bruteforcer/Map.cs
++++ b/Jump_Bruteforcer/Map.cs
+@@ -55,8 +55,8 @@ namespace Jump_Bruteforcer
+             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
+             Objects = ImmutableArray.CreateRange(objects);
+             Bmp = GenerateCollisionImage();
+-            (var cmap, var vineDistance) = GenerateCollisionMap();
+-            CollisionMap = new(cmap, platforms, vineDistance);
++            (var cmap, var leftscrapercmap, var rightscrapercmap, var vineDistance) = GenerateCollisionMap();
++            CollisionMap = new(cmap, leftscrapercmap, rightscrapercmap, platforms, vineDistance);
+         }
+ 
+         private ImageSource GenerateCollisionImage()
+@@ -83,7 +83,7 @@ namespace Jump_Bruteforcer
+             return drawingImage;
+         }
+         
+-        private (ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
++        private (ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], ImmutableSortedSet<CollisionType>[,], VineDistance[,,]) GenerateCollisionMap()
+         {
+ 
+             var query = (from o in Objects
+@@ -110,6 +110,56 @@ namespace Jump_Bruteforcer
+                 collision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
+                     .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
+             }
++            //left facing scraper
++            var scraperquery = (from o in Objects
++                         where o.CollisionType != CollisionType.None
++                         let hitbox = toLeftScraperHitbox[o.ObjectType]
++                         from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
++                         from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
++                         where hitbox[spriteX, spriteY]
++                         let x = o.X + spriteX - 5
++                         let y = o.Y + spriteY - 8
++                         where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
++                         group new { x, y, o } by (x, y) into pixel
++                         select pixel);
++            var leftscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
++            for (int i = 0; i < WIDTH; i++)
++            {
++                for (int j = 0; j < HEIGHT; j++)
++                {
++                    leftscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
++                }
++            }
++            foreach (var pixel in scraperquery)
++            {
++                leftscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
++                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
++            }
++            //right facing scraper
++            scraperquery = (from o in Objects
++                                where o.CollisionType != CollisionType.None
++                                let hitbox = toRightScraperHitbox[o.ObjectType]
++                                from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
++                                from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
++                                where hitbox[spriteX, spriteY]
++                                let x = o.X + spriteX - 5
++                                let y = o.Y + spriteY - 8
++                                where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
++                                group new { x, y, o } by (x, y) into pixel
++                                select pixel);
++            var rightscrapercollision = new ImmutableSortedSet<CollisionType>[WIDTH, HEIGHT];
++            for (int i = 0; i < WIDTH; i++)
++            {
++                for (int j = 0; j < HEIGHT; j++)
++                {
++                    rightscrapercollision[i, j] = ImmutableSortedSet<CollisionType>.Empty;
++                }
++            }
++            foreach (var pixel in scraperquery)
++            {
++                rightscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType)
++                    .ToImmutableSortedSet(Comparer<CollisionType>.Create((a, b) => b.CompareTo(a)));
++            }
+ 
+             //vine distance matrix
+             var vineDistances = new VineDistance[WIDTH, HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
+@@ -130,7 +180,7 @@ namespace Jump_Bruteforcer
+                 }
+             }
+ 
+-            return (collision, vineDistances);
++            return (collision, leftscrapercollision, rightscrapercollision, vineDistances);
+ 
+             static void vineDistanceArrayHelper(VineDistance[,,] vineDistances, VineArrayIdx idx, int x, int y, VineDistance distance)
+             {
+@@ -180,17 +230,25 @@ namespace Jump_Bruteforcer
+ 
+         private static readonly Dictionary<ObjectType, BitmapSource> toImage;
+         private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
++        private static readonly Dictionary<ObjectType, bool[,]> toLeftScraperHitbox;
++        private static readonly Dictionary<ObjectType, bool[,]> toRightScraperHitbox;
+         static Map()
+         {
+             toImage = new Dictionary<ObjectType, BitmapSource>();
+             toHitbox = new Dictionary<ObjectType, bool[,]>();
++            toLeftScraperHitbox = new Dictionary<ObjectType, bool[,]>();
++            toRightScraperHitbox = new Dictionary<ObjectType, bool[,]>();
+             foreach (string e in Enum.GetNames(typeof(ObjectType)))
+             {
+                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
+                 BitmapSource img = GetImage(e.ToLower());
++                BitmapSource leftscraperimg = GetImage("scraperLeftFacing" + e.ToLower());
++                BitmapSource rightscraperimg = GetImage("scraperRightFacing" + e.ToLower());
+ 
+                 toImage.Add(o, img);
+                 toHitbox.Add(o, GetHitbox(img));
++                toLeftScraperHitbox.Add(o, GetHitbox(leftscraperimg));
++                toRightScraperHitbox.Add(o, GetHitbox(rightscraperimg));
+             }
+         }
+ 
+diff --git a/Jump_Bruteforcer/Player.cs b/Jump_Bruteforcer/Player.cs
+index 102c69c..05f6c32 100644
+--- a/Jump_Bruteforcer/Player.cs
++++ b/Jump_Bruteforcer/Player.cs
+@@ -7,7 +7,8 @@
+         Left = 1,
+         Right = 2,
+         Jump = 4,
+-        Release = 8
++        Release = 8,
++        Facescraper = 16,
+     }
+ 
+     public static class Player
+@@ -29,6 +30,38 @@
+         {
+             return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y)).Contains(type);
+         }
++        public static bool PlaceMeeting(int x, int y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
++        {
++            if (facescraper)
++            {
++                return CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(type);
++            }
++            return PlaceMeeting(x, y, type, CollisionMap);
++        }
++        public static bool PlaceMeeting(int x, double y, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
++        {
++            if (facescraper)
++            {
++                return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y), facingRight).Contains(type);
++            }
++            return PlaceMeeting(x, y, type, CollisionMap);
++        }
++        private static bool PlaceFree(int x, int y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
++        {
++            if (facescraper)
++            {
++                return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
++            }
++            return PlaceFree(x, y, CollisionMap);
++        }
++        private static bool PlaceFree(int x, double y, CollisionMap CollisionMap, bool facingRight, bool facescraper)
++        {
++            if (facescraper)
++            {
++                return !CollisionMap.GetCollisionTypes(x, y, facingRight).Contains(CollisionType.Solid);
++            }
++            return PlaceFree(x, y, CollisionMap);
++        }
+         private static bool PlaceFree(int x, int y, CollisionMap CollisionMap)
+         {
+             return CollisionMap.GetHighestPriorityCollisionType(x, y) != CollisionType.Solid;
+@@ -40,10 +73,18 @@
+ 
+ 
+ 
++
+         public static bool IsAlive(CollisionMap CollisionMap, PlayerNode node)
+         {
+             int yRounded = node.State.RoundedY;
+-            bool notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded).Contains(CollisionType.Killer);
++            bool notOnKiller;
++            if ((node.State.Flags & Bools.FaceScraper) == Bools.FaceScraper)
++            {
++                notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded, (node.State.Flags & Bools.FacingRight) == Bools.FacingRight).Contains(CollisionType.Killer);
++            }
++            else { 
++                notOnKiller = !CollisionMap.GetCollisionTypes(node.State.X, yRounded).Contains(CollisionType.Killer);
++            }
+             bool inbounds = node.State.X is >= 0 and <= Map.WIDTH - 1 & node.State.Y is >= 0 and <= Map.HEIGHT - 1;
+             return notOnKiller & inbounds;
+         }
+@@ -57,89 +98,114 @@
+         /// <param name="collisionMap"></param>
+         /// <returns></returns>
+         /// <exception cref="NotImplementedException"></exception>
+-        public static State Update(State state, Input input, CollisionMap collisionMap)
++        public static State Update(PlayerNode parent, Input input, CollisionMap collisionMap)
+         {
++            var state = parent.State;
+             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
+             (int xPrevious, double yPrevious) = (state.X, state.Y);
++            var facingRightAtBeginning = (flags & Bools.FacingRight) == Bools.FacingRight;
+             // mutate state variables here:
+-            //step event:
+-            int h = (input & Input.Left) == Input.Left ? -1 : 0;
+-            h = (input & Input.Right) == Input.Right ? 1 : h;
+-            //vines
+-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+-            if (h != 0)
++            if ((input & Input.Facescraper) != Input.Facescraper)
+             {
+-                if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
++                //step event:
++                int h = (input & Input.Left) == Input.Left ? -1 : 0;
++                h = (input & Input.Right) == Input.Right ? 1 : h;
++                //vines
++                VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
++                VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
++                if (h != 0)
+                 {
+-                    flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
++                    if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
++                    {
++                        flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
++                    }
+                 }
+-            }
+-                
+-            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+-            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+-            if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+-            {
+-                hSpeed = h * PhysicsParams.WALKING_SPEED;
+-            }
+ 
+-            flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+-            vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
+-            //  playerJump
+-            if ((input & Input.Jump) == Input.Jump)
+-            {
+-                if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap))
++                vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
++                vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
++                if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                 {
+-                    vSpeed = PhysicsParams.SJUMP_VSPEED;
+-                    flags |= Bools.CanDJump;
++                    hSpeed = h * PhysicsParams.WALKING_SPEED;
+                 }
+-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap))
++
++                flags = PlaceMeeting(x, y + 4, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
++                vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
++                //  playerJump
++                if ((input & Input.Jump) == Input.Jump)
+                 {
+-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+-                    flags &= ~Bools.CanDJump;
++                    if (PlaceMeeting(x, y + 1, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight || facingRightAtBeginning, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + 1, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + 1, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
++                    {
++                        vSpeed = PhysicsParams.SJUMP_VSPEED;
++                        flags |= Bools.CanDJump;
++                    }
++                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water2, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
++                    {
++                        vSpeed = PhysicsParams.DJUMP_VSPEED;
++                        flags &= ~Bools.CanDJump;
++                    }
++                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
++                    {
++                        vSpeed = PhysicsParams.DJUMP_VSPEED;
++                        flags |= Bools.CanDJump;
++                    }
++
+                 }
+-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + 1, CollisionType.Water3, collisionMap))
++                //  playerVJump
++                if ((input & Input.Release) == Input.Release & vSpeed < 0)
+                 {
+-                    vSpeed = PhysicsParams.DJUMP_VSPEED;
+-                    flags |= Bools.CanDJump;
++                    vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
++                }
++                //more vines
++                if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
++                {
++                    vSpeed = 2;
++                    flags |= Bools.FacingRight;
++                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
++                    if (h == 1)
++                    {
++                        vSpeed = -9;
++                        hSpeed = 15;
++                    }
++                }
++                if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
++                {
++                    vSpeed = 2;
++                    flags &= ~Bools.FacingRight;
++                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
++                    if (h == -1)
++                    {
++                        vSpeed = -9;
++                        hSpeed = -15;
++                    }
+                 }
+-
+             }
+-            //  playerVJump
+-            if ((input & Input.Release) == Input.Release & vSpeed < 0)
+-            {
+-                vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
++            //facescraper
++            else {
++                int h = (parent.Action & Input.Left) == Input.Left ? -1 : 0;
++                h = (parent.Action & Input.Right) == Input.Right ? 1 : h;
++                hSpeed = h * PhysicsParams.WALKING_SPEED;
++
+             }
+-            //more vines
+-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + 1, collisionMap))
++
++            if ((parent.Action & Input.Facescraper) == Input.Facescraper)
+             {
+-                vSpeed = 2;
+-                flags |= Bools.FacingRight;
+-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+-                if (h == 1)
++                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight, true).Contains(CollisionType.Solid))
+                 {
+-                    vSpeed = -9;
+-                    hSpeed = 15;
++                    flags |= Bools.FaceScraper;
+                 }
+-            }
+-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + 1, collisionMap))
+-            {
+-                vSpeed = 2;
+-                flags &= ~Bools.FacingRight;
+-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+-                if (h == -1)
++                else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), collisionMap))
+                 {
+-                    vSpeed = -9;
+-                    hSpeed = -15;
++                    flags &= ~Bools.FaceScraper;
+                 }
+             }
+ 
++
+             //apply friction, gravity, hspeed/vspeed:
+             vSpeed += PhysicsParams.GRAVITY;
+             x += (int)hSpeed;
+             y += vSpeed;
+             //collision event
+-            var collisionTypes = collisionMap.GetCollisionTypes(x, y);
++            var collisionTypes = ((flags & Bools.FaceScraper) == Bools.FaceScraper)? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
+             (var currentX, var currentY) = (x,  y);
+             int minInstanceNum = 0;
+             int collisionIdx = 0;
+@@ -149,25 +215,25 @@
+                 {
+                     case CollisionType.Solid:
+                         (x, y) = (xPrevious, yPrevious);
+-                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap))
++                        if (!PlaceFree(x + (int)hSpeed, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                         {
+                             int sign = Math.Sign(hSpeed);
+                             if (sign != 0)
+                             {
+-                                while (PlaceFree(x + sign, y, collisionMap))
++                                while (PlaceFree(x + sign, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                                 {
+                                     x += sign;
+                                 }
+                                 hSpeed = 0;
+                             }
+                         }
+-                        if (!PlaceFree(x, y + vSpeed, collisionMap))
++                        if (!PlaceFree(x, y + vSpeed, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                         {
+                             int sign = Math.Sign(vSpeed);
+                             if (sign != 0)
+                             {
+                                 flags |= sign > 0 ? Bools.CanDJump : Bools.None;
+-                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap))
++                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                                 {
+                                     y += sign;
+                                     vSpeed -= sign;
+@@ -176,13 +242,13 @@
+                             }
+ 
+                         }
+-                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap))
++                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                         {
+                             hSpeed = 0;
+                         }
+                         x += (int)hSpeed;
+                         y += vSpeed;
+-                        if (!PlaceFree(x, y, collisionMap))
++                        if (!PlaceFree(x, y, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                         {
+                             (x, y) = (xPrevious, yPrevious);
+                         }
+@@ -221,7 +287,7 @@
+                 {
+                     //update the collision types we'll check for on this frame
+                     var currentCollisionType = collisionTypes[collisionIdx];
+-                    collisionTypes = collisionMap.GetCollisionTypes(x, y);
++                    collisionTypes = ((flags & Bools.FaceScraper) == Bools.FaceScraper) ? collisionMap.GetCollisionTypes(x, y, (flags & Bools.FacingRight) == Bools.FacingRight) : collisionMap.GetCollisionTypes(x, y);
+                     CollisionType nextCollisionType = collisionTypes.FirstOrDefault(c => c < currentCollisionType);
+                     if (nextCollisionType == CollisionType.None)
+                         goto collisionDone;
+@@ -231,6 +297,11 @@
+                 collisionIdx++;
+             }
+         collisionDone:
++            //more facescraper
++            if (((input & Input.Facescraper) == Input.Facescraper))
++            {
++                flags &= ~Bools.CanDJump;
++            }
+ 
+             return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
+         }
+diff --git a/Jump_Bruteforcer/PlayerNode.cs b/Jump_Bruteforcer/PlayerNode.cs
+index 7f2e19a..55ab699 100644
+--- a/Jump_Bruteforcer/PlayerNode.cs
++++ b/Jump_Bruteforcer/PlayerNode.cs
+@@ -2,6 +2,7 @@
+ using System.Text.Json;
+ using System.Collections.Immutable;
+ using System.Windows;
++using System.IO;
+ 
+ namespace Jump_Bruteforcer
+ {
+@@ -11,11 +12,12 @@ namespace Jump_Bruteforcer
+         None = 0,
+         CanDJump = 1,
+         OnPlatform = 2,
+-        FacingRight = 4
++        FacingRight = 4,
++        FaceScraper = 8,
+     }
+     public class State : IEquatable<State>
+     {
+-        
++
+         public int X { get; init; }
+         public double Y { get; init; }
+         public double VSpeed { get; init; }
+@@ -43,8 +45,8 @@ namespace Jump_Bruteforcer
+         }
+         public bool Equals(State? other) =>
+             X == other.X & ApproximatelyEquals(Y, other.Y) &
+-            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight);
+-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight).GetHashCode();
++            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight) & (Flags | Bools.FaceScraper) == (other.Flags | Bools.FaceScraper);
++        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight, Bools.FaceScraper).GetHashCode();
+         public override string ToString() => JsonSerializer.Serialize(this);
+ 
+     }
+@@ -54,7 +56,7 @@ namespace Jump_Bruteforcer
+         public PlayerNode? Parent { get; set; }
+         public uint PathCost { get; set; }
+         public Input? Action { get; set; }
+-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
++        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Facescraper);
+         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
+         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
+         private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
+@@ -73,6 +75,9 @@ namespace Jump_Bruteforcer
+ 
+ 
+ 
++
++
++
+         /// <summary>
+         /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
+         /// </summary>
+@@ -140,9 +145,10 @@ namespace Jump_Bruteforcer
+         public PlayerNode NewState(Input input, CollisionMap CollisionMap)
+         {
+ 
+-            State newState = Player.Update(State, input, CollisionMap);
++            State newState = Player.Update(this, input, CollisionMap);
++            uint newStateCost = (uint)((input & Input.Facescraper) == Input.Facescraper ? 48 : 1); 
+ 
+-            return new PlayerNode(newState, action: input, pathCost: PathCost + 1, parent: this);
++            return new PlayerNode(newState, action: input, pathCost: PathCost + newStateCost, parent: this);
+         }
+ 
+         public bool Equals(PlayerNode? other)
+@@ -156,6 +162,6 @@ namespace Jump_Bruteforcer
+         }
+ 
+         public override int GetHashCode() => State.GetHashCode();
+-        public override string ToString() => State.ToString();
++        public override string ToString() => $"{{State: {State.ToString()}, Action: {Action.ToString()} }}";
+     }
+ }
+\ No newline at end of file
+diff --git a/Jump_Bruteforcer/Search.cs b/Jump_Bruteforcer/Search.cs
+index c6851c0..2fe29b4 100644
+--- a/Jump_Bruteforcer/Search.cs
++++ b/Jump_Bruteforcer/Search.cs
+@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
+         private double _aStarWeight = 1.0;
+         private PointCollection playerPath = new();
+         private double startingVSpeed = 0;
++        private bool scraperOn = false;
+         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
+         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
+         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
+@@ -24,6 +25,7 @@ namespace Jump_Bruteforcer
+         public double AStarWeight { get { return _aStarWeight; } set { _aStarWeight = value; OnPropertyChanged(); } }
+         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
+         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
++        public bool ScraperOn { get { return scraperOn; } set { scraperOn = value; OnPropertyChanged(); } }
+         public event PropertyChangedEventHandler? PropertyChanged;
+ 
+ 
+@@ -49,7 +51,8 @@ namespace Jump_Bruteforcer
+ 
+         public SearchResult RunAStar()
+         {
+-            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
++            Bools scraper = scraperOn ? Bools.FaceScraper : Bools.None;
++            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, Bools.CanDJump | Bools.FacingRight | scraper);
+             root.PathCost = 0;
+ 
+             var openSet = new SimplePriorityQueue<PlayerNode, uint>();
+@@ -60,17 +63,18 @@ namespace Jump_Bruteforcer
+             while (openSet.Count > 0)
+             {
+                 PlayerNode v = openSet.Dequeue();
+-                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
++                if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y) || Player.PlaceMeeting(v.State.X, v.State.Y, CollisionType.Warp, CollisionMap, (v.State.Flags & Bools.FacingRight) == Bools.FacingRight, (v.State.Flags & Bools.FaceScraper) == Bools.FaceScraper))
+                 {
+ 
+                     (List<Input> inputs, PointCollection points) = v.GetPath();
+                     Strat = SearchOutput.GetInputString(inputs);
+                     PlayerPath = points;
++                    SearchOutput.DumpPath(v);
+                     var optimalGoal = points.Last();
+                     (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y)); 
+                     VisualizeSearch.CountStates(openSet, closedSet);
+ 
+-                    string Macro = SearchOutput.GetMacro(inputs);
++                    string Macro = SearchOutput.GetMacro(inputs, (root.State.Flags & Bools.FaceScraper) == Bools.FaceScraper);
+ 
+                     return new SearchResult(Strat, Macro, true, closedSet.Count);
+                 }
+@@ -81,7 +85,7 @@ namespace Jump_Bruteforcer
+                     {
+                         continue;
+                     }
+-                    uint newCost = v.PathCost + 1;
++                    uint newCost = v.PathCost + (uint)((w.Action & Input.Facescraper) == Input.Facescraper ? 48 : 1);
+                     if (!openSet.Contains(w) || newCost < w.PathCost)
+                     {
+                         w.Parent = v;
+diff --git a/Jump_Bruteforcer/SearchOutput.cs b/Jump_Bruteforcer/SearchOutput.cs
+index 45b7d8f..68b6c3b 100644
+--- a/Jump_Bruteforcer/SearchOutput.cs
++++ b/Jump_Bruteforcer/SearchOutput.cs
+@@ -1,10 +1,30 @@
+-﻿using System.Text;
++﻿using System.IO;
++using System.Text;
+ 
+ namespace Jump_Bruteforcer
+ {
+     internal static class SearchOutput
+     {
++        /// <summary>
++        /// For a given PlayerNode, writes to a file the states of all nodes on the path through the game space ending at the current node
++        /// </summary>
++        public static void DumpPath(PlayerNode node)
++        {
++            List<PlayerNode> path = new List<PlayerNode>();
++            PlayerNode? currentNode = node;
++
++            while (currentNode != null)
++            {
++                path.Add(currentNode);
++                currentNode = currentNode.Parent;
++            }
++            path.Reverse();
++            string states = string.Join<PlayerNode>("\n", path.ToArray());
++            string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
++            Directory.CreateDirectory(outputPath);
++            File.WriteAllText(Path.Join(outputPath, $"states.txt"), states);
+ 
++        }
+         public static string GetInputString(List<Input> inputs)
+         {
+             if (inputs.Count == 0)
+@@ -36,7 +56,7 @@ namespace Jump_Bruteforcer
+             return sb.ToString();
+         }
+ 
+-        public static string GetMacro(List<Input> inputs)
++        public static string GetMacro(List<Input> inputs, bool scraperOn)
+         {
+             if (inputs.Count == 0)
+                 return "";
+@@ -47,6 +67,19 @@ namespace Jump_Bruteforcer
+ 
+             foreach (Input input in inputs)
+             {
++                if ((input & Input.Facescraper) == Input.Facescraper)
++                {
++
++                    string MenuDirection = scraperOn ? "LeftArrow": "RightArrow";
++
++                    // menu movement left/right dependant on current hitbox, go left to regular, go right to facescraper, full left macro:
++                    // Escape(PR)>LeftShift(R)>>>>>>>>>>>>>>>>>>>>>>LeftShift(PR)>LeftArrow(P)>LeftArrow(R),Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>
++                    sb.Append("Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>LeftShift(RP)>" + MenuDirection + "(RP)>.,Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>");
++
++                    scraperOn = !scraperOn;
++                    continue;
++                }
++
+                 bool InputChanged = false;
+ 
+                 NextDirection = input & Input.Right | input & Input.Left;
+diff --git a/TestBrute/TestFaceScraper.cs b/TestBrute/TestFaceScraper.cs
+new file mode 100644
+index 0000000..154f8b1
+--- /dev/null
++++ b/TestBrute/TestFaceScraper.cs
+@@ -0,0 +1,727 @@
++﻿using FluentAssertions;
++using Jump_Bruteforcer;
++using System.Windows;
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Text;
++using System.Threading.Tasks;
++using Xunit.Abstractions;
++
++namespace TestBrute
++{
++    public class TestFaceScraper
++    {
++        private readonly ITestOutputHelper output;
++
++        public TestFaceScraper(ITestOutputHelper output)
++        {
++            if (Application.Current == null) //https://stackoverflow.com/a/14224558
++                new Application();
++            this.output = output;
++        }
++
++        [Fact]
++        public void TestNoInputsRegular()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(49, 23, 0);
++
++            // 36 frames until stable
++            for (int i = 0; i < 36; i++)
++            {
++                v = v.NewState(Input.Neutral, cmap);
++            }
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(49, 215.4, 0).State);
++        }
++
++        [Fact]
++        public void TestNoInputsFaceScraperFacingRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(49, 23, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++
++            // 35 frames until stable
++
++            for (int i = 0; i < 35; i++)
++            {
++                v = v.NewState(Input.Neutral, cmap);
++            }
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestNoInputsFaceScraperFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(49, 23, 0, Bools.CanDJump | Bools.FaceScraper);
++
++            // 36 frames until stable
++
++            for (int i = 0; i < 36; i++)
++            {
++                v = v.NewState(Input.Neutral, cmap);
++            }
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(49, 217.4, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperRunIntoWallFacingRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(79, 218.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++
++            double x_previous;
++            do
++            {
++                x_previous = v.State.X;
++                v = v.NewState(Input.Right, cmap);
++            }
++            while (v.State.X != x_previous);
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(115, 218.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperRunIntoWallFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(79, 217.4, 0, Bools.CanDJump | Bools.FaceScraper);
++
++            double x_previous;
++            do
++            {
++                x_previous = v.State.X;
++                v = v.NewState(Input.Left, cmap);
++            }
++            while (v.State.X != x_previous);
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(44, 217.4, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperBonkCeilingFacingRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(115, 74.5, -0.2, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Jump, cmap);
++
++            do
++            {
++                v = v.NewState(Input.Neutral, cmap);
++            }
++            while (v.State.VSpeed != 0);
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(115, 36.7, 0, flags: Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperBonkCeilingFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(115, 74.5, -0.2, Bools.CanDJump | Bools.FaceScraper);
++            v = v.NewState(Input.Jump, cmap);
++
++            do
++            {
++                v = v.NewState(Input.Neutral, cmap);
++            }
++            while (v.State.VSpeed != 0);
++
++            v.State.Should().BeEquivalentTo(new PlayerNode(115, 36.7, 0, flags: Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperLeftEdgeHitSpikeFacingRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(199, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        [Fact]
++        public void TestFaceScraperLeftEdgeHitSpikeFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(203, 218.1, 0, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        [Fact]
++        public void TestFaceScraperLeftEdgeMissSpikeFacingRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(200, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++        }
++
++        [Fact]
++        public void TestFaceScraperLeftEdgeMissSpikeFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(204, 218.1, 0, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++        }
++
++        [Fact]
++        public void TestFaceScrapeFacingLeftTurningRightHitSpike()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(279, 163, 9.4, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Right, cmap);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++
++            v = new PlayerNode(276, 163, 9.4, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Right, cmap);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        // as it turns out you can also survive with y 164 in the like leftmost quarter of the block but i dont know why
++        [Fact]
++        public void TestFaceScrapeFacingLeftTurningRightMissSpike()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(279, 165, 9.4, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Right, cmap);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v.State.Should().BeEquivalentTo(new PlayerNode(279, 165, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++
++            v = new PlayerNode(276, 165, 9.4, Bools.CanDJump | Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Right, cmap);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v.State.Should().BeEquivalentTo(new PlayerNode(276, 165, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScrapeFacingRightTurningLeftHitSpike()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(328, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Left, cmap);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++
++            v = new PlayerNode(331, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Left, cmap);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        [Fact]
++        public void TestFaceScrapeFacingRightTurningLeftMissSpike()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(328, 165, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Left, cmap);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v.State.Should().BeEquivalentTo(new PlayerNode(328, 165, 0, Bools.CanDJump | Bools.FaceScraper).State);
++
++            v = new PlayerNode(331, 165, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Left, cmap);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v.State.Should().BeEquivalentTo(new PlayerNode(331, 165, 0, Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScrapeFacingLeftTurningRightNoWallClip()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(275, 172.4, 9.4, Bools.CanDJump | Bools.FaceScraper);
++            v = v.NewState(Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(275, 181.8, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScrapeFacingRightTurningLeftNoWallClip()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(332, 163, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Left, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(332, 172.4, 9.4, Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftOnGroundTurningRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(250, 217.2, 0, Bools.CanDJump | Bools.FaceScraper);
++            v = v.NewState(Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(253, 217.6, 0.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingRightOnGroundTurningLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(250, 218.2, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Left, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 218.2, 0, Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftJumpRight()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(250, 217.4, 0, Bools.CanDJump | Bools.FaceScraper);
++            v = v.NewState(Input.Right | Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(253, 210.8, -6.6, Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingRightJumpLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(253, 218.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Left | Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 210.3, -8.1, Bools.CanDJump | Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingRightJumpLeft1PxAboveGround()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(253, 217.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Left | Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 210.8, -6.6, Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingRightSwitchCostume()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(250, 218.4, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 218.4, 0, Bools.FaceScraper | Bools.FacingRight).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 218.4, 0, Bools.CanDJump | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftSwitchCostume()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(250, 217.4, 0, Bools.CanDJump | Bools.FaceScraper);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.FaceScraper).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.CanDJump).State);
++        }
++
++        [Fact]
++        public void TestRegularFacingLeftSwitchCostumeOnGround()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.None).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.8, 0.4, Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestRegularFacingRightSwitchCostumeOnGround()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump | Bools.FacingRight);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.FacingRight).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.8, 0.4, Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestCostumeSwitchDuringMovement()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump);
++            v = v.NewState(Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(393, 55.4, 0, Bools.CanDJump | Bools.FacingRight).State);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(396, 55.4, 0, Bools.FacingRight).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(396, 55.8, 0.4, Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperJumpBeforeCostumeSwitch()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump | Bools.FacingRight);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.FacingRight).State);
++            v = v.NewState(Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 47.3, -8.1, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperJumpAfterCostumeSwitch()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(390, 55.4, 0, Bools.CanDJump | Bools.FacingRight);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.FacingRight).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.8, 0.4, Bools.FaceScraper | Bools.FacingRight).State);
++            v = v.NewState(Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(390, 56.6, 0.8, Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperInputsDuringCostumeSwitch()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(369, 215.2, 0, Bools.CanDJump);
++            v = v.NewState(Input.Jump, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(369, 207.1, -8.1, Bools.CanDJump).State);
++            v = v.NewState(Input.Facescraper | Input.Release | Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(369, 199.4, -7.7, Bools.None).State);
++            v = v.NewState(Input.Release, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(369, 196.335, -3.065, Bools.FaceScraper).State);
++        }
++
++        //image_xscale and image_angle get desynced so we get a new state for the hitbox which is not accounted for so this fails
++        [Fact]
++        public void TestSwitchToFaceScraperSuccess()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(378, 56.6, 0.8, Bools.None);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 1.2, Bools.None).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 57.8, 0, Bools.FaceScraper | Bools.CanDJump).State);
++        }
++
++        [Fact]
++        public void TestSwitchToFaceScraperFail()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(378, 57.8, 1.2, Bools.None);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 59.4, 1.6, Bools.None).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 61.4, 2, Bools.None).State);
++        }
++
++        [Fact]
++        public void TestSwitchToRegularFail()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(381, 45.6, 0, Bools.FaceScraper);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(381, 46, 0.4, Bools.FaceScraper).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(381, 46.8, 0.8, Bools.FaceScraper).State);
++        }
++
++        [Fact]
++        public void TestSwitchToRegularSuccess()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(381, 47, 0.4, Bools.FaceScraper);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(381, 47.8, 0.8, Bools.FaceScraper).State);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(381, 49, 1.2, Bools.None).State);
++        }
++
++        [Fact]
++        public void TestHitboxChangeAfterSwitch()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(378, 205, 1, Bools.None);
++            v = v.NewState(Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.None).State);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.FaceScraper).State);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        [Fact]
++        public void TestCorrectHitboxFacingLeft()
++        {
++            string path = @$"..\..\..\instance_maps\rHell1.txt";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".txt", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            // bottom right pixel
++            var v = new PlayerNode(476, 58.3, 0, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Left, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(473, 58.3, 0, Bools.FaceScraper | Bools.CanDJump).State);
++            v = v.NewState(Input.Left, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(472, 58.3, 0, Bools.FaceScraper | Bools.CanDJump).State);
++
++            // top right missing pixels
++            v = new PlayerNode(538, 262, -5.4, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(538, 261, 0, Bools.FaceScraper | Bools.CanDJump).State);
++
++            v = new PlayerNode(537, 262, -5.4, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(537, 260, 0, Bools.FaceScraper | Bools.CanDJump).State);
++
++            v = new PlayerNode(536, 262, -5.4, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(536, 259, 0, Bools.FaceScraper | Bools.CanDJump).State);
++
++            v = new PlayerNode(535, 262, -5.4, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Neutral, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(535, 257, -5, Bools.FaceScraper | Bools.CanDJump).State);
++        }
++
++        //broken testcase
++        //[Fact]
++        //public void TestCorrectHitboxFacingRight()
++        //{
++        //    string path = @$"..\..\..\instance_maps\rHell1.txt";
++        //    string Text = File.ReadAllText(path);
++        //    Map Map = Parser.Parse(".txt", Text);
++        //    CollisionMap cmap = Map.CollisionMap;
++
++        //    // bottom right pixel
++        //    var v = new PlayerNode(533, 218.4, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(533, 218.4, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(532, 218.4, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(532, 218.8, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(531, 218.4, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(531, 220.8, 1.2, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    // top right missing pixels
++        //    v = new PlayerNode(543, 262, -5.4, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(543, 261, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(542, 262, -5.4, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(542, 260, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(533, 262, -5.4, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(533, 260, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(532, 262, -5.4, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(532, 259, 0, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++
++        //    v = new PlayerNode(531, 262, -5.4, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump);
++        //    v = v.NewState(Input.Neutral, cmap);
++        //    v.State.Should().BeEquivalentTo(new PlayerNode(531, 257, -5, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++        //}
++
++        [Fact]
++        public void TestKale1Macro()
++        {
++            string path = @$"..\..\..\jmaps\4_07_rKale1.jmap";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".jmap", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(371, 529.57925, 3.86675, Bools.FacingRight);
++            v = v.NewState(Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(374, 533.846, 4.26675, Bools.FacingRight).State);
++            v = v.NewState(Input.Right | Input.Facescraper, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(377, 538.51275, 4.66675, Bools.FacingRight).State);
++            v = v.NewState(Input.Left, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(374, 543.5795, 5.06675, Bools.None).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftBottomRightExtraPixel()
++        {
++            string path = @$"..\..\..\jmaps\4_07_rKale1.jmap";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".jmap", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(254, 427.1, 0, Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeTrue();
++
++            v = new PlayerNode(254, 428.1, 0, Bools.FaceScraper);
++            Player.IsAlive(cmap, v).Should().BeFalse();
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftTurningRightJumpOutsideOfBlock()
++        {
++            string path = @$"..\..\..\jmaps\4_07_rKale1.jmap";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".jmap", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(372, 538.6566, 4.6144875, Bools.FaceScraper | Bools.CanDJump);
++            v = v.NewState(Input.Jump | Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(375, 532.0566, -6.6, Bools.FaceScraper | Bools.FacingRight).State);
++        }
++
++        [Fact]
++        public void TestFaceScraperFacingLeftTurningRightJumpInsideOfBlock()
++        {
++            string path = @$"..\..\..\jmaps\4_05_rBlood1.jmap";
++            string Text = File.ReadAllText(path);
++            Map Map = Parser.Parse(".jmap", Text);
++            CollisionMap cmap = Map.CollisionMap;
++
++            var v = new PlayerNode(698, 391.32, 0, Bools.FaceScraper);
++            v = v.NewState(Input.Jump | Input.Right, cmap);
++            v.State.Should().BeEquivalentTo(new PlayerNode(701, 383.22, -8.1, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
++        }
++    }
++}
+diff --git a/TestBrute/TestPlayerNode.cs b/TestBrute/TestPlayerNode.cs
+index 02a714b..5448de4 100644
+--- a/TestBrute/TestPlayerNode.cs
++++ b/TestBrute/TestPlayerNode.cs
+@@ -23,13 +23,13 @@ namespace TestBrute
+ 
+ 
+         [Theory]
+-        [InlineData(1, 2, 3, true, false)]
+-        [InlineData(0, 0, 0, true, true)]
+-        [InlineData(0, 0, 0, false, false)]
++        [InlineData(1,2,3, true, false)]
++        [InlineData(0,0,0, true, true)]
++        [InlineData(0,0,0,false, false)]
+         public void TestNodeEquals(int x, double y, double vSpeed, bool canDJump, bool shouldEqual)
+         {
+-            var n1 = new PlayerNode(0, 0, 0);
+-            Bools flags = canDJump ? Bools.CanDJump | Bools.FacingRight : Bools.FacingRight;
++            var n1 = new PlayerNode(0,0,0);
++            Bools flags = canDJump ? Bools.CanDJump : ~Bools.CanDJump | Bools.FacingRight;
+             var n2 = new PlayerNode(x, y, vSpeed, flags);
+             (n1.Equals(n2)).Should().Be(shouldEqual);
+ 
+diff --git a/TestBrute/instance_maps/rHell1.txt b/TestBrute/instance_maps/rHell1.txt
+new file mode 100644
+index 0000000..04f0738
+--- /dev/null
++++ b/TestBrute/instance_maps/rHell1.txt
+@@ -0,0 +1,261 @@
++spikeDown,128,96,003C9518,0,1,1,4294967295,0,0
++spikeDown,288,64,001B99C1,0,1,1,4294967295,0,0
++spikeDown,416,256,003FECEB,0,1,1,4294967295,0,0
++spikeDown,448,256,002AA795,0,1,1,4294967295,0,0
++spikeDown,480,256,001BA86E,0,1,1,4294967295,0,0
++spikeDown,640,256,0028EF53,0,1,1,4294967295,0,1
++spikeDown,704,256,0007A7C5,0,1,1,4294967295,0,0
++spikeDown,736,256,003D04A6,0,1,1,4294967295,0,0
++spikeDown,160,256,001344C1,0,1,1,4294967295,0,0
++spikeDown,96,256,00354F32,0,1,1,4294967295,0,0
++spikeDown,64,256,00207A2B,0,1,1,4294967295,0,0
++spikeDown,32,256,003F96E4,0,1,1,4294967295,0,0
++spikeDown,96,416,00002141,0,1,1,4294967295,0,0
++spikeDown,160,416,0028A339,0,1,1,4294967295,0,0
++spikeDown,224,448,00387C57,0,1,1,4294967295,0,0
++spikeDown,256,448,000A3F6E,0,1,1,4294967295,0,0
++spikeLeft,384,192,0039E108,0,1,1,4294967295,0,0
++spikeLeft,672,384,00021D48,0,1,1,4294967295,0,0
++spikeLeft,512,384,0032273E,0,1,1,4294967295,0,0
++spikeLeft,128,384,003BBCBC,0,1,1,4294967295,0,0
++spikeLeft,64,384,003B6ED3,0,1,1,4294967295,0,0
++spikeRight,512,528,0015C2EA,0,1,1,4294967295,0,0
++spikeRight,672,528,0032C7AC,0,1,1,4294967295,0,0
++spikeRight,32,320,000B2AC5,0,1,1,4294967295,0,0
++spikeRight,448,192,000431F4,0,1,1,4294967295,0,0
++spikeRight,672,224,0015B12B,0,1,1,4294967295,0,0
++spikeUp,32,496,0031B37A,0,1,1,4294967295,0,0
++spikeUp,96,496,0025B434,0,1,1,4294967295,0,0
++spikeUp,160,496,001889D6,0,1,1,4294967295,0,0
++spikeUp,192,464,00018E9D,0,1,1,4294967295,0,0
++spikeUp,224,496,003C98BD,0,1,1,4294967295,0,0
++spikeUp,256,496,000BB0CD,0,1,1,4294967295,0,0
++spikeUp,320,496,001C8A90,0,1,1,4294967295,0,0
++spikeUp,352,496,001FFB0B,0,1,1,4294967295,0,0
++spikeUp,416,464,003283D9,0,1,1,4294967295,0,0
++spikeUp,448,496,00077522,0,1,1,4294967295,0,0
++spikeUp,544,496,001881D1,0,1,1,4294967295,0,0
++spikeUp,576,496,00393A62,0,1,1,4294967295,0,0
++spikeUp,704,496,0009D07F,0,1,1,4294967295,0,0
++spikeUp,736,496,0014482F,0,1,1,4294967295,0,0
++spikeUp,320,352,003D9FAF,0,1,1,4294967295,0,0
++spikeUp,352,352,001C603C,0,1,1,4294967295,0,0
++spikeUp,224,352,000355C3,0,1,1,4294967295,0,0
++spikeUp,192,320,0029760D,0,1,1,4294967295,0,0
++spikeUp,384,320,0016CA9B,0,1,1,4294967295,0,0
++spikeUp,416,352,00046795,0,1,1,4294967295,0,0
++spikeUp,480,352,003D2F4B,0,1,1,4294967295,0,0
++spikeUp,448,352,002688E9,0,1,1,4294967295,0,0
++spikeUp,544,352,0023F524,0,1,1,4294967295,0,0
++spikeUp,576,352,000343B9,0,1,1,4294967295,0,0
++spikeUp,640,352,0028B663,0,1,1,4294967295,0,0
++spikeUp,640,352,00309006,0,1,1,4294967295,0,0
++spikeUp,288,128,002490F3,0,1,1,4294967295,0,0
++spikeUp,128,160,002BD60E,0,1,1,4294967295,0,0
++spikeUp,160,192,00394564,0,1,1,4294967295,0,0
++spikeUp,416,160,001DE975,0,1,1,4294967295,0,1
++spikeRight,320,192,0032F5E7,0,1,1,4294967295,0,0
++spikeDown,576,256,0000227A,0,1,1,4294967295,0,0
++spikeDown,384,96,00287BD4,0,1,1,4294967295,0,0
++spikeUp,96,352,0022009D,0,1,1,4294967295,0,0
++oBackground,0,0,00169B3C,0,1,1,4294967295,0,1
++block,64,0,003E386B,0,1,1,4294967295,0,0
++block,96,0,0009F4E4,0,1,1,4294967295,0,0
++block,128,0,0035339A,0,1,1,4294967295,0,0
++block,128,32,000BC140,0,1,1,4294967295,0,0
++block,128,64,002B24E9,0,1,1,4294967295,0,0
++block,160,0,002CF8A1,0,1,1,4294967295,0,0
++block,160,0,0009E60D,0,1,1,4294967295,0,0
++block,192,0,00083B86,0,1,1,4294967295,0,0
++block,224,0,001DCF76,0,1,1,4294967295,0,0
++block,256,0,001F84D9,0,1,1,4294967295,0,0
++block,288,0,002E7379,0,1,1,4294967295,0,0
++block,288,32,001B46C6,0,1,1,4294967295,0,0
++block,320,0,00066D1D,0,1,1,4294967295,0,0
++block,352,0,003978CF,0,1,1,4294967295,0,0
++block,384,0,00062B6D,0,1,1,4294967295,0,0
++block,416,0,00115D16,0,1,1,4294967295,0,0
++block,416,32,00105BF2,0,1,1,4294967295,0,0
++block,416,32,001CAC13,0,1,1,4294967295,0,0
++block,384,64,0020BD06,0,1,1,4294967295,0,0
++block,416,64,0018F8A6,0,1,1,4294967295,0,0
++block,448,64,0001A71A,0,1,1,4294967295,0,0
++block,448,0,0033AC5D,0,1,1,4294967295,0,0
++block,480,0,0035557D,0,1,1,4294967295,0,0
++block,512,0,0030CC2C,0,1,1,4294967295,0,0
++block,544,0,00123DCC,0,1,1,4294967295,0,0
++block,576,0,003B7F2F,0,1,1,4294967295,0,0
++block,608,0,0028B36A,0,1,1,4294967295,0,0
++block,640,0,003C850F,0,1,1,4294967295,0,0
++block,672,0,003E88F0,0,1,1,4294967295,0,0
++block,704,0,0001282E,0,1,1,4294967295,0,0
++block,736,0,0008A0BE,0,1,1,4294967295,0,0
++block,608,32,002A705C,0,1,1,4294967295,0,0
++block,608,64,002EB68A,0,1,1,4294967295,0,0
++block,608,96,00036082,0,1,1,4294967295,0,0
++block,608,128,003D38B1,0,1,1,4294967295,0,0
++block,608,160,0024FD01,0,1,1,4294967295,0,0
++block,608,192,001A2E6D,0,1,1,4294967295,0,0
++block,608,224,00398CB3,0,1,1,4294967295,0,0
++block,640,224,003D14B8,0,1,1,4294967295,0,0
++block,608,224,001A5080,0,1,1,4294967295,0,0
++block,608,256,001B5923,0,1,1,4294967295,0,0
++block,576,224,001662A3,0,1,1,4294967295,0,0
++block,544,224,002845D4,0,1,1,4294967295,0,0
++block,704,224,0036BA7D,0,1,1,4294967295,0,0
++block,704,224,003D4628,0,1,1,4294967295,0,0
++block,736,224,0029AE72,0,1,1,4294967295,0,0
++block,480,224,00336D85,0,1,1,4294967295,0,0
++block,256,224,003AB22A,0,1,1,4294967295,0,0
++block,480,224,0018E4C3,0,1,1,4294967295,0,0
++block,448,224,000E4663,0,1,1,4294967295,0,0
++block,416,224,00247A6A,0,1,1,4294967295,0,0
++block,384,224,002A24C3,0,1,1,4294967295,0,0
++block,352,224,002B38A7,0,1,1,4294967295,0,0
++block,320,224,002F97A5,0,1,1,4294967295,0,0
++block,288,224,00317FBE,0,1,1,4294967295,0,0
++block,256,224,001D9C50,0,1,1,4294967295,0,0
++block,224,224,00162E3F,0,1,1,4294967295,0,0
++block,192,224,0031C276,0,1,1,4294967295,0,0
++block,160,224,001D2699,0,1,1,4294967295,0,0
++block,128,224,001133F4,0,1,1,4294967295,0,0
++block,96,224,001A16AC,0,1,1,4294967295,0,0
++block,64,224,00262538,0,1,1,4294967295,0,0
++block,32,224,0003916A,0,1,1,4294967295,0,0
++block,128,192,001CD1A2,0,1,1,4294967295,0,0
++block,288,192,00187466,0,1,1,4294967295,0,0
++block,288,160,003A854A,0,1,1,4294967295,0,0
++block,416,192,00139C13,0,1,1,4294967295,0,0
++block,384,256,000F80DC,0,1,1,4294967295,0,0
++block,384,352,000B7777,0,1,1,4294967295,0,0
++block,384,384,00273F69,0,1,1,4294967295,0,0
++block,352,384,00046075,0,1,1,4294967295,0,0
++block,320,384,003AF0A5,0,1,1,4294967295,0,0
++block,416,384,0027297F,0,1,1,4294967295,0,0
++block,448,384,00318AB9,0,1,1,4294967295,0,0
++block,480,384,00281803,0,1,1,4294967295,0,0
++block,544,384,00064742,0,1,1,4294967295,0,0
++block,544,384,002AC1E6,0,1,1,4294967295,0,0
++block,544,416,0020C253,0,1,1,4294967295,0,0
++block,576,384,0006CC43,0,1,1,4294967295,0,0
++block,608,384,0039ECBE,0,1,1,4294967295,0,0
++block,608,352,003BC135,0,1,1,4294967295,0,0
++block,608,384,001E21C4,0,1,1,4294967295,0,0
++block,640,384,0005FE46,0,1,1,4294967295,0,0
++block,704,384,00357991,0,1,1,4294967295,0,0
++block,256,416,002E5B5B,0,1,1,4294967295,0,0
++block,256,416,003E53FD,0,1,1,4294967295,0,0
++block,224,416,00259D69,0,1,1,4294967295,0,0
++block,192,416,00260932,0,1,1,4294967295,0,0
++block,224,384,00358301,0,1,1,4294967295,0,0
++block,192,384,00095052,0,1,1,4294967295,0,0
++block,160,384,003632BD,0,1,1,4294967295,0,0
++block,192,352,000ED133,0,1,1,4294967295,0,0
++block,96,384,003E8938,0,1,1,4294967295,0,0
++block,192,496,0025EA54,0,1,1,4294967295,0,0
++block,192,528,0035C79F,0,1,1,4294967295,0,0
++block,160,528,0013EFA4,0,1,1,4294967295,0,0
++block,160,560,0011A8C4,0,1,1,4294967295,0,0
++block,160,592,00154D64,0,1,1,4294967295,0,0
++block,96,528,0011AF5B,0,1,1,4294967295,0,0
++block,96,560,00002DC9,0,1,1,4294967295,0,0
++block,96,592,001E6105,0,1,1,4294967295,0,0
++block,64,528,000A5D65,0,1,1,4294967295,0,0
++block,32,528,001DAB08,0,1,1,4294967295,0,0
++block,224,528,001300D2,0,1,1,4294967295,0,0
++block,256,528,002781D5,0,1,1,4294967295,0,0
++block,256,560,00288248,0,1,1,4294967295,0,0
++block,256,592,001D0530,0,1,1,4294967295,0,0
++block,288,528,002E8AAB,0,1,1,4294967295,0,1
++block,320,528,001AB2E5,0,1,1,4294967295,0,0
++block,320,560,00101A27,0,1,1,4294967295,0,0
++block,320,592,00103629,0,1,1,4294967295,0,0
++block,352,528,001397E3,0,1,1,4294967295,0,0
++block,384,528,0027341E,0,1,1,4294967295,0,0
++block,384,496,002D3197,0,1,1,4294967295,0,0
++block,416,496,0002FB6A,0,1,1,4294967295,0,0
++block,416,528,002605B3,0,1,1,4294967295,0,0
++block,448,528,003B02B1,0,1,1,4294967295,0,0
++block,480,528,00063361,0,1,1,4294967295,0,0
++block,480,560,002B591E,0,1,1,4294967295,0,0
++block,480,592,000187ED,0,1,1,4294967295,0,0
++block,544,528,001EBF33,0,1,1,4294967295,0,0
++block,544,560,0024ECE9,0,1,1,4294967295,0,0
++block,544,592,00374244,0,1,1,4294967295,0,0
++block,576,528,003FCE71,0,1,1,4294967295,0,0
++block,608,528,00375CA2,0,1,1,4294967295,0,0
++block,608,496,0034A7B6,0,1,1,4294967295,0,0
++block,640,528,003AA121,0,1,1,4294967295,0,0
++block,640,560,0012D3C6,0,1,1,4294967295,0,0
++block,640,592,000155C6,0,1,1,4294967295,0,0
++block,704,528,000FD93F,0,1,1,4294967295,0,0
++block,704,560,003962B3,0,1,1,4294967295,0,0
++block,704,592,0038F352,0,1,1,4294967295,0,0
++block,736,528,00330586,0,1,1,4294967295,0,0
++block,768,0,003C8096,0,1,1,4294967295,0,0
++block,768,32,001E8BC5,0,1,1,4294967295,0,0
++block,768,64,00093996,0,1,1,4294967295,0,0
++block,768,96,0033DA51,0,1,1,4294967295,0,0
++block,768,128,00285187,0,1,1,4294967295,0,0
++block,768,160,003F7A49,0,1,1,4294967295,0,0
++block,768,192,003FEE45,0,1,1,4294967295,0,0
++block,768,224,0039C8FC,0,1,1,4294967295,0,0
++block,768,256,000E4518,0,1,1,4294967295,0,0
++block,768,288,0017BAD7,0,1,1,4294967295,0,0
++block,768,320,0029A6D5,0,1,1,4294967295,0,0
++block,768,352,001B22C1,0,1,1,4294967295,0,0
++block,768,384,003180BF,0,1,1,4294967295,0,0
++block,768,416,0001C331,0,1,1,4294967295,0,0
++block,768,448,00342E10,0,1,1,4294967295,0,0
++block,768,480,000193E0,0,1,1,4294967295,0,0
++block,768,512,0033AC28,0,1,1,4294967295,0,0
++block,768,544,003531CE,0,1,1,4294967295,0,0
++block,768,576,0025614D,0,1,1,4294967295,0,0
++block,0,32,00322C37,0,1,1,4294967295,0,0
++block,0,0,001B78FD,0,1,1,4294967295,0,0
++block,0,64,002D1164,0,1,1,4294967295,0,0
++block,0,128,001AF8AC,0,1,1,4294967295,0,0
++block,0,160,0031C14F,0,1,1,4294967295,0,0
++block,0,192,002B27A4,0,1,1,4294967295,0,0
++block,0,224,0027033D,0,1,1,4294967295,0,0
++block,0,256,0039A7E5,0,1,1,4294967295,0,0
++block,0,288,001FD847,0,1,1,4294967295,0,0
++block,0,320,003AD170,0,1,1,4294967295,0,0
++block,0,352,003544D2,0,1,1,4294967295,0,0
++block,0,384,0007B0CF,0,1,1,4294967295,0,0
++block,0,416,002A8084,0,1,1,4294967295,0,0
++block,0,448,001B29C3,0,1,1,4294967295,0,0
++block,0,512,00364561,0,1,1,4294967295,0,0
++block,0,544,0000C0C2,0,1,1,4294967295,0,0
++block,0,576,001452A3,0,1,1,4294967295,0,0
++block,0,480,0012ACAD,0,1,1,4294967295,0,0
++block,0,96,0010173E,0,1,1,4294967295,0,0
++block,240,96,003855B6,0,1,1,4294967295,0,1
++savePoint,576,416,001501E8,0,1,1,4294967295,0,1
++savePoint,576,192,0016B410,0,1,1,4294967295,0,0
++savePoint,32,192,001EA9C2,0,1,1,4294967295,0,0
++oRoomSwitch,128,608,003A563C,0,1,1,4294967295,0,1
++biffMiniSpikeUp,656,512,00283DBB,0,1,1,4294967295,0,0
++biffMiniSpikeUp,176,368,003631A9,0,1,1,4294967295,0,0
++biffMiniSpikeUp,64,512,0011D4E5,0,1,1,4294967295,0,0
++biffMiniSpikeUp,80,512,0024D6BB,0,1,1,4294967295,0,0
++block,32,-32,00349402,0,1,1,4294967295,0,0
++biffSpikeDown,240,128,0036D3D2,0,1,1,4294967295,0,0
++biffSpikeDown,448,96,000E7AB9,0,1,1,4294967295,0,0
++biffSpikeDown,416,192,0002BC03,0,1,1,4294967295,0,1
++biffSpikeDown,544,256,00002B90,0,1,1,4294967295,0,0
++biffSpikeDown,608,288,0039A011,0,1,1,4294967295,0,0
++biffSpikeUp,224,224,002D6663,0,1,1,4294967295,0,1
++biffSpikeUp,256,224,00052659,0,1,1,4294967295,0,1
++biffSpikeUp,192,192,003BC4EC,0,1,1,4294967295,0,0
++biffSpikeUp,240,64,00075DD4,0,1,1,4294967295,0,0
++biffSpikeUp,704,352,0008CB6B,0,1,1,4294967295,0,0
++biffSpikeUp,608,464,0004DF4E,0,1,1,4294967295,0,0
++biffSpikeUp,480,528,003610CE,0,1,1,4294967295,0,1
++biffSpikeUp,384,496,003B66AE,0,1,1,4294967295,0,1
++biffSpikeDown,224,256,00195A09,0,1,1,4294967295,0,0
++biffSpikeUp,336,80,0008BA98,0,1,1,4294967295,0,0
++biffSpikeDown,336,112,0027365C,0,1,1,4294967295,0,0
++biffSpikeDown,416,96,0009FE0C,0,1,1,4294967295,0,1
++biffSpikeDown,320,416,002CA731,0,1,1,4294967295,0,1
++playerStart,32,0,001A007E,0,1,1,4294967295,0,0
+diff --git a/TestBrute/jmaps/4_05_rBlood1.jmap b/TestBrute/jmaps/4_05_rBlood1.jmap
+new file mode 100644
+index 0000000..800c4ed
+--- /dev/null
++++ b/TestBrute/jmaps/4_05_rBlood1.jmap
+@@ -0,0 +1,13 @@
++jtool|1.3.5|inf:0|dot:0|sav:1|bor:0|px:410ls00000000|py:40vbmcpg00000|ps:1|pg:1|objects:-bo1p01o0180-701701401s0in0ifg3g03f03bg480-801701401s04ng3m83kg5k0ibgig0if03fg3gg3eg4cg5ag480-901701801901a01b01c01d01e01f01g01h01i01j01k01l01m01n01o01401s0i60i50-401501601701801901a01b01c01d01e01f01g01h01i01j01k01l01m01n01o01p01q01r01401s0-501401s0ia05904b0-601401s03fg3706a0-a01401s0670660650-b01401s03r03q03p0-c01401s01r01q01p01o01n01m01l01k01j01i01h01g01f01e01d01b01c01a0190180-d01401s06806h0-e01401s0-f01401s01703c05bg5b06ag3b03ag3a05a04a05c06ig3e03f03g03l03m03o03og-m01o01p01q01r01s01n0-g01401s01501601n01m01l01k01j01i01h01g01f01e01d01c01b01a01901801o01og-l01s01o01n0-k01s01o01n0ir0iq0ip0-981o0180-i01401s01l0ir0km0-h01401s01701l06o86o0-j01s01o01m01l01n0-hg1o0-8g6ng5lg4k05j0-7g3ng3mg-5gii06lg6ig6hg-6g6i0-eg4704a04ag5b04c06e06f05i04j0-fg580-cg5gg-4gilgiigihg5kg4jg5gg4mg-agl80
++
++data repeated below for easy parsing by other tools
++objects: (x, y, type)
++672 248 1 640 248 1 128 248 1 96 96 1 0 96 1 768 96 1 96 128 1 0 128 1 768 128 1 96 160 1 128 160 1 160 160 1 192 160 1 224 160 1 256 160 1 288 160 1 320 160 1 352 160 1 384 160 1 416 160 1 448 160 1 480 160 1 512 160 1 544 160 1 576 160 1 608 160 1 640 160 1 0 160 1 768 160 1 32 0 1 64 0 1 96 0 1 128 0 1 160 0 1 192 0 1 224 0 1 256 0 1 288 0 1 320 0 1 352 0 1 384 0 1 416 0 1 448 0 1 480 0 1 512 0 1 544 0 1 576 0 1 608 0 1 640 0 1 672 0 1 704 0 1 736 0 1 0 0 1 768 0 1 0 32 1 768 32 1 0 64 1 768 64 1 0 192 1 768 192 1 0 224 1 768 224 1 0 256 1 768 256 1 736 256 1 704 256 1 672 256 1 640 256 1 608 256 1 576 256 1 544 256 1 512 256 1 480 256 1 448 256 1 416 256 1 384 256 1 352 256 1 320 256 1 288 256 1 224 256 1 256 256 1 192 256 1 160 256 1 128 256 1 0 288 1 768 288 1 0 320 1 768 320 1 0 352 1 768 352 1 96 352 1 640 576 1 672 576 1 704 576 1 736 576 1 768 576 1 608 576 1 0 384 1 768 384 1 32 384 1 64 384 1 608 384 1 576 384 1 544 384 1 512 384 1 480 384 1 448 384 1 416 384 1 384 384 1 352 384 1 320 384 1 288 384 1 256 384 1 224 384 1 192 384 1 160 384 1 128 384 1 640 384 1 656 384 1 768 544 1 640 544 1 608 544 1 768 512 1 640 512 1 608 512 1 640 168 1 128 168 1 0 448 1 768 448 1 544 448 1 0 416 1 768 416 1 96 416 1 544 416 1 768 480 1 640 480 1 576 480 1 544 480 1 608 480 1 640 432 1 624 144 6 560 144 5 512 144 4 480 144 5 624 112 3 592 112 3 448 48 18 560 48 6 464 48 6 432 48 6 448 80 6 96 336 4 192 336 4 208 336 4 224 336 5 256 336 4 320 336 6 352 336 6 448 336 5 480 336 4 128 368 5 400 272 5 560 16 18 464 16 18 432 16 18 528 16 5 496 16 4 400 16 5 592 16 4 608 96 18 368 96 18 384 96 3 352 96 3 240 96 3 128 96 4 624 128 4 584 128 3 528 128 3 512 128 5 240 128 18 384 128 18 352 128 18 368 128 3 400 128 3 336 128 3 272 128 4 208 128 5 128 128 4 64 160 18 32 160 18 192 32 18 160 32 5 224 32 4 368 64 3 96 64 3 192 64 6 96 192 6 64 192 6 32 192 6 736 224 3 704 224 3 672 224 3 128 288 6 416 288 6 256 352 3 240 352 5 224 352 5 208 352 6 224 352 3 208 352 3 192 352 3 192 352 5 192 352 4 256 352 5 464 352 6 320 352 3 352 352 3 384 352 3 544 352 3 576 352 3 640 352 3 656 352 3 736 512 18 704 512 18 672 512 18 736 448 18 648 416 6 640 416 6 128 208 21 576 448 20 
++version:1.3.5
++infinitejump:0
++dotkid:0
++savetype:1
++bordertype:0
++playersavex:599.50
++playersavey:471.3999938964843700
++playersavexscale:1
+diff --git a/TestBrute/jmaps/4_07_rKale1.jmap b/TestBrute/jmaps/4_07_rKale1.jmap
+new file mode 100644
+index 0000000..4e31711
+--- /dev/null
++++ b/TestBrute/jmaps/4_07_rKale1.jmap
+@@ -0,0 +1,13 @@
++jtool|1.3.5|inf:0|dot:0|sav:1|bor:0|px:40sog00000000|py:410do00000000|ps:1|pg:1|objects:-60i706og3b06l01401s0-90i508505h04n01401s01701601901a01b01c01d01i01j01k01l01m0-fgi70-j0ib0igg5q03a06804601401s01c01r0150-b0ip05r03n03i06bg6cg1401s0ch0-a0in05r06k06d06c06b01401s0-e0ig0if06n06m06r04d05b04701401s01c0150160-f0igg4d05b06mg6606501401s01c0-6g5r0-ag5q0-4g67g68g-5g680lq0-705q04c03903705h04j01401s01i01b0-506o06p06g06kg6lg1401s0-9g850-7g5r05g04k0-8039g36g4e05f05h04j03lg1401s01701901b01d01i0-8g5g07mg-cg5k05f0-d04o05l05g03c01401s01r01m01n01i01h0160150-eg4e05a0-kg6k0-ig3k0-jg5j04l01k0-l06bg3p03o03n03m04i03903801401s01c01h01g0kd0cd0-k03bg6r03og3mg3g03h06a06501401s01c0-i04d03rg6mg6og6gg4601401s01c0180190150-hg7c07cg97g-h05fg4pg4hg97g1401s01og1mg1gg180190-g05r03og3gg3801401s0-gg790-c04o05l05g06c034o35o1401s01m01n01i01h0-m01401501601701801901a01b01c01d01e01f01g01h01i01j01k01l01m01n01o01p01q01r01s0-401401s01r01q01p01o01n01m01l01k01j01i01h01501601701801901a01b01c01d01e01f01g0
++
++data repeated below for easy parsing by other tools
++objects: (x, y, type)
++96 64 18 32 160 18 96 368 18 224 480 18 672 224 18 608 192 18 384 320 18 352 320 18 400 352 18 400 480 18 736 80 5 704 208 5 112 16 6 144 16 6 128 48 6 704 96 5 256 96 4 160 96 3 96 96 3 416 96 5 480 96 4 640 32 6 672 32 6 384 32 6 528 32 6 560 32 6 656 64 6 224 64 3 544 64 6 32 176 8 736 112 5 384 112 5 512 112 4 176 128 3 80 128 3 320 128 4 352 128 5 416 128 5 480 128 4 560 128 3 384 144 5 592 144 7 32 160 8 416 160 5 608 160 4 512 272 5 352 272 5 736 192 5 512 192 6 288 192 6 256 192 6 224 192 6 736 224 5 608 224 3 448 224 3 240 224 6 272 224 6 640 288 4 544 288 5 384 288 5 256 288 3 320 336 4 192 336 5 512 528 6 512 464 3 480 496 5 544 496 4 240 544 6 672 544 3 640 544 3 608 544 3 576 544 3 448 544 4 160 544 3 128 544 3 240 512 3 736 512 6 656 512 3 592 512 3 384 512 3 416 512 3 192 512 6 32 512 6 704 480 5 192 480 3 128 480 6 64 480 4 288 448 4 752 448 3 592 448 6 656 448 6 400 448 6 64 448 4 256 432 7 272 432 7 112 432 9 368 416 5 688 416 4 432 416 4 112 416 9 736 384 5 656 384 3 400 384 3 128 384 3 160 400 7 608 320 6 576 320 6 736 320 6 288 320 4 224 320 5 96 320 4 288 352 4 224 352 5 592 352 6 64 352 6 32 352 6 640 256 4 544 256 5 384 256 5 256 256 6 24 256 3 56 256 3 0 576 1 32 576 1 64 576 1 96 576 1 128 576 1 160 576 1 192 576 1 224 576 1 256 576 1 288 576 1 320 576 1 352 576 1 384 576 1 416 576 1 448 576 1 480 576 1 512 576 1 544 576 1 576 576 1 608 576 1 640 576 1 672 576 1 704 576 1 736 576 1 768 576 1 0 0 1 768 0 1 736 0 1 704 0 1 672 0 1 640 0 1 608 0 1 576 0 1 544 0 1 512 0 1 480 0 1 448 0 1 416 0 1 32 0 1 64 0 1 96 0 1 128 0 1 160 0 1 192 0 1 224 0 1 256 0 1 288 0 1 320 0 1 352 0 1 384 0 1 0 96 1 768 96 1 448 96 1 224 96 1 0 32 1 768 32 1 0 64 1 768 64 1 0 128 1 768 128 1 96 128 1 160 128 1 224 128 1 288 128 1 448 128 1 0 160 1 768 160 1 96 160 1 64 160 1 160 160 1 192 160 1 224 160 1 256 160 1 288 160 1 448 160 1 480 160 1 512 160 1 544 160 1 576 160 1 0 192 1 768 192 1 0 224 1 768 224 1 0 288 1 768 288 1 736 288 1 576 288 1 608 288 1 448 288 1 416 288 1 64 288 1 32 288 1 512 496 1 0 544 1 768 544 1 256 544 1 416 544 1 384 544 1 0 512 1 768 512 1 256 512 1 0 480 1 768 480 1 256 480 1 736 480 1 32 480 1 0 448 1 768 448 1 256 448 1 128 448 1 160 448 1 32 448 1 0 416 1 768 416 1 656 416 1 592 416 1 400 416 1 128 416 1 160 416 1 0 384 1 768 384 1 0 320 1 768 320 1 256 320 1 32 320 1 64 320 1 0 352 1 768 352 1 256 352 1 0 256 1 768 256 1 576 256 1 608 256 1 448 256 1 416 256 1 704 48 21 416 224 12 288 544 20 288 544 12 
++version:1.3.5
++infinitejump:0
++dotkid:0
++savetype:1
++bordertype:0
++playersavex:305
++playersavey:567.0000000000000000
++playersavexscale:1
+diff --git a/images/scraperLeftFacingapple.png b/images/scraperLeftFacingapple.png
+new file mode 100644
+index 0000000..340c4e9
+Binary files /dev/null and b/images/scraperLeftFacingapple.png differ
+diff --git a/images/scraperLeftFacingblock.png b/images/scraperLeftFacingblock.png
+new file mode 100644
+index 0000000..16f2597
+Binary files /dev/null and b/images/scraperLeftFacingblock.png differ
+diff --git a/images/scraperLeftFacingkillerblock.png b/images/scraperLeftFacingkillerblock.png
+new file mode 100644
+index 0000000..4f1525c
+Binary files /dev/null and b/images/scraperLeftFacingkillerblock.png differ
+diff --git a/images/scraperLeftFacingminiblock.png b/images/scraperLeftFacingminiblock.png
+new file mode 100644
+index 0000000..c1560f2
+Binary files /dev/null and b/images/scraperLeftFacingminiblock.png differ
+diff --git a/images/scraperLeftFacingminispikedown.png b/images/scraperLeftFacingminispikedown.png
+new file mode 100644
+index 0000000..1298c80
+Binary files /dev/null and b/images/scraperLeftFacingminispikedown.png differ
+diff --git a/images/scraperLeftFacingminispikeleft.png b/images/scraperLeftFacingminispikeleft.png
+new file mode 100644
+index 0000000..7938cca
+Binary files /dev/null and b/images/scraperLeftFacingminispikeleft.png differ
+diff --git a/images/scraperLeftFacingminispikeright.png b/images/scraperLeftFacingminispikeright.png
+new file mode 100644
+index 0000000..2fd67ef
+Binary files /dev/null and b/images/scraperLeftFacingminispikeright.png differ
+diff --git a/images/scraperLeftFacingminispikeup.png b/images/scraperLeftFacingminispikeup.png
+new file mode 100644
+index 0000000..912e4e2
+Binary files /dev/null and b/images/scraperLeftFacingminispikeup.png differ
+diff --git a/images/scraperLeftFacingplatform.png b/images/scraperLeftFacingplatform.png
+new file mode 100644
+index 0000000..74ebdb3
+Binary files /dev/null and b/images/scraperLeftFacingplatform.png differ
+diff --git a/images/scraperLeftFacingspikedown.png b/images/scraperLeftFacingspikedown.png
+new file mode 100644
+index 0000000..1eae561
+Binary files /dev/null and b/images/scraperLeftFacingspikedown.png differ
+diff --git a/images/scraperLeftFacingspikeleft.png b/images/scraperLeftFacingspikeleft.png
+new file mode 100644
+index 0000000..580bb43
+Binary files /dev/null and b/images/scraperLeftFacingspikeleft.png differ
+diff --git a/images/scraperLeftFacingspikeright.png b/images/scraperLeftFacingspikeright.png
+new file mode 100644
+index 0000000..26a4251
+Binary files /dev/null and b/images/scraperLeftFacingspikeright.png differ
+diff --git a/images/scraperLeftFacingspikeup.png b/images/scraperLeftFacingspikeup.png
+new file mode 100644
+index 0000000..add8252
+Binary files /dev/null and b/images/scraperLeftFacingspikeup.png differ
+diff --git a/images/scraperLeftFacingwarp.png b/images/scraperLeftFacingwarp.png
+new file mode 100644
+index 0000000..8e98b52
+Binary files /dev/null and b/images/scraperLeftFacingwarp.png differ
+diff --git a/images/scraperLeftFacingwater1.png b/images/scraperLeftFacingwater1.png
+new file mode 100644
+index 0000000..5be63c1
+Binary files /dev/null and b/images/scraperLeftFacingwater1.png differ
+diff --git a/images/scraperLeftFacingwater2.png b/images/scraperLeftFacingwater2.png
+new file mode 100644
+index 0000000..a618360
+Binary files /dev/null and b/images/scraperLeftFacingwater2.png differ
+diff --git a/images/scraperLeftFacingwater3.png b/images/scraperLeftFacingwater3.png
+new file mode 100644
+index 0000000..6cf8aeb
+Binary files /dev/null and b/images/scraperLeftFacingwater3.png differ
+diff --git a/images/scraperRightFacingapple.png b/images/scraperRightFacingapple.png
+new file mode 100644
+index 0000000..6752f20
+Binary files /dev/null and b/images/scraperRightFacingapple.png differ
+diff --git a/images/scraperRightFacingblock.png b/images/scraperRightFacingblock.png
+new file mode 100644
+index 0000000..61d1a78
+Binary files /dev/null and b/images/scraperRightFacingblock.png differ
+diff --git a/images/scraperRightFacingkillerblock.png b/images/scraperRightFacingkillerblock.png
+new file mode 100644
+index 0000000..014934a
+Binary files /dev/null and b/images/scraperRightFacingkillerblock.png differ
+diff --git a/images/scraperRightFacingminiblock.png b/images/scraperRightFacingminiblock.png
+new file mode 100644
+index 0000000..7bbedb7
+Binary files /dev/null and b/images/scraperRightFacingminiblock.png differ
+diff --git a/images/scraperRightFacingminispikedown.png b/images/scraperRightFacingminispikedown.png
+new file mode 100644
+index 0000000..1f6d00c
+Binary files /dev/null and b/images/scraperRightFacingminispikedown.png differ
+diff --git a/images/scraperRightFacingminispikeleft.png b/images/scraperRightFacingminispikeleft.png
+new file mode 100644
+index 0000000..cbff828
+Binary files /dev/null and b/images/scraperRightFacingminispikeleft.png differ
+diff --git a/images/scraperRightFacingminispikeright.png b/images/scraperRightFacingminispikeright.png
+new file mode 100644
+index 0000000..5224fb4
+Binary files /dev/null and b/images/scraperRightFacingminispikeright.png differ
+diff --git a/images/scraperRightFacingminispikeup.png b/images/scraperRightFacingminispikeup.png
+new file mode 100644
+index 0000000..b354248
+Binary files /dev/null and b/images/scraperRightFacingminispikeup.png differ
+diff --git a/images/scraperRightFacingplatform.png b/images/scraperRightFacingplatform.png
+new file mode 100644
+index 0000000..e3bdf3f
+Binary files /dev/null and b/images/scraperRightFacingplatform.png differ
+diff --git a/images/scraperRightFacingspikedown.png b/images/scraperRightFacingspikedown.png
+new file mode 100644
+index 0000000..bb664b6
+Binary files /dev/null and b/images/scraperRightFacingspikedown.png differ
+diff --git a/images/scraperRightFacingspikeleft.png b/images/scraperRightFacingspikeleft.png
+new file mode 100644
+index 0000000..ea51921
+Binary files /dev/null and b/images/scraperRightFacingspikeleft.png differ
+diff --git a/images/scraperRightFacingspikeright.png b/images/scraperRightFacingspikeright.png
+new file mode 100644
+index 0000000..bac2691
+Binary files /dev/null and b/images/scraperRightFacingspikeright.png differ
+diff --git a/images/scraperRightFacingspikeup.png b/images/scraperRightFacingspikeup.png
+new file mode 100644
+index 0000000..e765eeb
+Binary files /dev/null and b/images/scraperRightFacingspikeup.png differ
+diff --git a/images/scraperRightFacingwarp.png b/images/scraperRightFacingwarp.png
+new file mode 100644
+index 0000000..53eeed1
+Binary files /dev/null and b/images/scraperRightFacingwarp.png differ
+diff --git a/images/scraperRightFacingwater1.png b/images/scraperRightFacingwater1.png
+new file mode 100644
+index 0000000..cafbc48
+Binary files /dev/null and b/images/scraperRightFacingwater1.png differ
+diff --git a/images/scraperRightFacingwater2.png b/images/scraperRightFacingwater2.png
+new file mode 100644
+index 0000000..8925942
+Binary files /dev/null and b/images/scraperRightFacingwater2.png differ
+diff --git a/images/scraperRightFacingwater3.png b/images/scraperRightFacingwater3.png
+new file mode 100644
+index 0000000..bc04802
+Binary files /dev/null and b/images/scraperRightFacingwater3.png differ
+diff --git a/images/scraperblock.png b/images/scraperblock.png
+new file mode 100644
+index 0000000..329099c
+Binary files /dev/null and b/images/scraperblock.png differ

@@ -19,13 +19,13 @@ namespace Jump_Bruteforcer
     public partial class MainWindow : Window
     {
         private Search s;
-        private string Macro = "";
+        private uint heatMapIndex = 1;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
+            s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), CollisionType>(), null));
             DataContext = s;
         }
         private void BruteforceProjectButton_Click(object sender, RoutedEventArgs e)
@@ -52,7 +52,6 @@ namespace Jump_Bruteforcer
 
                         ImageJMap.Source = Map.Bmp;
                         s.CollisionMap = Map.CollisionMap;
-                        ImageHeatMap.Source = new WriteableBitmap(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
                         s.PlayerPath = new();
                         s.Strat = "";
                         if(Map.hasPlayerStart)
@@ -73,8 +72,7 @@ namespace Jump_Bruteforcer
                             continue;
                         }
                         SearchResult sr = s.RunAStar();
-                        ImageHeatMap.Source = VisualizeSearch.HeatMap();
-                        Macro = sr.Macro;
+                        ImageHeatMap.Source = VisualizeSearch.stateMap;
 
                         if (sr.Success)
                         {
@@ -91,15 +89,17 @@ namespace Jump_Bruteforcer
                             }
                             RenderTargetBitmap target = new RenderTargetBitmap((int)renderBounds.Width, (int)renderBounds.Height, 96, 96, PixelFormats.Pbgra32);
                             target.Render(drawingVisual);
-                            FileStream stream = new FileStream(Path.Join(outputPath, $"{Path.GetFileName(room)}.png"), FileMode.Create);
-                            BitmapEncoder encoder = new PngBitmapEncoder();
-                            encoder.Frames.Add(BitmapFrame.Create(target));
-                            encoder.Save(stream);
+                            using (FileStream stream = new FileStream(Path.Join(outputPath, $"{Path.GetFileName(room)}.png"), FileMode.Create))
+                            {
+                                BitmapEncoder encoder = new PngBitmapEncoder();
+                                encoder.Frames.Add(BitmapFrame.Create(target));
+                                encoder.Save(stream);
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Failed to import map with error:\n" + ex.Message);
+                        MessageBox.Show("Failed to import map with error:\n" + ex.StackTrace);
                     }
                 }
                
@@ -157,15 +157,31 @@ namespace Jump_Bruteforcer
         private void ButtonStartSearch_Click(object sender, RoutedEventArgs e)
         {
             SearchResult sr = s.RunAStar();
-            ImageHeatMap.Source = VisualizeSearch.HeatMap();
-            Macro = sr.Macro;
+            System.GC.Collect();
+            ImageHeatMap.Source = VisualizeSearch.stateMap;
             Topmost = true;
             Topmost = false;
         }
 
         private void ButtonToggleHeatmap_Click(object sender, RoutedEventArgs e)
         {
-            ImageHeatMap.Visibility = ImageHeatMap.Visibility is Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            heatMapIndex = (heatMapIndex + 1) % 3;
+            switch (heatMapIndex)
+            {
+                case 0:
+                    ImageHeatMap.Visibility = Visibility.Hidden;
+                    break;
+                case 1:
+                    ImageHeatMap.Visibility = Visibility.Visible;
+                    ImageHeatMap.Source = VisualizeSearch.stateMap;
+                    break;
+                case 2:
+                    ImageHeatMap.Visibility = Visibility.Visible;
+                    ImageHeatMap.Source = VisualizeSearch.heuristicMap;
+                    break;
+            }
+            
+
         }
 
 
@@ -181,7 +197,7 @@ namespace Jump_Bruteforcer
 
         private void CopyMacroButton_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetDataObject(Macro);
+            Clipboard.SetDataObject(s.Macro);
         }
 
 

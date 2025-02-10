@@ -2,20 +2,24 @@
 using System.Text.Json;
 using System.Collections.Immutable;
 using System.Windows;
-using System.IO;
+using System.Runtime.InteropServices;
+using System.IO.Hashing;
 
 namespace Jump_Bruteforcer
 {
     [Flags]
-    public enum Bools
+    public enum Bools: byte
     {
         None = 0,
         CanDJump = 1,
         OnPlatform = 2,
         FacingRight = 4,
         FaceScraper = 8,
+        InvertedGravity = 16,
+        ParentInvertedGravity = 32
     }
-    public class State : IEquatable<State>
+    [StructLayout(LayoutKind.Auto)]
+    public readonly record struct State 
     {
 
         public int X { get; init; }
@@ -23,52 +27,30 @@ namespace Jump_Bruteforcer
         public double VSpeed { get; init; }
         public Bools Flags { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
-        const int epsilon = 10;
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
 
-            return ((State)obj).Equals(this);
-        }
 
-        private static double Quantize(double a)
-        {
-            return Math.Round(a * epsilon);
-        }
-        private static bool ApproximatelyEquals(double a, double b)
-        {
-            return Quantize(a) == Quantize(b);
-        }
-        public bool Equals(State? other) =>
-            X == other.X & ApproximatelyEquals(Y, other.Y) &
-            ApproximatelyEquals(VSpeed, other.VSpeed) & (Flags | Bools.FacingRight) == (other.Flags | Bools.FacingRight) & (Flags | Bools.FaceScraper) == (other.Flags | Bools.FaceScraper);
-        public override int GetHashCode() => (X, Quantize(Y), Quantize(VSpeed), Flags | Bools.FacingRight, Bools.FaceScraper).GetHashCode();
-        public override string ToString() => JsonSerializer.Serialize(this);
 
     }
     public class PlayerNode : IEquatable<PlayerNode>
     {
+        static XxHash64 hasher = new();
+        const int epsilon = 10;
         public State State { get; set; }
-        public PlayerNode? Parent { get; set; }
+        public int NodeIndex { get; set; }
         public uint PathCost { get; set; }
-        public Input? Action { get; set; }
-        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Facescraper);
+
+        public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
-        private static readonly ImmutableArray<CollisionType> jumpables = ImmutableArray.Create(CollisionType.Solid, CollisionType.Platform, CollisionType.Water1, CollisionType.Water2, CollisionType.Water3);
-        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, uint pathCost = uint.MaxValue, PlayerNode? parent = null) =>
-            (State, Parent, PathCost, Action) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, parent, pathCost, action);
+        private static readonly CollisionType jumpables = CollisionType.Solid | CollisionType.Platform | CollisionType.Water1 | CollisionType.Water2 | CollisionType.Water3;
+        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, int nodeIndex = 0) =>
+            (State, NodeIndex, PathCost) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, nodeIndex, uint.MaxValue);
 
-        public PlayerNode(State state, PlayerNode? parent, uint pathCost, Input? action)
+        public PlayerNode(State state)
         {
             State = state;
-            Parent = parent;
-            PathCost = pathCost;
-            Action = action;
+            PathCost = uint.MaxValue;
         }
 
         public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
@@ -78,60 +60,43 @@ namespace Jump_Bruteforcer
 
 
 
-        /// <summary>
-        /// For a given PlayerNode, returns the inputs to get there and the path taken through the game space
-        /// </summary>
-        /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
-        public (List<Input> Inputs, PointCollection Points) GetPath()
-        {
-            List<Input> inputs = new List<Input>();
-            List<Point> points = new List<Point>();
-            PlayerNode? currentNode = this;
 
-            while (currentNode != null)
-            {
-                if (currentNode.Action != null)
-                {
-                    inputs.Add((Input)currentNode.Action);
-                }
-                points.Add(new Point(currentNode.State.X, currentNode.State.RoundedY));
-                currentNode = currentNode.Parent;
-            }
-            inputs.Reverse();
-            points.Reverse();
-
-            return (inputs, new PointCollection(points));
-        }
 
         /// <summary>
         /// creates the set of all unique states that can be reached in one frame from the current state with arbitrary inputs.
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public HashSet<PlayerNode> GetNeighbors(CollisionMap CollisionMap)
+        public IEnumerable<(PlayerNode, Input)> GetNeighbors(CollisionMap CollisionMap)
         {
-            var neighbors = new HashSet<PlayerNode>();
+            var neighbors = new List<(PlayerNode, Input)>();
             fillNeighbors(CollisionMap, neighbors, inputs);
+            //corresponds to global.grav = 1
+            bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
+            bool kidUpsidedown = (this.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
 
-            if (State.VSpeed < 0)
+            double checkOffset = globalGravInverted ? -1 : 1;
+            if (Math.Sign(State.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
             }
-            if (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 4)).Contains(CollisionType.Platform) || ((State.Flags & Bools.CanDJump) == Bools.CanDJump) || CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + 1)).Overlaps(jumpables))
+            
+            if ((State.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown) | jumpables) != 0)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }
 
-            return neighbors;
+            return neighbors.DistinctBy(n => n.Item1.Hash());
 
-            void fillNeighbors(CollisionMap CollisionMap, HashSet<PlayerNode> neighbors, ImmutableArray<Input> inputs)
+            void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode, Input)> neighbors, ImmutableArray<Input> inputs)
             {
-                foreach (var neighbor in from Input input in inputs
+                foreach (var (neighbor, input) in from Input input in inputs
                                          let neighbor = NewState(input, CollisionMap)
-                                         where Player.IsAlive(CollisionMap, neighbor)
-                                         select neighbor)
+                                         where Player.IsAlive(neighbor)
+                                         select (neighbor, input))
                 {
-                    neighbors.Add(neighbor);
+                    neighbors.Add((neighbor, input));
                 }
             }
         }
@@ -142,13 +107,16 @@ namespace Jump_Bruteforcer
         /// <param name="input"></param> the inputs for the next frame
         /// <param name="CollisionMap"></param> the game field
         /// <returns>A new PlayerNode that results from running inputs on the collision map</returns>
-        public PlayerNode NewState(Input input, CollisionMap CollisionMap)
+        public PlayerNode? NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State newState = Player.Update(this, input, CollisionMap);
-            uint newStateCost = (uint)((input & Input.Facescraper) == Input.Facescraper ? 48 : 1); 
-
-            return new PlayerNode(newState, action: input, pathCost: PathCost + newStateCost, parent: this);
+            State? newState = Player.Update(this, input, CollisionMap);
+            if (newState != null)
+            {
+                return new PlayerNode(newState.Value);
+            }
+            return null;
+            
         }
 
         public bool Equals(PlayerNode? other)
@@ -158,10 +126,32 @@ namespace Jump_Bruteforcer
                 return false;
             }
 
-            return State.Equals(other.State);
+            return State.X == other.State.X & ApproximatelyEquals(State.Y, other.State.Y) &
+            ApproximatelyEquals(State.VSpeed, other.State.VSpeed) & State.Flags == other.State.Flags;
         }
 
-        public override int GetHashCode() => State.GetHashCode();
-        public override string ToString() => $"{{State: {State.ToString()}, Action: {Action.ToString()} }}";
+        private static double Quantize(double a)
+        {
+            return Math.Round(a * epsilon);
+        }
+        private static bool ApproximatelyEquals(double a, double b)
+        {
+            return Quantize(a) == Quantize(b);
+        }
+
+        public override int GetHashCode() => Hash().GetHashCode();
+        public ulong Hash()
+        {
+
+            hasher.Append(BitConverter.GetBytes(State.X));
+            hasher.Append(BitConverter.GetBytes(Quantize(State.Y)));
+            hasher.Append(BitConverter.GetBytes(Quantize(State.VSpeed)));
+            hasher.Append(new byte[] { (byte)State.Flags });
+            ulong hash = hasher.GetCurrentHashAsUInt64();
+            hasher.Reset();
+            return hash;
+        }
+        
+        public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}}}";
     }
 }

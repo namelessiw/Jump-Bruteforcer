@@ -112,45 +112,52 @@ namespace TestBrute
             SearchResult result = s.RunAStar();
             result.Success.Should().BeTrue();
             output.WriteLine(result.ToString());
+            output.WriteLine("Nodes visited: " + result.Visited.ToString());
         }
 
-        [Fact]
-        public void TestHeuristicIsAdmissable()
-        {
-            (int x, int y) evenGoal = (30, 20);
-            (int x, int y) oddGoal = (30, 21);
-            Search evenS = new Search((0, 0), evenGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
-            Search oddS = new Search((0, 0), oddGoal, new CollisionMap(new Dictionary<(int, int), ImmutableSortedSet<CollisionType>>(), null));
-            evenS.Distance(new PlayerNode(30, 20, 0), evenGoal).Should().Be(0);
-            evenS.Distance(new PlayerNode(30, 29.5, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 29, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 30, 0), evenGoal).Should().Be(2);
 
-            evenS.Distance(new PlayerNode(30, 10.5, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 11, 0), evenGoal).Should().Be(1);
-            evenS.Distance(new PlayerNode(30, 10, 0), evenGoal).Should().Be(2);
-
-            throw new NotImplementedException();
-
-        }
         [Fact]
         private void InstanceOverheadTest()
         {
             const int Size = 1000;
             long initialMemory = GC.GetTotalMemory(true);
-            object[] array = new object[Size];
+            PlayerNode[] array = new PlayerNode[Size];
             PlayerNode parent = new PlayerNode(0, 566.6500000000001, 3.374999999999999);
             
             for (int i = 0; i < Size; i++)
             {
-                //   array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left, parent : parent);
-                array[i] = 1;
+                array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left);
+
 
             }
             long finalMemory = GC.GetTotalMemory(true);
             GC.KeepAlive(array);
             long total = finalMemory - initialMemory;
             uint classSize = (uint)((double)total / Size);
+            output.WriteLine("Measured size of each element: {0:0.000} bytes",
+                              classSize);
+            classSize.Should().Be(88);
+
+        }
+
+        [Fact]
+        private void InstanceOverheadTest2()
+        {
+            const int Size = 1000;
+            long initialMemory = GC.GetTotalMemory(true);
+            List<Input> array = new(Size);
+
+
+            for (int i = 0; i < Size; i++)
+            {
+                array.Add(Input.Right);
+
+
+            }
+            long finalMemory = GC.GetTotalMemory(true);
+            GC.KeepAlive(array);
+            long total = finalMemory - initialMemory;
+            double classSize = ((double)total / Size);
             output.WriteLine("Measured size of each element: {0:0.000} bytes",
                               classSize);
             classSize.Should().Be(88);

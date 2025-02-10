@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <RootNamespace>Jump_Bruteforcer</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>False</UseWindowsForms>
@@ -22,6 +22,8 @@
     <None Remove="images\apple.png" />
     <None Remove="images\block.png" />
     <None Remove="images\catharsiswater.png" />
+    <None Remove="images\gravityarrowdown.png" />
+    <None Remove="images\gravityarrowup.png" />
     <None Remove="images\killerblock.png" />
     <None Remove="images\miniblock.png" />
     <None Remove="images\minispikedown.png" />
@@ -104,6 +106,7 @@
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
   </ItemGroup>
 
 
@@ -111,6 +114,8 @@
     <Resource Include="images\apple.png" />
     <Resource Include="images\block.png" />
     <Resource Include="images\catharsiswater.png" />
+    <Resource Include="images\gravityarrowdown.png" />
+    <Resource Include="images\gravityarrowup.png" />
     <Resource Include="images\killerblock.png" />
     <Resource Include="images\miniblock.png" />
     <Resource Include="images\minispikedown.png" />

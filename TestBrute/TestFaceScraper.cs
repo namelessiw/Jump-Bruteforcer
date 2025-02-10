@@ -194,7 +194,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(199, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(203, 218.1, 0, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(200, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(204, 218.1, 0, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
         }
 
         [Fact]
@@ -242,14 +242,14 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(279, 163, 9.4, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Right, cmap);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
 
             v = new PlayerNode(276, 163, 9.4, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Right, cmap);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         [Fact]
@@ -261,15 +261,15 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(279, 165, 9.4, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Right, cmap);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v.State.Should().BeEquivalentTo(new PlayerNode(279, 165, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
 
             v = new PlayerNode(276, 165, 9.4, Bools.CanDJump | Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Right, cmap);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v.State.Should().BeEquivalentTo(new PlayerNode(276, 165, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
         }
 
@@ -283,11 +283,11 @@ namespace TestBrute
 
             var v = new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             v.State.Should().BeEquivalentTo(new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
 
             v = new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             v.State.Should().BeEquivalentTo(new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         [Fact]
@@ -299,14 +299,14 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(328, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Left, cmap);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
 
             v = new PlayerNode(331, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Left, cmap);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         [Fact]
@@ -318,15 +318,15 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(328, 165, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Left, cmap);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v.State.Should().BeEquivalentTo(new PlayerNode(328, 165, 0, Bools.CanDJump | Bools.FaceScraper).State);
 
             v = new PlayerNode(331, 165, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Left, cmap);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v.State.Should().BeEquivalentTo(new PlayerNode(331, 165, 0, Bools.CanDJump | Bools.FaceScraper).State);
         }
 
@@ -619,10 +619,10 @@ namespace TestBrute
             var v = new PlayerNode(378, 205, 1, Bools.None);
             v = v.NewState(Input.Facescraper, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.None).State);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Neutral, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.FaceScraper).State);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
 
         // just gonna not worry about this for now
@@ -736,10 +736,10 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(254, 427.1, 0, Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            Player.IsAlive(v).Should().BeTrue();
 
             v = new PlayerNode(254, 428.1, 0, Bools.FaceScraper);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
         }
         */
 
@@ -753,7 +753,7 @@ namespace TestBrute
 
             var v = new PlayerNode(372, 538.6566, 4.6144875, Bools.FaceScraper | Bools.CanDJump);
             v = v.NewState(Input.Jump | Input.Right, cmap);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            Player.IsAlive(v).Should().BeFalse();
             // v.State.Should().BeEquivalentTo(new PlayerNode(375, 532.0566, -6.6, Bools.FaceScraper | Bools.FacingRight).State);
         }
 

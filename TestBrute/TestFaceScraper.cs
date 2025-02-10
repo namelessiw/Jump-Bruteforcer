@@ -65,6 +65,25 @@ namespace TestBrute
         }
 
         [Fact]
+        public void TestFaceScraperLeftRightInputs()
+        {
+            string path = @$"..\..\..\instance_maps\rHell1.txt";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".txt", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(88, 218.3, 0, Bools.CanDJump | Bools.FaceScraper);
+
+            v = v.NewState(Input.Right, cmap);
+
+            v.State.Should().BeEquivalentTo(new PlayerNode(91, 218.3, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+
+            v = v.NewState(Input.Left, cmap);
+
+            v.State.Should().BeEquivalentTo(new PlayerNode(88, 218.3, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
+        }
+
+        [Fact]
         public void TestNoInputsFaceScraperFacingLeft()
         {
             string path = @$"..\..\..\instance_maps\rHell1.txt";

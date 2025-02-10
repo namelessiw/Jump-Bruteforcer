@@ -118,7 +118,7 @@ namespace Jump_Bruteforcer
                          from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
                          where hitbox[spriteX, spriteY]
                          let x = o.X + spriteX - 5
-                         let y = o.Y + spriteY - 7
+                         let y = o.Y + spriteY - 8
                          where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                          group new { x, y, o } by (x, y) into pixel
                          select pixel);

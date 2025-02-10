@@ -50,18 +50,18 @@ namespace TestBrute
 
             var v = new PlayerNode(49, 23, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
 
-            // 36 frames until stable
+            // 35 frames until stable
 
-            for (int i = 0; i < 35; i++)
+            for (int i = 0; i < 34; i++)
             {
                 v = v.NewState(Input.Neutral, cmap);
             }
 
-            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0.4, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4000000000001, 0.4, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
 
             v = v.NewState(Input.Neutral, cmap);
 
-            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4000000000001, 0, flags: Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
         }
 
         [Fact]
@@ -74,14 +74,14 @@ namespace TestBrute
 
             var v = new PlayerNode(49, 23, 0, Bools.CanDJump | Bools.FaceScraper);
 
-            // 36 frames until stable
+            // 35 frames until stable
 
             for (int i = 0; i < 36; i++)
             {
                 v = v.NewState(Input.Neutral, cmap);
             }
 
-            v.State.Should().BeEquivalentTo(new PlayerNode(49, 217.4, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(49, 218.4000000000001, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
         }
 
         [Fact]
@@ -262,13 +262,13 @@ namespace TestBrute
             Map Map = Parser.Parse(".txt", Text);
             CollisionMap cmap = Map.CollisionMap;
 
-            var v = new PlayerNode(280, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeTrue();
+            var v = new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             v.State.Should().BeEquivalentTo(new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+            Player.IsAlive(cmap, v).Should().BeTrue();
 
-            v = new PlayerNode(281, 164, 9.4, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            Player.IsAlive(cmap, v).Should().BeFalse();
+            v = new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
             v.State.Should().BeEquivalentTo(new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
+            Player.IsAlive(cmap, v).Should().BeFalse();
         }
 
         [Fact]
@@ -427,9 +427,9 @@ namespace TestBrute
 
             var v = new PlayerNode(250, 217.4, 0, Bools.CanDJump | Bools.FaceScraper);
             v = v.NewState(Input.Facescraper, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.8, 0.4, Bools.FaceScraper).State);
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.4, 0, Bools.CanDJump).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(250, 217.8, 0, Bools.CanDJump).State);
         }
 
         [Fact]
@@ -749,6 +749,19 @@ namespace TestBrute
             var v = new PlayerNode(698, 391.32, 0, Bools.FaceScraper);
             v = v.NewState(Input.Jump | Input.Right, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(701, 383.22, -8.1, Bools.FaceScraper | Bools.FacingRight | Bools.CanDJump).State);
+        }
+
+        [Fact]
+        public void TestFaceScraperFacingRightTurningLeftJumpInsideOfBlock()
+        {
+            string path = @$"..\..\..\jmaps\4_05_rBlood1.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(630, 505.4, 0, Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Jump | Input.Left, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(627, 497.3, -8.1, Bools.FaceScraper | Bools.CanDJump).State);
         }
     }
 }

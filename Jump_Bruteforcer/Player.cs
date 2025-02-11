@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Jump_Bruteforcer
 {
@@ -40,6 +41,34 @@ namespace Jump_Bruteforcer
         {
             return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
         }
+        private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown, facingRight).HasFlag(type);
+            }
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
+        }
+        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            if (facescraper)
+            {
+                return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y), kidUpsidedown, facingRight).HasFlag(type);
+            }
+            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
+        }
+        private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            if (facescraper)
+            {
+                return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap, facingRight, facescraper);
+            }
+            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
+        }
+        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        {
+            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
+        }
 
 
 
@@ -64,6 +93,7 @@ namespace Jump_Bruteforcer
             State state = node.State;
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
+            var facingRightAtBeginning = (flags & Bools.FacingRight) == Bools.FacingRight;
 
             //corresponds to global.grav = 1
             bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
@@ -71,110 +101,120 @@ namespace Jump_Bruteforcer
             bool kidUpsidedown = (node.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; //TODO replace with the correct calculation
 
             // mutate state variables here:
+            if ((input & Input.Facescraper) != Input.Facescraper)
+            {
             //step event:
             beginningOfStepEvent:
-            int h = (input & Input.Left) == Input.Left ? -1 : 0;
-            h = (input & Input.Right) == Input.Right ? 1 : h;
-            //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
-            if (h != 0)
-            {
-                if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                int h = (input & Input.Left) == Input.Left ? -1 : 0;
+                h = (input & Input.Right) == Input.Right ? 1 : h;
+                //vines
+                VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+                VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+                if (h != 0)
                 {
-                    flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
-                }
-            }
-                
-            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
-            if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
-            {
-                hSpeed = h * PhysicsParams.WALKING_SPEED;
-            }
-            int onPlatformOffset = kidUpsidedown ? -4 : 4;
-            flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
-            vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
-            //  playerJump
-            int vspeedDirection = globalGravInverted ? -1 : 1;
-            if ((input & Input.Jump) == Input.Jump)
-            {
-                double checkOffset = globalGravInverted ? -1 : 1;
-                
-                if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
-                {
-                    vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
-                    flags |= Bools.CanDJump;
-                }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap))
-                {
-                    vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
-                    flags &= ~Bools.CanDJump;
-                }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap))
-                {
-                    vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
-                    flags |= Bools.CanDJump;
+                    if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
+                    {
+                        flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
+                    }
                 }
 
-            }
-            //  playerVJump
-            if ((input & Input.Release) == Input.Release & (vSpeed < 0 & !globalGravInverted | vSpeed > 0 & globalGravInverted))
-            {
-                vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
-            }
-            //more vines
-            int vineOffset = globalGravInverted ? -1 : 1;
-            int upsidedownKidVSpeedDirection = globalGravInverted ? -1 : 1;
-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
-            {
-                vSpeed = 2 * upsidedownKidVSpeedDirection;
-                flags |= Bools.FacingRight;
-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if (h == 1)
+                vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
+                vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+                if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
                 {
-                    vSpeed = -9 * upsidedownKidVSpeedDirection;
-                    hSpeed = 15;
+                    hSpeed = h * PhysicsParams.WALKING_SPEED;
                 }
-            }
-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
-            {
-                vSpeed = 2 * upsidedownKidVSpeedDirection;
-                flags &= ~Bools.FacingRight;
-                //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
-                if (h == -1)
+                int onPlatformOffset = kidUpsidedown ? -4 : 4;
+                flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+                vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
+                //  playerJump
+                int vspeedDirection = globalGravInverted ? -1 : 1;
+                if ((input & Input.Jump) == Input.Jump)
                 {
-                    vSpeed = -9 * upsidedownKidVSpeedDirection;
-                    hSpeed = -15;
+                    double checkOffset = globalGravInverted ? -1 : 1;
+
+                    if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
+                    {
+                        vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
+                        flags |= Bools.CanDJump;
+                    }
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap))
+                    {
+                        vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
+                        flags &= ~Bools.CanDJump;
+                    }
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap))
+                    {
+                        vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
+                        flags |= Bools.CanDJump;
+                    }
+
                 }
-            }
-            //global.grav
-            if ((node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
+                //  playerVJump
+                if ((input & Input.Release) == Input.Release & (vSpeed < 0 & !globalGravInverted | vSpeed > 0 & globalGravInverted))
+                {
+                    vSpeed *= PhysicsParams.RELEASE_MULTIPLIER;
+                }
+                //more vines
+                int vineOffset = globalGravInverted ? -1 : 1;
+                int upsidedownKidVSpeedDirection = globalGravInverted ? -1 : 1;
+                if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+                {
+                    vSpeed = 2 * upsidedownKidVSpeedDirection;
+                    flags |= Bools.FacingRight;
+                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                    if (h == 1)
+                    {
+                        vSpeed = -9 * upsidedownKidVSpeedDirection;
+                        hSpeed = 15;
+                    }
+                }
+                if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+                {
+                    vSpeed = 2 * upsidedownKidVSpeedDirection;
+                    flags &= ~Bools.FacingRight;
+                    //simplified physics where you always jump off a vinebecause keyboard_check is unimplemented
+                    if (h == -1)
+                    {
+                        vSpeed = -9 * upsidedownKidVSpeedDirection;
+                        hSpeed = -15;
+                    }
+                }
+                //global.grav
+                if ((node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
+                {
+                    flags |= Bools.ParentInvertedGravity;
+                }
+                if (globalGravInverted & !kidUpsidedown)
+                {
+                    y -= 4;
+                    (xPrevious, yPrevious) = (x, y);
+                    vSpeed = 0;
+                    hSpeed = 0;
+                    Bools facingDirection = Bools.FacingRight & flags;
+                    Bools invertedGravity = Bools.InvertedGravity & flags;
+                    flags = facingDirection | invertedGravity | Bools.CanDJump;
+                    kidUpsidedown = true;
+                    goto beginningOfStepEvent;
+                }
+                if (!globalGravInverted & kidUpsidedown)
+                {
+                    y += 4;
+                    (xPrevious, yPrevious) = (x, y);
+                    vSpeed = 0;
+                    hSpeed = 0;
+                    Bools facingDirection = Bools.FacingRight & flags;
+                    Bools invertedGravity = Bools.InvertedGravity & flags;
+                    flags = facingDirection | invertedGravity | Bools.CanDJump;
+                    kidUpsidedown = false;
+                }
+            }  //facescraper
+            else
             {
-                flags |= Bools.ParentInvertedGravity;
-            }
-            if (globalGravInverted& !kidUpsidedown)
-            {
-                y -= 4;
-                (xPrevious, yPrevious) = (x, y);
-                vSpeed = 0;
-                hSpeed = 0;
-                Bools facingDirection = Bools.FacingRight & flags;
-                Bools invertedGravity = Bools.InvertedGravity & flags;
-                flags = facingDirection | invertedGravity | Bools.CanDJump;
-                kidUpsidedown = true;
-                goto beginningOfStepEvent;
-            }
-            if (!globalGravInverted & kidUpsidedown)
-            {
-                y += 4;
-                (xPrevious, yPrevious) = (x, y);
-                vSpeed = 0;
-                hSpeed = 0;
-                Bools facingDirection = Bools.FacingRight & flags;
-                Bools invertedGravity = Bools.InvertedGravity & flags;
-                flags = facingDirection | invertedGravity | Bools.CanDJump;
-                kidUpsidedown = false;
+                int h = (node.Action & Input.Left) == Input.Left ? -1 : 0;
+                h = (node.Action & Input.Right) == Input.Right ? 1 : h;
+                hSpeed = h * PhysicsParams.WALKING_SPEED;
+
             }
 
 

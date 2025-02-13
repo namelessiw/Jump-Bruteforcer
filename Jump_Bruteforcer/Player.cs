@@ -95,6 +95,7 @@ namespace Jump_Bruteforcer
         public static State? Update(PlayerNode node, Input input, CollisionMap collisionMap)
         {
             State state = node.State;
+
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
             var facingRightAtBeginning = (flags & Bools.FacingRight) == Bools.FacingRight;
@@ -196,22 +197,22 @@ namespace Jump_Bruteforcer
             //facescraper
             else
             {
-                //int h = (parent.Action & Input.Left) == Input.Left ? -1 : 0;
-                //h = (parent.Action & Input.Right) == Input.Right ? 1 : h;
-                //hSpeed = h * PhysicsParams.WALKING_SPEED;
+                int h = (node.State.ParentInput & Input.Left) == Input.Left ? -1 : 0;
+                h = (node.State.ParentInput & Input.Right) == Input.Right ? 1 : h;
+                hSpeed = h * PhysicsParams.WALKING_SPEED;
 
             }
-            //if ((parent.Action & Input.Facescraper) == Input.Facescraper)
-            //{
-            //    if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
-            //    {
-            //        flags |= Bools.FaceScraper;
-            //    }
-            //    else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), kidUpsidedown, collisionMap))
-            //    {
-            //        flags &= ~Bools.FaceScraper;
-            //    }
-            //}
+            if ((node.State.ParentInput & Input.Facescraper) == Input.Facescraper)
+            {
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                {
+                    flags |= Bools.FaceScraper;
+                }
+                else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), kidUpsidedown, collisionMap))
+                {
+                    flags &= ~Bools.FaceScraper;
+                }
+            }
 
             //global.grav
             if ((node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
@@ -371,7 +372,7 @@ namespace Jump_Bruteforcer
             {
                 flags &= ~Bools.CanDJump;
             }
-            return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
+            return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags, ParentInput=input};
         }
     }
 }

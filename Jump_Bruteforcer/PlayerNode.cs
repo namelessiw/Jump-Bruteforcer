@@ -26,6 +26,7 @@ namespace Jump_Bruteforcer
         public double Y { get; init; }
         public double VSpeed { get; init; }
         public Bools Flags { get; init; }
+        public Input ParentInput { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
 
 
@@ -39,6 +40,7 @@ namespace Jump_Bruteforcer
         public State State { get; set; }
         public int NodeIndex { get; set; }
         public uint PathCost { get; set; }
+
 
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);

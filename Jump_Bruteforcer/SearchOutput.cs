@@ -75,7 +75,7 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        public static string GetMacro(List<Input> inputs)
+        public static string GetMacro(List<Input> inputs, bool scraperOn)
         {
             if (inputs.Count == 0)
                 return "";
@@ -86,6 +86,18 @@ namespace Jump_Bruteforcer
 
             foreach (Input input in inputs)
             {
+                if ((input & Input.Facescraper) == Input.Facescraper)
+                {
+
+                    string MenuDirection = scraperOn ? "LeftArrow" : "RightArrow";
+
+                    // menu movement left/right dependant on current hitbox, go left to regular, go right to facescraper, full left macro:
+                    // Escape(PR)>LeftShift(R)>>>>>>>>>>>>>>>>>>>>>>LeftShift(PR)>LeftArrow(P)>LeftArrow(R),Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>
+                    sb.Append("Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>LeftShift(RP)>" + MenuDirection + "(RP)>.,Escape(PR)>>>>>>>>>>>>>>>>>>>>>>>");
+
+                    scraperOn = !scraperOn;
+                    continue;
+                }
                 bool InputChanged = false;
 
                 NextDirection = input & Input.Right | input & Input.Left;

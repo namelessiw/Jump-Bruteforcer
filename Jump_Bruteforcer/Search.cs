@@ -136,7 +136,7 @@ namespace Jump_Bruteforcer
                     {
                         (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
-                        Macro = SearchOutput.GetMacro(inputs);
+                        Macro = SearchOutput.GetMacro(inputs, (root.State.Flags & Bools.FaceScraper) == Bools.FaceScraper);
                         Strat = SearchOutput.GetInputString(inputs);
                         PlayerPath = points;
 

@@ -197,12 +197,12 @@ namespace Jump_Bruteforcer
             //facescraper
             else
             {
-                int h = (node.State.ParentInput & Input.Left) == Input.Left ? -1 : 0;
-                h = (node.State.ParentInput & Input.Right) == Input.Right ? 1 : h;
+                int h = (node.Action & Input.Left) == Input.Left ? -1 : 0;
+                h = (node.Action & Input.Right) == Input.Right ? 1 : h;
                 hSpeed = h * PhysicsParams.WALKING_SPEED;
 
             }
-            if ((node.State.ParentInput & Input.Facescraper) == Input.Facescraper)
+            if ((node.Action & Input.Facescraper) == Input.Facescraper)
             {
                 if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
                 {
@@ -372,7 +372,7 @@ namespace Jump_Bruteforcer
             {
                 flags &= ~Bools.CanDJump;
             }
-            return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags, ParentInput=input};
+            return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Jump_Bruteforcer
         public double Y { get; init; }
         public double VSpeed { get; init; }
         public Bools Flags { get; init; }
-        public Input ParentInput { get; init; }
+
         public int RoundedY { get { return (int)Math.Round(Y); } }
 
 
@@ -40,6 +40,7 @@ namespace Jump_Bruteforcer
         public State State { get; set; }
         public int NodeIndex { get; set; }
         public uint PathCost { get; set; }
+        public Input Action { get; set; }
 
 
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Facescraper);
@@ -53,6 +54,13 @@ namespace Jump_Bruteforcer
         {
             State = state;
             PathCost = uint.MaxValue;
+            Action = Input.Neutral;
+        }
+        public PlayerNode(State state, Input Action)
+        {
+            State = state;
+            PathCost = uint.MaxValue;
+            this.Action = Action;
         }
 
         public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
@@ -115,7 +123,7 @@ namespace Jump_Bruteforcer
             State? newState = Player.Update(this, input, CollisionMap);
             if (newState != null)
             {
-                return new PlayerNode(newState.Value);
+                return new PlayerNode(newState.Value, input);
             }
             return null;
             

@@ -157,7 +157,7 @@ namespace Jump_Bruteforcer
                             continue;
                         }
 
-                        uint newCost = v.PathCost + 1;
+                        uint newCost = v.PathCost + (uint)((input & Input.Facescraper) == Input.Facescraper ? 48 : 1);
                         if (!openSet.Contains(w) || newCost < w.PathCost)
                         {
                             closedStates[w.State.X, w.State.RoundedY] += 1;

@@ -112,7 +112,7 @@ namespace Jump_Bruteforcer
             }
 
             //left facing scraper
-            var scraperquery = (from o in Objects
+            query = (from o in Objects
                          where o.CollisionType != CollisionType.None
                          let hitbox = toLeftScraperHitbox[o.ObjectType]
                          from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
@@ -132,13 +132,13 @@ namespace Jump_Bruteforcer
                 }
             }
             var scrapercomparer = Comparer<CollisionType>.Create((a, b) => b.CompareTo(a));
-            foreach (var pixel in scraperquery)
+            foreach (var pixel in query)
             {
                 leftscrapercollision[pixel.Key.x, pixel.Key.y] = (from o in pixel select o.o.CollisionType).Aggregate((a, b) => a | b);
             }
 
             //right facing scraper
-            scraperquery = (from o in Objects
+            query = (from o in Objects
                          where o.CollisionType != CollisionType.None
                          let hitbox = toRightScraperHitbox[o.ObjectType]
                          from spriteX in Enumerable.Range(0, hitbox.GetLength(0))

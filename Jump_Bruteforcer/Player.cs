@@ -25,53 +25,17 @@ namespace Jump_Bruteforcer
         /// <param name="type"></param>
         /// <param name="CollisionMap"></param>
         /// <returns></returns>
-        private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
+        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap, Bools flags)
         {
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
-        }
-        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
-        {
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
-        }
-        private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap)
-        {
-            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
-        }
-        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap)
-        {
-            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
-        }
-        private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
-        {
-            if (facescraper)
+            if ((flags & Bools.FaceScraper) == Bools.FaceScraper)
             {
-                return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown, facingRight).HasFlag(type);
+                return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y), kidUpsidedown, (flags & Bools.FacingRight) == Bools.FacingRight).HasFlag(type);
             }
             return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
         }
-        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap, bool facingRight, bool facescraper)
+        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap, Bools flags)
         {
-            if (facescraper)
-            {
-                return CollisionMap.GetCollisionTypes(x, (int)Math.Round(y), kidUpsidedown, facingRight).HasFlag(type);
-            }
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
-        }
-        private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap, bool facingRight, bool facescraper)
-        {
-            if (facescraper)
-            {
-                return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap, facingRight, facescraper);
-            }
-            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
-        }
-        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap, bool facingRight, bool facescraper)
-        {
-            if (facescraper)
-            {
-                return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap, facingRight, facescraper);
-            }
-            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
+            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap, flags);
         }
 
 
@@ -134,25 +98,25 @@ namespace Jump_Bruteforcer
                     hSpeed = h * PhysicsParams.WALKING_SPEED;
                 }
                 int onPlatformOffset = kidUpsidedown ? -4 : 4;
-                flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+                flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap, flags) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
                 vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
                 //  playerJump
                 vspeedDirection = globalGravInverted ? -1 : 1;
                 if ((input & Input.Jump) == Input.Jump)
                 {
                     double checkOffset = globalGravInverted ? -1 : 1;
-
-                    if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight || facingRightAtBeginning, (flags & Bools.FaceScraper) == Bools.FaceScraper) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    var facingRightAtBeginningFlags = flags | (facingRightAtBeginning ? Bools.FacingRight : Bools.None);
+                    if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap, facingRightAtBeginningFlags) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap, flags) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap, flags))
                     {
                         vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
                         flags |= Bools.CanDJump;
                     }
-                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap, flags))
                     {
                         vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                         flags &= ~Bools.CanDJump;
                     }
-                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                    else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap, flags))
                     {
                         vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                         flags |= Bools.CanDJump;
@@ -167,7 +131,7 @@ namespace Jump_Bruteforcer
                 //more vines
                 int vineOffset = globalGravInverted ? -1 : 1;
                 int upsidedownKidVSpeedDirection = globalGravInverted ? -1 : 1;
-                if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+                if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap, flags))
                 {
                     vSpeed = 2 * upsidedownKidVSpeedDirection;
                     flags |= Bools.FacingRight;
@@ -178,7 +142,7 @@ namespace Jump_Bruteforcer
                         hSpeed = 15;
                     }
                 }
-                if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+                if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap, flags))
                 {
                     vSpeed = 2 * upsidedownKidVSpeedDirection;
                     flags &= ~Bools.FacingRight;
@@ -204,11 +168,11 @@ namespace Jump_Bruteforcer
             }
             if ((node.Action & Input.Facescraper) == Input.Facescraper)
             {
-                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, true))
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, flags))
                 {
                     flags |= Bools.FaceScraper;
                 }
-                else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), kidUpsidedown, collisionMap))
+                else if ((flags & Bools.FaceScraper) == Bools.FaceScraper & PlaceFree(x, Math.Floor(y - 3), kidUpsidedown, collisionMap, flags & ~Bools.FaceScraper))
                 {
                     flags &= ~Bools.FaceScraper;
                 }
@@ -260,25 +224,25 @@ namespace Jump_Bruteforcer
                 {
                     case CollisionType.Solid:
                         (x, y) = (xPrevious, yPrevious);
-                        if (!PlaceFree(x + (int)hSpeed, y, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                        if (!PlaceFree(x + (int)hSpeed, y, kidUpsidedown, collisionMap, flags))
                         {
                             int sign = Math.Sign(hSpeed);
                             if (sign != 0)
                             {
-                                while (PlaceFree(x + sign, y, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                                while (PlaceFree(x + sign, y, kidUpsidedown, collisionMap, flags))
                                 {
                                     x += sign;
                                 }
                                 hSpeed = 0;
                             }
                         }
-                        if (!PlaceFree(x, y + vSpeed, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                        if (!PlaceFree(x, y + vSpeed, kidUpsidedown, collisionMap, flags))
                         {
                             int sign = Math.Sign(vSpeed);
                             if (sign != 0)
                             {
                                 flags |= sign == vspeedDirection ? Bools.CanDJump : Bools.None;
-                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                                while (Math.Abs(vSpeed) >= 1 && PlaceFree(x, y + sign, kidUpsidedown, collisionMap, flags))
                                 {
                                     y += sign;
                                     vSpeed -= sign;
@@ -287,13 +251,13 @@ namespace Jump_Bruteforcer
                             }
 
                         }
-                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                        if (!PlaceFree(x + (int)hSpeed, y + vSpeed, kidUpsidedown, collisionMap, flags))
                         {
                             hSpeed = 0;
                         }
                         x += (int)hSpeed;
                         y += vSpeed;
-                        if (!PlaceFree(x, y, kidUpsidedown, collisionMap, (flags & Bools.FacingRight) == Bools.FacingRight, (flags & Bools.FaceScraper) == Bools.FaceScraper))
+                        if (!PlaceFree(x, y, kidUpsidedown, collisionMap, flags))
                         {
                             (x, y) = (xPrevious, yPrevious);
                         }

@@ -114,7 +114,7 @@ namespace Jump_Bruteforcer
             var startTime = Stopwatch.GetTimestamp();
             FloodFill();
 
-            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
+            PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, Bools.CanDJump | Bools.FacingRight | Bools.FaceScraper);
 
             root.PathCost = 0;
             int nodesVisited;

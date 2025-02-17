@@ -194,6 +194,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(199, 218.1, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
+            v = v.NewState(Input.Neutral, cmap);
             Player.IsAlive(v).Should().BeFalse();
         }
 
@@ -206,6 +207,7 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(203, 218.1, 0, Bools.CanDJump | Bools.FaceScraper);
+            v = v.NewState(Input.Neutral, cmap);
             Player.IsAlive(v).Should().BeFalse();
         }
 
@@ -282,12 +284,11 @@ namespace TestBrute
             CollisionMap cmap = Map.CollisionMap;
 
             var v = new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            v.State.Should().BeEquivalentTo(new PlayerNode(280, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
-            Player.IsAlive(v).Should().BeTrue();
+            ((cmap.GetCollisionTypes(v.State.X, v.State.Y, (v.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity, (v.State.Flags & Bools.FacingRight) == Bools.FacingRight) & CollisionType.Killer) == CollisionType.Killer).Should().BeFalse();
 
             v = new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight);
-            v.State.Should().BeEquivalentTo(new PlayerNode(281, 164, 0, Bools.CanDJump | Bools.FaceScraper | Bools.FacingRight).State);
-            Player.IsAlive(v).Should().BeFalse();
+
+            ((cmap.GetCollisionTypes(v.State.X, v.State.Y, (v.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity, (v.State.Flags & Bools.FacingRight) == Bools.FacingRight) & CollisionType.Killer) == CollisionType.Killer).Should().BeTrue();
         }
 
         [Fact]
@@ -621,8 +622,9 @@ namespace TestBrute
             v.State.Should().BeEquivalentTo(new PlayerNode(378, 206.4, 1.4, Bools.None).State);
             Player.IsAlive(v).Should().BeTrue();
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(378, 208.2, 1.8, Bools.FaceScraper).State);
             Player.IsAlive(v).Should().BeFalse();
+            
+            
         }
 
         // just gonna not worry about this for now

@@ -89,26 +89,6 @@ namespace Jump_Bruteforcer
             return x;
         }
 
-        public CollisionType GetHighestPriorityCollisionType(int x, int y, bool invertedGrav)
-        {
-            if (invertedGrav)
-            {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB( (int)Collision[x, y + 3]) : CollisionType.None;
-            }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)Collision[x, y]) : CollisionType.None;
-        }
-        public CollisionType GetHighestPriorityCollisionType(int x, int y, bool invertedGrav, bool scraperFacingRight)
-        {
-            x += (scraperFacingRight ? 7 : 3);
-            y -= 3;
-            var collision = scraperFacingRight ? RightScraperCollision : LeftScraperCollision;
-            if (invertedGrav)
-            {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)collision[x, y + 3]) : CollisionType.None;
-            }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)collision[x, y]) : CollisionType.None;
-        }
-
 
         public CollisionType GetHighestPriorityCollisionType(int x, double y, bool invertedGrav)
         {
@@ -129,21 +109,13 @@ namespace Jump_Bruteforcer
             }
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? (CollisionType)UnsetAllBitsExceptMSB((int)collision[x, (int)Math.Round(y)]) : CollisionType.None;
         }
+
         /// <summary>
         /// returns the set of CollisionTypes at pixel (x, y) in order of descending priority
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public CollisionType GetCollisionTypes(int x, int y, bool invertedGrav)
-        {
-            if (invertedGrav)
-            {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? Collision[x, y + 3] : CollisionType.None;
-            }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? Collision[x, y] : CollisionType.None;
-
-        }
         public CollisionType GetCollisionTypes(int x, double y, bool invertedGrav)
         {
             if (invertedGrav)
@@ -151,18 +123,6 @@ namespace Jump_Bruteforcer
                 return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : CollisionType.None;
             }
             return (uint)x < Map.WIDTH & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : CollisionType.None;
-        }
-        public CollisionType GetCollisionTypes(int x, int y, bool invertedGrav, bool scraperFacingRight)
-        {
-            x += (scraperFacingRight ? 7 : 3);
-            y -= 3;
-            var collision = scraperFacingRight ? RightScraperCollision : LeftScraperCollision;
-            if (invertedGrav)
-            {
-                return (uint)x < Map.WIDTH & (uint)y + 3 < Map.HEIGHT ? collision[x, y + 3] : CollisionType.None;
-            }
-            return (uint)x < Map.WIDTH & (uint)y < Map.HEIGHT ? collision[x, y] : CollisionType.None;
-
         }
         public CollisionType GetCollisionTypes(int x, double y, bool invertedGrav, bool scraperFacingRight)
         {

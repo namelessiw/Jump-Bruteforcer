@@ -23,18 +23,12 @@ namespace Jump_Bruteforcer
         /// <param name="type"></param>
         /// <param name="CollisionMap"></param>
         /// <returns></returns>
-        private static bool PlaceMeeting(int x, int y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
-        {
-            return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
-        }
+
         private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
             return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
         }
-        private static bool PlaceFree(int x, int y, bool kidUpsidedown, CollisionMap CollisionMap)
-        {
-            return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
-        }
+
         private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
             return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);

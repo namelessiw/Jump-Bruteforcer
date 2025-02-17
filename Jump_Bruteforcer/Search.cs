@@ -57,7 +57,19 @@ namespace Jump_Bruteforcer
 
         public void FloodFill()
         {
-            var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x - 1, goal.y) }, { (goal.x + 1, goal.y) } };
+            HashSet<(int, int)> CurrentGoalPixels;
+            if (goal.x + 1 == Map.WIDTH)
+            {
+                CurrentGoalPixels = new() { { goal }, { (goal.x - 2, goal.y) }, { (goal.x - 1, goal.y) } };
+            }
+            else if (goal.x - 1 < 0)
+            {
+                CurrentGoalPixels = new() { { goal }, { (goal.x + 2, goal.y) }, { (goal.x + 1, goal.y) } };
+            }
+            else
+            {
+                CurrentGoalPixels = new() { { goal }, { (goal.x + 1, goal.y) }, { (goal.x - 1, goal.y) } };
+            }
 
             for (int X = 0; X < Map.WIDTH; X++)
             {

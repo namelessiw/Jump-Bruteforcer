@@ -13,7 +13,7 @@
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
         <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="977" Canvas.Top="61"/>
         <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <StackPanel Orientation="Horizontal" Canvas.Left="400" Canvas.Top="5">
+        <StackPanel Orientation="Horizontal" Canvas.Left="180" Canvas.Top="5">
             <Label Content="Start x" />
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartX}" Width="79"/>
             <Label Content="Start y"/>
@@ -24,6 +24,10 @@
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78"/>
             <Label Content="Start VSpeed"/>
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78"/>
+            <Label Content="Start Facing Right"/>
+            <CheckBox IsChecked="{Binding StartFacingRight}" VerticalAlignment="Center" />
+            <Label Content="Start FaceScraper"/>
+            <CheckBox IsChecked="{Binding StartScraper}" VerticalAlignment="Center"  />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Canvas.Top="30" Canvas.Left="870">
             <Label Content="Nodes Visited"/>
@@ -58,7 +62,7 @@
                 </EllipseGeometry>
             </Path.Data>
         </Path>
-        <Button Content="Start Search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="276" Canvas.Top="5" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Start Search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="90" Canvas.Top="5" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>

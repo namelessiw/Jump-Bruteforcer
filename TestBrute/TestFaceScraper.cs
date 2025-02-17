@@ -144,6 +144,50 @@ namespace TestBrute
 
             v.State.Should().BeEquivalentTo(new PlayerNode(44, 218.2, 0, flags: Bools.CanDJump | Bools.FaceScraper).State);
         }
+        [Fact]
+        public void TestSwitchToFaceScraperNearRightWallFail()
+        {
+            string path = @$"..\..\..\jmaps\piece 4.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(602, 481.5034, 0.3, Bools.CanDJump | Bools.FacingRight);
+            v = v.NewState(Input.Left, cmap);
+            v = v.NewState(Input.Facescraper, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(596, 484.8034, 1.5, flags: Bools.None).State);
+        }
+        [Fact]
+        public void TestSwitchToFaceScraperNearRightWallFail2()
+        {
+            string path = @$"..\..\..\jmaps\piece 4.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(602, 481.5034, 0.3, Bools.CanDJump | Bools.FacingRight);
+            v = v.NewState(Input.Left, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v = v.NewState(Input.Facescraper, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(599, 486.7034, 1.9, flags: Bools.None).State);
+        }
+        [Fact]
+        public void TestSwitchToFaceScraperNearRightWallSucceeds()
+        {
+            string path = @$"..\..\..\jmaps\piece 4.jmap";
+            string Text = File.ReadAllText(path);
+            Map Map = Parser.Parse(".jmap", Text);
+            CollisionMap cmap = Map.CollisionMap;
+
+            var v = new PlayerNode(602, 481.5034, 0.3, Bools.CanDJump | Bools.FacingRight);
+            v = v.NewState(Input.Left, cmap);
+            v = v.NewState(Input.Neutral, cmap);
+            v = v.NewState(Input.Facescraper, cmap);
+            v = v.NewState(Input.Left, cmap);
+            v.State.Should().BeEquivalentTo(new PlayerNode(596, 486.7034, 1.9, flags: Bools.FaceScraper).State);
+        }
 
         [Fact]
         public void TestFaceScraperBonkCeilingFacingRight()
@@ -464,7 +508,7 @@ namespace TestBrute
             v = v.NewState(Input.Facescraper, cmap);
             v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.4, 0, Bools.None).State);
             v = v.NewState(Input.Neutral, cmap);
-            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.8, 0.4, Bools.FaceScraper).State);
+            v.State.Should().BeEquivalentTo(new PlayerNode(390, 55.8, 0.4, Bools.FaceScraper | Bools.FacingRight).State);
         }
 
         [Fact]

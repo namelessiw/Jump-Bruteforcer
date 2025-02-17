@@ -128,7 +128,7 @@ namespace Jump_Bruteforcer
         {
             var startTime = Stopwatch.GetTimestamp();
             FloodFill();
-            Bools flags = Bools.None/* | Bools.CanDJump*/;
+            Bools flags = Bools.None | Bools.CanDJump;
             flags |= StartFacingRight ? Bools.FacingRight : Bools.None;
             flags |= StartScraper ? Bools.FaceScraper : Bools.None;
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, flags);

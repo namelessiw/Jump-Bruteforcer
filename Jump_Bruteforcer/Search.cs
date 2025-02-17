@@ -61,7 +61,17 @@ namespace Jump_Bruteforcer
 
         public void FloodFill()
         {
-            var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x - 1, goal.y) }, { (goal.x + 1, goal.y) } };
+            if (goal.x + 1 == Map.WIDTH)
+            {
+                var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x - 2, goal.y) }, { (goal.x - 1, goal.y) } };
+            }else if (goal.x - 1 < 0)
+            {
+                var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x + 2, goal.y) }, { (goal.x + 1, goal.y) } };
+            }else
+            {
+                var CurrentGoalPixels = new HashSet<(int, int)>() { { goal }, { (goal.x + 1, goal.y) }, { (goal.x - 1, goal.y) } };
+            }
+            
 
             for (int X = 0; X < Map.WIDTH; X++)
             {
@@ -117,7 +127,7 @@ namespace Jump_Bruteforcer
         {
             var startTime = Stopwatch.GetTimestamp();
             FloodFill();
-            Bools flags = Bools.CanDJump | Bools.FacingRight;
+            Bools flags = Bools.None/* | Bools.CanDJump*/;
             flags |= StartFacingRight ? Bools.FacingRight : Bools.None;
             flags |= StartScraper ? Bools.FaceScraper : Bools.None;
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, flags);

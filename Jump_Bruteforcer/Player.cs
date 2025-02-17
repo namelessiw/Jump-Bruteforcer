@@ -168,7 +168,7 @@ namespace Jump_Bruteforcer
             }
             if ((node.Action & Input.Facescraper) == Input.Facescraper)
             {
-                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, flags))
+                if ((flags & Bools.FaceScraper) != Bools.FaceScraper & !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, collisionMap, flags | Bools.FaceScraper))
                 {
                     flags |= Bools.FaceScraper;
                 }

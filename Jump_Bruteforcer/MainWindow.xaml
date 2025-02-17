@@ -11,9 +11,9 @@
     </Window.Resources>
     <Canvas x:Name="CanvasWindow">
         <Button Content="Import Map"  Click="ButtonSelectJMap_Click" Canvas.Left="10" Canvas.Top="10"/>
-        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="977" Canvas.Top="61"/>
-        <Label x:Name="LabelFileName" Canvas.Left="101" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <StackPanel Orientation="Horizontal" Canvas.Left="180" Canvas.Top="5">
+        <Button Content="Toggle Heatmap"  Click="ButtonToggleHeatmap_Click" Canvas.Left="984" Canvas.Top="120" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label x:Name="LabelFileName" Canvas.Left="184" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <StackPanel Orientation="Horizontal" Canvas.Left="280" Canvas.Top="5">
             <Label Content="Start x" />
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartX}" Width="79"/>
             <Label Content="Start y"/>
@@ -24,12 +24,28 @@
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding GoalY}" Width="78"/>
             <Label Content="Start VSpeed"/>
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding StartingVSpeed}" Width="78"/>
-            <Label Content="Start Facing Right"/>
-            <CheckBox IsChecked="{Binding StartFacingRight}" VerticalAlignment="Center" />
-            <Label Content="Start FaceScraper"/>
-            <CheckBox IsChecked="{Binding StartScraper}" VerticalAlignment="Center"  />
+
+
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Canvas.Top="30" Canvas.Left="870">
+        <Grid Width="210" Height="80" Canvas.Left="930" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Content="Start Facing Right" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding StartFacingRight}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" />
+            <Label Content="Start FaceScraper" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding StartScraper}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
+            <Label Content="Start Djump" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding StartDJump}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" />
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Canvas.Top="90" Canvas.Left="870">
             <Label Content="Nodes Visited"/>
             <Label Content="{Binding NodesVisited}"/>
             <Label Content="Time Taken"/>
@@ -64,8 +80,8 @@
         </Path>
         <Button Content="Start Search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="90" Canvas.Top="5" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-        <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
+        <ScrollViewer Canvas.Left="870"  Canvas.Top="172" Height="600"  Width="229" Content="{Binding Strat}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
-        <Button Content="Bruteforce Project" Height="19" Canvas.Left="870" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
+        <Button Content="Bruteforce Project" Height="19" Canvas.Left="870" Canvas.Top="121" Width="100" Click="BruteforceProjectButton_Click" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     </Canvas>
 </Window>

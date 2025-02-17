@@ -15,6 +15,7 @@ namespace Jump_Bruteforcer
         private (int x, int y) goal;
         private bool startScraper;
         private bool startfacingRight;
+        private bool startDJump;
         private string _strat = "";
         private CollisionMap _collisionMap = new(new Dictionary<(int, int), CollisionType>(), null);
         private PointCollection playerPath = new();
@@ -27,6 +28,7 @@ namespace Jump_Bruteforcer
         public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
         public int GoalX { get { return goal.x; } set { goal.x = Math.Clamp(value, 0, Map.WIDTH - 1); OnPropertyChanged(); } }
         public int GoalY { get { return goal.y; } set { goal.y = Math.Clamp(value, 0, Map.HEIGHT - 1); OnPropertyChanged(); } }
+        public bool StartDJump { get { return startDJump; } set { startDJump = value; OnPropertyChanged(); } }
         public bool StartScraper { get { return startScraper; } set { startScraper = value; OnPropertyChanged(); } }
         public bool StartFacingRight { get { return startfacingRight; } set { startfacingRight = value; OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
@@ -128,9 +130,10 @@ namespace Jump_Bruteforcer
         {
             var startTime = Stopwatch.GetTimestamp();
             FloodFill();
-            Bools flags = Bools.None | Bools.CanDJump;
+            Bools flags = Bools.None;
             flags |= StartFacingRight ? Bools.FacingRight : Bools.None;
             flags |= StartScraper ? Bools.FaceScraper : Bools.None;
+            flags |= StartDJump ? Bools.CanDJump : Bools.None;
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed, flags);
 
             root.PathCost = 0;

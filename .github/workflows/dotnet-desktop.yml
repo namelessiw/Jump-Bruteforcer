@@ -71,19 +71,11 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:OutDir=build
-      env:
-        Configuration: ${{ matrix.configuration }}
-        
+    - run: dotnet publish -c Release --self-contained true --artifacts-path out
+    
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: release
-        path: build\Jump Bruteforcer.exe
+        path: out\Jump Bruteforcer.exe

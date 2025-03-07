@@ -71,7 +71,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - run: dotnet publish -c Release --self-contained true --artifacts-path out -r win-x64
+    - run: dotnet publish -c Release --artifacts-path out -r win-x64 --self-contained -p:PublishSingleFile=True -p:PublishTrimmed=True -p:TrimMode=CopyUsed -p:PublishReadyToRun=True
     
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts

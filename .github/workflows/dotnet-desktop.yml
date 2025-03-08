@@ -58,6 +58,8 @@ jobs:
     env:
       Solution_Name: Jump Bruteforcer.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path: TestBrute\TestBrute.csproj  # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE: ${{ github.event.issue.html_url }}
 
     steps:
     - name: Checkout
@@ -79,3 +81,9 @@ jobs:
       with:
         name: release
         path: out\publish\Jump Bruteforcer\release_win-x64\
+
+    - run: gh api --method PATCH \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  /repos/namelessiw/Jump-Bruteforcer/releases/assets/1 \
+   -f "name=out\publish\Jump Bruteforcer\release_win-x64\" -f "label=release"

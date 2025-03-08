@@ -82,5 +82,4 @@ jobs:
         name: release
         path: out\publish\Jump Bruteforcer\release_win-x64\
 
-    - run: | 
-    gh api --method PATCH -H "Accept: application/vnd.github+json"  /repos/namelessiw/Jump-Bruteforcer/releases/assets/1 -f "name=out\publish\Jump Bruteforcer\release_win-x64" -f "label=release"
+    - run: "gh api --method PATCH -H \"Accept: application/vnd.github+json\" -H \"X-GitHub-Api-Version: 2022-11-28\"  /repos/namelessiw/Jump-Bruteforcer/releases/assets/1 -f \"name=out/publish/Jump Bruteforcer/release_win-x64\" -f \"label=release\"

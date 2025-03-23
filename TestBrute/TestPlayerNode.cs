@@ -211,7 +211,7 @@ namespace TestBrute
             Dictionary<(int, int), CollisionType> collision = new();
             CollisionMap cmap = new(collision, null);
                 ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Release, Input.Jump | Input.Release, Input.Left | Input.Jump,
-                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
+                Input.Right | Input.Jump, Input.Left | Input.Release, Input.Right | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release, Input.Facescraper);
 
         PlayerNode n1 = new(400, 400, -1);
 
@@ -249,7 +249,7 @@ namespace TestBrute
             PlayerNode n1 = new(400, 400, 1);
 
             Input[] inputs =  {Input.Neutral, Input.Left, Input.Right, Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump,
-                Input.Right | Input.Jump, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release };
+                Input.Right | Input.Jump, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release, Input.Facescraper };
             PlayerNode[] players = new PlayerNode[inputs.Length];
             for (int i = 0; i < players.Length; i++)
             {
@@ -272,7 +272,7 @@ namespace TestBrute
 
             PlayerNode n1 = new(400, 567.1, 0);
             List<Input> inputs  = new List<Input>() {Input.Left | Input.Jump, Input.Left, Input.Left, Input.Left | Input.Release, Input.Left, Input.Neutral, Input.Neutral,
-            Input.Right | Input.Jump | Input.Release, Input.Right | Input.Release, Input.Right | Input.Release, Input.Right, Input.Neutral};
+            Input.Right | Input.Jump | Input.Release, Input.Right | Input.Release, Input.Right | Input.Release, Input.Right, Input.Neutral, Input.Facescraper};
             PointCollection points = new PointCollection() { new Point(400, 567), new Point(397, 559), new Point(394, 551), new Point(391, 544), new Point(388, 541),
             new Point(385, 539), new Point(385, 537), new Point(385, 535), new Point(388, 532), new Point(391, 531), new Point(394, 531), new Point(397, 532), new Point(397, 533)};
 

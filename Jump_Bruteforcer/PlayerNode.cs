@@ -152,11 +152,15 @@ namespace Jump_Bruteforcer
         public override int GetHashCode() => Hash().GetHashCode();
         public ulong Hash()
         {
+            int x = State.X;
+            double y = Quantize(State.Y);
+            double vspeed = Quantize(State.VSpeed);
+            byte flags = (byte)State.Flags;
 
-            hasher.Append(BitConverter.GetBytes(State.X));
-            hasher.Append(BitConverter.GetBytes(Quantize(State.Y)));
-            hasher.Append(BitConverter.GetBytes(Quantize(State.VSpeed)));
-            hasher.Append(new byte[] { (byte)State.Flags });
+            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref x, 1)));
+            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref y, 1)));
+            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref vspeed, 1)));
+            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref flags, 1)));
             ulong hash = hasher.GetCurrentHashAsUInt64();
             hasher.Reset();
             return hash;

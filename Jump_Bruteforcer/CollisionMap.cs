@@ -102,7 +102,7 @@ namespace Jump_Bruteforcer
             {
                 return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : CollisionType.None;
             }
-            return (uint)x >= 0 & (uint)x < Map.WIDTH & (uint)Math.Round(y) > 0 & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : CollisionType.None;
+            return (uint)x >= 0 & (uint)x < Map.WIDTH & (uint)Math.Round(y) >= 0 & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : CollisionType.None;
         }
 
         /// <summary>

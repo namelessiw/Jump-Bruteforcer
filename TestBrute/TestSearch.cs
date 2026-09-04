@@ -25,8 +25,8 @@ namespace TestBrute
         [InlineData(410, 407.4, 518, 503, "sjump")] 
         [InlineData(419, 407.4, 476, 407, "floor")] 
         [InlineData(452, 407.4, 482, 343, "minif")] 
-        [InlineData(410, 407.4, 491, 407, "double")] 
-        [InlineData(401, 407.4, 380, 343, "double_plane")] 
+        [InlineData(410, 407.4, 491, 407, "float")] 
+        [InlineData(401, 407.4, 380, 343, "float_plane")] 
         [InlineData(401, 407.4, 413, 263, "45")] 
         [InlineData(410, 407.4, 485, 407, "co")] 
         [InlineData(410, 407.4, 443, 311, "leehe")] 
@@ -101,7 +101,7 @@ namespace TestBrute
         [InlineData(49, 87.4, 752, 423, "quadruple_no_vfpi")]
         */
 
-        public void TestParsers(int startX, double startY, int goalX, int goalY, string jmapName)
+        public void TestParsers(int startX, float startY, int goalX, int goalY, string jmapName)
         {
             
             string path = @$"..\..\..\jmaps\{jmapName}.jmap";
@@ -122,18 +122,18 @@ namespace TestBrute
             const int Size = 1000;
             long initialMemory = GC.GetTotalMemory(true);
             PlayerNode[] array = new PlayerNode[Size];
-            PlayerNode parent = new PlayerNode(0, 566.6500000000001, 3.374999999999999);
+            PlayerNode parent = new PlayerNode(0, 566.6500000000001f, 3.374999999999999f);
             
             for (int i = 0; i < Size; i++)
             {
-                array[i] = new PlayerNode(0, 566.6500000000001, 3.374999999999999, action : Input.Left);
+                array[i] = new PlayerNode(0, 566.6500000000001f, 3.374999999999999f, action : Input.Left);
 
 
             }
             long finalMemory = GC.GetTotalMemory(true);
             GC.KeepAlive(array);
             long total = finalMemory - initialMemory;
-            uint classSize = (uint)((double)total / Size);
+            uint classSize = (uint)((float)total / Size);
             output.WriteLine("Measured size of each element: {0:0.000} bytes",
                               classSize);
             classSize.Should().Be(88);
@@ -157,7 +157,7 @@ namespace TestBrute
             long finalMemory = GC.GetTotalMemory(true);
             GC.KeepAlive(array);
             long total = finalMemory - initialMemory;
-            double classSize = ((double)total / Size);
+            float classSize = ((float)total / Size);
             output.WriteLine("Measured size of each element: {0:0.000} bytes",
                               classSize);
             classSize.Should().Be(88);

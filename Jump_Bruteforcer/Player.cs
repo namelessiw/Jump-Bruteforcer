@@ -283,7 +283,7 @@ namespace Jump_Bruteforcer
                     CollisionType nextCollisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
                     currentCollision = (CollisionType)CollisionMap.UnsetAllBitsExceptMSB((int)nextCollisionTypes % (int)currentCollision);
                     if (currentCollision == CollisionType.None)
-                        goto collisionDone;
+                        break;
                     (currentX, currentY) = (x, y);
                 }
                 else
@@ -292,7 +292,6 @@ namespace Jump_Bruteforcer
                 }
                 
             }
-        collisionDone:
 
             return new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags};
         }

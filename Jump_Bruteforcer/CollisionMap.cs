@@ -30,8 +30,8 @@ namespace Jump_Bruteforcer
             }
 
         }
-        public bool onWarp(int x, double y) => goalPixels.Contains((x, (int)Math.Round(y)));
-        public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
+        public bool onWarp(int x, float y) => goalPixels.Contains((x, (int)Math.Round(y)));
+        public VineDistance GetVineDistance(int x, float y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);
             if (!((uint)x < Map.WIDTH & (uint)yRounded < Map.HEIGHT))
@@ -85,7 +85,7 @@ namespace Jump_Bruteforcer
             return x;
         }
 
-        public CollisionType GetHighestPriorityCollisionType(int x, double y, bool invertedGrav)
+        public CollisionType GetHighestPriorityCollisionType(int x, float y, bool invertedGrav)
         {
             return (CollisionType)UnsetAllBitsExceptMSB((int)GetCollisionTypes(x, y, invertedGrav));
         }
@@ -96,7 +96,7 @@ namespace Jump_Bruteforcer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public CollisionType GetCollisionTypes(int x, double y, bool invertedGrav)
+        public CollisionType GetCollisionTypes(int x, float y, bool invertedGrav)
         {
             if (invertedGrav)
             {
@@ -120,7 +120,7 @@ namespace Jump_Bruteforcer
 
 
         }
-        public Object? GetCollidingPlatform(int x, double y, int minInstanceNum)
+        public Object? GetCollidingPlatform(int x, float y, int minInstanceNum)
         {
             return (from Object platform in Platforms
                     where platform.instanceNum >= minInstanceNum & platform.bbox.Contains(x, (int)Math.Round(y))

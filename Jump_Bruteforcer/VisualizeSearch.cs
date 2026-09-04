@@ -70,9 +70,9 @@ namespace Jump_Bruteforcer
                     {
                         continue;
                     }
-                    int i = (int)((double)sum / maxStatesPerPx * 255);
+                    int i = (int)((float)sum / maxStatesPerPx * 255);
                     Color c = (Color)ColorConverter.ConvertFromString(cmap[i]);
-                    double Brightness = (double)closedStates[x, y] / Math.Max(openStates[x, y], closedStates[x, y]);
+                    float Brightness = (float)closedStates[x, y] / Math.Max(openStates[x, y], closedStates[x, y]);
                     byte[] C = { (byte)(c.B * Brightness), (byte)(c.G * Brightness), (byte)(c.R * Brightness), 255 };
                     stateMap.WritePixels(new Int32Rect(x, y, 1, 1), C, 4, 0);
                 }
@@ -86,7 +86,7 @@ namespace Jump_Bruteforcer
             {
                 for(int y = 0; y < Map.HEIGHT; y++)
                 {
-                    int i = heuristic[x, y] == uint.MaxValue ? 255: (int)((double)heuristic[x, y] / maxHeuristic * 255);
+                    int i = heuristic[x, y] == uint.MaxValue ? 255: (int)((float)heuristic[x, y] / maxHeuristic * 255);
                     Color c = (Color)ColorConverter.ConvertFromString(cmap[i]);
                     byte transparency = (byte)(heuristic[x, y] == uint.MaxValue ? 0 : 255);
                     byte[] C = { (byte)(c.B), (byte)(c.G), (byte)(c.R), transparency };

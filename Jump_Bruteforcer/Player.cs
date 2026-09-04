@@ -24,12 +24,12 @@ namespace Jump_Bruteforcer
         /// <param name="CollisionMap"></param>
         /// <returns></returns>
 
-        private static bool PlaceMeeting(int x, double y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
+        private static bool PlaceMeeting(int x, float y, bool kidUpsidedown, CollisionType type, CollisionMap CollisionMap)
         {
             return CollisionMap.GetCollisionTypes(x, y, kidUpsidedown).HasFlag(type);
         }
 
-        private static bool PlaceFree(int x, double y, bool kidUpsidedown, CollisionMap CollisionMap)
+        private static bool PlaceFree(int x, float y, bool kidUpsidedown, CollisionMap CollisionMap)
         {
             return !PlaceMeeting(x, y, kidUpsidedown, CollisionType.Solid, CollisionMap);
         }
@@ -55,8 +55,8 @@ namespace Jump_Bruteforcer
         public static State? Update(PlayerNode node, Input input, CollisionMap collisionMap)
         {
             State state = node.State;
-            (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
-            (int xPrevious, double yPrevious) = (state.X, state.Y);
+            (int x, float y, float vSpeed, float hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
+            (int xPrevious, float yPrevious) = (state.X, state.Y);
 
             //corresponds to global.grav = 1
             bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
@@ -92,7 +92,7 @@ namespace Jump_Bruteforcer
             int vspeedDirection = globalGravInverted ? -1 : 1;
             if ((input & Input.Jump) == Input.Jump)
             {
-                double checkOffset = globalGravInverted ? -1 : 1;
+                float checkOffset = globalGravInverted ? -1 : 1;
                 
                 if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
                 {

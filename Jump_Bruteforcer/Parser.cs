@@ -25,7 +25,7 @@ namespace Jump_Bruteforcer
             const int MinParams = 10;
             const NumberStyles Style = NumberStyles.Float;
 
-            static double ParseDouble(string s) => double.Parse(s, Style, CultureInfo.InvariantCulture);
+            static float Parsefloat(string s) => float.Parse(s, Style, CultureInfo.InvariantCulture);
 
             string[] Lines = Text.Split('\n');
             List<Object> objects = new();
@@ -43,8 +43,8 @@ namespace Jump_Bruteforcer
                 }
                 string name = Regex.Replace(Parameters[0].ToLower(), "^obj", "");
                 ObjectType o = ObjectNames.GetValueOrDefault(name);
-                int x = (int)Math.Round(ParseDouble(Parameters[1]));
-                int y = (int)Math.Round(ParseDouble(Parameters[2]));
+                int x = (int)Math.Round(Parsefloat(Parameters[1]));
+                int y = (int)Math.Round(Parsefloat(Parameters[2]));
 
                 objects.Add(new(x, y, o, i));
             }

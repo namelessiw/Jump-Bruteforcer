@@ -187,7 +187,7 @@ namespace Jump_Bruteforcer
 
         private void ImageJMap_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            (s.StartX, s.StartY) = ((int)e.GetPosition(ImageJMap).X, e.GetPosition(ImageJMap).Y);
+            (s.StartX, s.StartY) = ((int)e.GetPosition(ImageJMap).X, (float)e.GetPosition(ImageJMap).Y);
         }
 
         private void ImageJMap_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

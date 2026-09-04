@@ -6,29 +6,30 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
+using System.Numerics;
 
 namespace Jump_Bruteforcer
 {
     public class Search : INotifyPropertyChanged
     {
-        private (int x, double y) start;
+        private (int x, float y) start;
         private (int x, int y) goal;
         private string _strat = "";
         private CollisionMap _collisionMap = new(new Dictionary<(int, int), CollisionType>(), null);
         private PointCollection playerPath = new();
-        private double startingVSpeed = 0;
+        private float startingVSpeed = 0;
         private String nodesVisited = "";
         private String timeTaken = "";
         private String macro = "";
         public PointCollection PlayerPath { get { return playerPath; } set { playerPath = value; OnPropertyChanged(); } }
         public int StartX { get { return start.x; } set { start.x = value; OnPropertyChanged(); } }
-        public double StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
+        public float StartY { get { return start.y; } set { start.y = value; OnPropertyChanged(); } }
         public int GoalX { get { return goal.x; } set { goal.x = Math.Clamp(value, 0, Map.WIDTH - 1); OnPropertyChanged(); } }
         public int GoalY { get { return goal.y; } set { goal.y = Math.Clamp(value, 0, Map.HEIGHT - 1); OnPropertyChanged(); } }
         public string Strat { get { return _strat; } set { _strat = value; OnPropertyChanged(); } }
         public String NodesVisited { get { return nodesVisited; } set { nodesVisited = value; OnPropertyChanged(); } }
         public CollisionMap CollisionMap { get { return _collisionMap; } set { _collisionMap = value; } }
-        public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
+        public float StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
         public String TimeTaken { get { return timeTaken; } set { timeTaken = value; OnPropertyChanged(); } }
         public String Macro { get { return macro; } set { macro = value; } }
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -39,7 +40,7 @@ namespace Jump_Bruteforcer
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Search((int, double) start, (int, int) goal, CollisionMap collision)
+        public Search((int, float) start, (int, int) goal, CollisionMap collision)
         {
             this.start = start;
             this.goal = goal;

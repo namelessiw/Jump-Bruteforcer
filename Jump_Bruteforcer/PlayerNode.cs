@@ -22,8 +22,8 @@ namespace Jump_Bruteforcer
     {
 
         public int X { get; init; }
-        public double Y { get; init; }
-        public double VSpeed { get; init; }
+        public float Y { get; init; }
+        public float VSpeed { get; init; }
         public Bools Flags { get; init; }
         public int RoundedY { get { return (int)Math.Round(Y); } }
 
@@ -43,7 +43,7 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
         private static readonly CollisionType jumpables = CollisionType.Solid | CollisionType.Platform | CollisionType.Water1 | CollisionType.Water2 | CollisionType.Water3;
-        public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, int nodeIndex = 0) =>
+        public PlayerNode(int x, float y, float vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, int nodeIndex = 0) =>
             (State, NodeIndex, PathCost) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, nodeIndex, uint.MaxValue);
 
         public PlayerNode(State state)
@@ -75,7 +75,7 @@ namespace Jump_Bruteforcer
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
             bool kidUpsidedown = (this.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
 
-            double checkOffset = globalGravInverted ? -1 : 1;
+            float checkOffset = globalGravInverted ? -1 : 1;
             if (Math.Sign(State.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease);
@@ -129,11 +129,11 @@ namespace Jump_Bruteforcer
             ApproximatelyEquals(State.VSpeed, other.State.VSpeed) & State.Flags == other.State.Flags;
         }
 
-        private static double Quantize(double a)
+        private static float Quantize(float a)
         {
-            return Math.Round(a * epsilon);
+            return MathF.Round(a * epsilon);
         }
-        private static bool ApproximatelyEquals(double a, double b)
+        private static bool ApproximatelyEquals(float a, float b)
         {
             return Quantize(a) == Quantize(b);
         }
@@ -142,8 +142,8 @@ namespace Jump_Bruteforcer
         public ulong Hash()
         {
             int x = State.X;
-            double y = Quantize(State.Y);
-            double vspeed = Quantize(State.VSpeed);
+            float y = Quantize(State.Y);
+            float vspeed = Quantize(State.VSpeed);
             byte flags = (byte)State.Flags;
 
             hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref x, 1)));

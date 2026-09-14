@@ -3,27 +3,51 @@ using System.Numerics;
 
 namespace Jump_Bruteforcer
 {
+    internal readonly record struct VineDistances(
+        VineDistance LeftFacingRight,
+        VineDistance LeftFacingLeft,
+        VineDistance RightFacingRight,
+        VineDistance RightFacingLeft)
+    {
+        public VineDistance Left(bool facingRight) => facingRight ? LeftFacingRight : LeftFacingLeft;
+        public VineDistance Right(bool facingRight) => facingRight ? RightFacingRight : RightFacingLeft;
+    }
+
     public class CollisionMap
     {
+        private const int VineVariantCount = 4;
+        private const int PixelCount = Map.WIDTH * Map.HEIGHT;
+
         public CollisionType[,] Collision { get; init; }
         public List<Object> Platforms { get; init; }
 
-        private readonly VineDistance[,,] vineDistance;
+        private readonly CollisionType[] collisionCells;
+        private readonly VineDistance[] vineDistanceCells;
         public readonly HashSet<(int x, int y)> goalPixels;
 
         public CollisionMap(CollisionType[,]? Collision, List<Object>? Platforms, VineDistance[,,] vineDistances)
         {
             this.Collision = Collision ?? new CollisionType[Map.WIDTH, Map.HEIGHT];
             this.Platforms = Platforms ?? new List<Object>();
-            this.vineDistance = vineDistances;
+            collisionCells = new CollisionType[PixelCount];
+            vineDistanceCells = new VineDistance[PixelCount * VineVariantCount];
             this.goalPixels = new();
-            for (int x = 0; x < Map.WIDTH; x++)
+            for (int y = 0; y < Map.HEIGHT; y++)
             {
-                for (int y = 0; y < Map.HEIGHT; y++)
+                for (int x = 0; x < Map.WIDTH; x++)
                 {
-                    if (this.Collision[x, y].HasFlag(CollisionType.Warp))
+                    int pixelIndex = PixelIndex(x, y);
+                    CollisionType collision = this.Collision[x, y];
+                    collisionCells[pixelIndex] = collision;
+                    if ((collision & CollisionType.Warp) != CollisionType.None)
                     {
                         goalPixels.Add((x, y));
+                    }
+
+                    int vineIndex = pixelIndex * VineVariantCount;
+                    for (int variant = 0; variant < VineVariantCount; variant++)
+                    {
+                        vineDistanceCells[vineIndex + variant] = vineDistances[x, y, variant];
                     }
 
                 }
@@ -34,7 +58,7 @@ namespace Jump_Bruteforcer
         {
             int yRounded = (int)Math.Round(y);
             return (uint)x < Map.WIDTH && (uint)yRounded < Map.HEIGHT &&
-                (Collision[x, yRounded] & CollisionType.Warp) != CollisionType.None;
+                (collisionCells[PixelIndex(x, yRounded)] & CollisionType.Warp) != CollisionType.None;
         }
         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
@@ -43,41 +67,53 @@ namespace Jump_Bruteforcer
             {
                 return VineDistance.FAR;
             }
-            if (vine == ObjectType.VineRight)
+            int variant = vine == ObjectType.VineRight
+                ? facingRight ? (int)VineArrayIdx.VINERIGHTFACINGRIGHT : (int)VineArrayIdx.VINERIGHTFACINGLEFT
+                : facingRight ? (int)VineArrayIdx.VINELEFTFACINGRIGHT : (int)VineArrayIdx.VINELEFTFACINGLEFT;
+            return vineDistanceCells[PixelIndex(x, yRounded) * VineVariantCount + variant];
+        }
+
+        internal VineDistances GetVineDistances(int x, double y)
+        {
+            int yRounded = (int)Math.Round(y);
+            if ((uint)x >= Map.WIDTH || (uint)yRounded >= Map.HEIGHT)
             {
-                if (facingRight)
-                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGRIGHT];
-                else
-                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINERIGHTFACINGLEFT];
+                return default;
             }
-            else
-            {
-                if (facingRight)
-                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGRIGHT];
-                else
-                    return vineDistance[x, yRounded, (int)VineArrayIdx.VINELEFTFACINGLEFT];
-            }
+
+            int index = PixelIndex(x, yRounded) * VineVariantCount;
+            return new VineDistances(
+                vineDistanceCells[index + (int)VineArrayIdx.VINELEFTFACINGRIGHT],
+                vineDistanceCells[index + (int)VineArrayIdx.VINELEFTFACINGLEFT],
+                vineDistanceCells[index + (int)VineArrayIdx.VINERIGHTFACINGRIGHT],
+                vineDistanceCells[index + (int)VineArrayIdx.VINERIGHTFACINGLEFT]);
         }
         public CollisionMap(Dictionary<(int, int), CollisionType>? Collision, List<Object>? Platforms)
         {
             this.Collision = new CollisionType[Map.WIDTH, Map.HEIGHT];
-            for (int i = 0; i < Map.WIDTH; i++)
-            {
-                for (int j = 0; j < Map.HEIGHT; j++)
-                {
-                    this.Collision[i, j] = CollisionType.None;
-                }
-            }
+            collisionCells = new CollisionType[PixelCount];
             if (Collision != null)
             {
                 foreach (var kvp in Collision)
                 {
                     (int x, int y) = kvp.Key;
                     this.Collision[x, y] = kvp.Value;
+                    collisionCells[PixelIndex(x, y)] = kvp.Value;
                 }
             }
-            this.vineDistance = new VineDistance[Map.WIDTH, Map.HEIGHT, Enum.GetNames(typeof(VineArrayIdx)).Length];
+            vineDistanceCells = new VineDistance[PixelCount * VineVariantCount];
             this.Platforms = Platforms ?? new List<Object>();
+            this.goalPixels = new();
+            if (Collision != null)
+            {
+                foreach (var kvp in Collision)
+                {
+                    if ((kvp.Value & CollisionType.Warp) != CollisionType.None)
+                    {
+                        goalPixels.Add(kvp.Key);
+                    }
+                }
+            }
         }
         public static int UnsetAllBitsExceptMSB(int x)
         {
@@ -105,9 +141,11 @@ namespace Jump_Bruteforcer
         {
             int yRounded = (int)Math.Round(y + (invertedGrav ? 3 : 0));
             return (uint)x < Map.WIDTH && (uint)yRounded < Map.HEIGHT
-                ? Collision[x, yRounded]
+                ? collisionCells[PixelIndex(x, yRounded)]
                 : CollisionType.None;
         }
+
+        private static int PixelIndex(int x, int y) => y * Map.WIDTH + x;
 
         /// <summary>
         /// gets the lowest instance number platform at coordinate (x, y) with an instance number greater than or equal to minInstanceNum

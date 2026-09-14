@@ -61,10 +61,11 @@ namespace Jump_Bruteforcer
         //inadmissable heuristic because of y position rounding
         public uint Distance(PlayerNode n)
         {
-            return GoalDistance[n.State.X, (int)Math.Round(n.State.Y)];
+            return goalDistanceCells[PixelIndex(n.State.X, (int)Math.Round(n.State.Y))];
         }
 
         public readonly uint[,] GoalDistance = new uint[Map.WIDTH, Map.HEIGHT];
+        private readonly uint[] goalDistanceCells = new uint[Map.WIDTH * Map.HEIGHT];
 
         public void FloodFill()
         {
@@ -87,6 +88,7 @@ namespace Jump_Bruteforcer
                 for (int Y = 0; Y < Map.HEIGHT; Y++)
                 {
                     GoalDistance[X, Y] = uint.MaxValue;
+                    goalDistanceCells[PixelIndex(X, Y)] = uint.MaxValue;
                 }
             }
 
@@ -95,6 +97,7 @@ namespace Jump_Bruteforcer
             foreach ((int X, int Y) GoalPos in CollisionMap.goalPixels.Union(CurrentGoalPixels))
             {
                 GoalDistance[GoalPos.X, GoalPos.Y] = 0;
+                goalDistanceCells[PixelIndex(GoalPos.X, GoalPos.Y)] = 0;
                 NewPositions.Add(GoalPos);
             }
 
@@ -121,6 +124,7 @@ namespace Jump_Bruteforcer
                             if (GoalDistance[X, Y] == uint.MaxValue && !(CollisionMap.Collision[X, Y].HasFlag(CollisionType.Killer) || CollisionMap.Collision[X, Y].HasFlag(CollisionType.Solid)))
                             {
                                 GoalDistance[X, Y] = Distance;
+                                goalDistanceCells[PixelIndex(X, Y)] = Distance;
                                 NewPositions.Add((X, Y));
                             }
                         }
@@ -158,7 +162,7 @@ namespace Jump_Bruteforcer
             var nodeInputs = new List<Input>();
             var visitedStateKeys = new VisitedStateSet();
             var neighborCandidates = new NeighborCandidate[PlayerNode.MaxNeighborCount];
-            int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
+            int[] closedStates = new int[Map.WIDTH * Map.HEIGHT];
             if (rootDistance != uint.MaxValue)
             {
                 bool rootVisited = false;
@@ -206,8 +210,9 @@ namespace Jump_Bruteforcer
 
                         uint newCost = v.PathCost + 1;
                         int roundedY = candidate.State.RoundedY;
-                        closedStates[candidate.State.X, roundedY] += 1;
-                        uint distance = GoalDistance[candidate.State.X, roundedY];
+                        int pixelIndex = PixelIndex(candidate.State.X, roundedY);
+                        closedStates[pixelIndex] += 1;
+                        uint distance = goalDistanceCells[pixelIndex];
                         int nodeIndex = nodeInputs.Count;
                         nodeInputs.Add(candidate.Input);
                         nodeParentIndices.Add(v.NodeIndex);
@@ -231,6 +236,7 @@ namespace Jump_Bruteforcer
         }
 
         private static ulong Priority(uint cost, uint timestamp) => ((ulong)cost << 32) | timestamp;
+        private static int PixelIndex(int x, int y) => y * Map.WIDTH + x;
 
         private void CaptureVisitedStorage(VisitedStateSet states)
         {

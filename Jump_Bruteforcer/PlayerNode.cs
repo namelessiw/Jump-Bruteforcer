@@ -72,11 +72,10 @@ namespace Jump_Bruteforcer
         public static int GetNeighborCandidates(State currentState, CollisionMap CollisionMap, NeighborCandidate[] neighbors)
         {
             int neighborCount = 0;
+            PlayerUpdateContext updateContext = Player.PrepareUpdateContext(currentState, CollisionMap);
             fillNeighbors(CollisionMap, neighbors, inputs, ref neighborCount);
             //corresponds to global.grav = 1
             bool globalGravInverted = (currentState.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
-            //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = (currentState.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
 
             double checkOffset = globalGravInverted ? -1 : 1;
             if (Math.Sign(currentState.VSpeed) == -checkOffset)
@@ -84,7 +83,7 @@ namespace Jump_Bruteforcer
                 fillNeighbors(CollisionMap, neighbors, inputsRelease, ref neighborCount);
             }
             
-            if ((currentState.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (CollisionMap.GetCollisionTypes(currentState.X, (int)Math.Round(currentState.Y + checkOffset), kidUpsidedown) | jumpables) != 0)
+            if ((currentState.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (updateContext.JumpCollision | jumpables) != 0)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump, ref neighborCount);
             }
@@ -95,7 +94,7 @@ namespace Jump_Bruteforcer
             {
                 foreach (Input input in candidateInputs)
                 {
-                    State? nextState = Player.Update(currentState, input, collisionMap);
+                    State? nextState = Player.Update(currentState, input, collisionMap, updateContext);
                     if (nextState is not State state || !Player.IsAlive(state))
                     {
                         continue;

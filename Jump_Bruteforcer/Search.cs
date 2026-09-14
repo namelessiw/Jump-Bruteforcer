@@ -147,6 +147,7 @@ namespace Jump_Bruteforcer
             var nodeParentIndices = new List<int>();
             var nodeInputs = new List<Input>();
             var visitedNodeHashes = new HashSet<ulong>();
+            var neighborCandidates = new NeighborCandidate[PlayerNode.MaxNeighborCount];
             int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
             if (Distance(root) != uint.MaxValue)
             {
@@ -180,22 +181,26 @@ namespace Jump_Bruteforcer
                         rootVisited = true;
                     }
 
-                    foreach ((PlayerNode w, Input input, ulong hash) in v.GetNeighbors(CollisionMap))
+                    int neighborCount = v.GetNeighborCandidates(CollisionMap, neighborCandidates);
+                    for (int i = 0; i < neighborCount; i++)
                     {
+                        NeighborCandidate candidate = neighborCandidates[i];
                         // A state is marked discovered when it is first enqueued.
                         // Consequently the old openSet.Contains/UpdatePriority
                         // branch could never be reached for an equal state.
-                        if (!visitedNodeHashes.Add(hash))
+                        if (!visitedNodeHashes.Add(candidate.Hash))
                         {
                             continue;
                         }
 
                         uint newCost = v.PathCost + 1;
-                        closedStates[w.State.X, w.State.RoundedY] += 1;
+                        int roundedY = candidate.State.RoundedY;
+                        closedStates[candidate.State.X, roundedY] += 1;
+                        PlayerNode w = new(candidate.State);
                         w.PathCost = newCost;
-                        uint distance = Distance(w);
+                        uint distance = GoalDistance[candidate.State.X, roundedY];
                         w.NodeIndex = nodeInputs.Count;
-                        nodeInputs.Add(input);
+                        nodeInputs.Add(candidate.Input);
                         nodeParentIndices.Add(v.NodeIndex);
                         openSet.Enqueue(w, (newCost + distance, --timestamp));
                     }

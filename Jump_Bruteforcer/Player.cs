@@ -39,7 +39,12 @@ namespace Jump_Bruteforcer
         public static bool IsAlive(PlayerNode? node)
         {
             if (node == null) return false;
-            bool inbounds = node.State.X is >= 0 and <= Map.WIDTH - 1 & node.State.Y is >= 0 and <= Map.HEIGHT - 1;
+            return IsAlive(node.State);
+        }
+
+        public static bool IsAlive(State state)
+        {
+            bool inbounds = state.X is >= 0 and <= Map.WIDTH - 1 & state.Y is >= 0 and <= Map.HEIGHT - 1;
             return inbounds;
         }
 
@@ -52,16 +57,17 @@ namespace Jump_Bruteforcer
         /// <param name="collisionMap"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public static State? Update(PlayerNode node, Input input, CollisionMap collisionMap)
+        public static State? Update(PlayerNode node, Input input, CollisionMap collisionMap) => Update(node.State, input, collisionMap);
+
+        public static State? Update(State state, Input input, CollisionMap collisionMap)
         {
-            State state = node.State;
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
 
             //corresponds to global.grav = 1
             bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = (node.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; //TODO replace with the correct calculation
+            bool kidUpsidedown = (state.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; //TODO replace with the correct calculation
 
             // mutate state variables here:
             //step event:
@@ -144,7 +150,7 @@ namespace Jump_Bruteforcer
                 }
             }
             //global.grav
-            if ((node.State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
+            if ((state.Flags & Bools.InvertedGravity) == Bools.InvertedGravity)
             {
                 flags |= Bools.ParentInvertedGravity;
             }

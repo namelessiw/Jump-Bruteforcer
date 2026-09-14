@@ -53,6 +53,18 @@ namespace Jump_Bruteforcer
             StateMap(closedSet, openStates);
         }
 
+        public static void CountStates(PriorityQueue<SearchNode, ulong> openSet, int[] closedSet)
+        {
+            int[] openStates = new int[Map.WIDTH * Map.HEIGHT];
+            foreach (var item in openSet.UnorderedItems)
+            {
+                SearchNode node = item.Element;
+                openStates[node.State.RoundedY * Map.WIDTH + node.State.X] += 1;
+            }
+
+            StateMap(closedSet, openStates);
+        }
+
 
 
         public static void StateMap(int[,] closedStates, int[,] openStates)
@@ -76,6 +88,44 @@ namespace Jump_Bruteforcer
                     double Brightness = (double)closedStates[x, y] / Math.Max(openStates[x, y], closedStates[x, y]);
                     byte[] C = { (byte)(c.B * Brightness), (byte)(c.G * Brightness), (byte)(c.R * Brightness), 255 };
                     stateMap.WritePixels(new Int32Rect(x, y, 1, 1), C, 4, 0);
+                }
+            }
+        }
+
+        private static void StateMap(int[] closedStates, int[] openStates)
+        {
+            stateMap = new(Map.WIDTH, Map.HEIGHT, 96, 96, PixelFormats.Bgra32, null);
+
+            int maxStatesPerPx = 0;
+            for (int i = 0; i < closedStates.Length; i++)
+            {
+                maxStatesPerPx = Math.Max(maxStatesPerPx, closedStates[i] + openStates[i]);
+            }
+
+            for (int y = 0; y < Map.HEIGHT; y++)
+            {
+                int rowStart = y * Map.WIDTH;
+                for (int x = 0; x < Map.WIDTH; x++)
+                {
+                    int index = rowStart + x;
+                    int sum = openStates[index] + closedStates[index];
+                    if (sum == 0)
+                    {
+                        continue;
+                    }
+
+                    int colorIndex = (int)((double)sum / maxStatesPerPx * 255);
+                    Color color = (Color)ColorConverter.ConvertFromString(cmap[colorIndex]);
+                    double brightness = (double)closedStates[index] /
+                        Math.Max(openStates[index], closedStates[index]);
+                    byte[] pixel =
+                    {
+                        (byte)(color.B * brightness),
+                        (byte)(color.G * brightness),
+                        (byte)(color.R * brightness),
+                        255
+                    };
+                    stateMap.WritePixels(new Int32Rect(x, y, 1, 1), pixel, 4, 0);
                 }
             }
         }

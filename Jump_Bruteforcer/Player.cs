@@ -12,6 +12,12 @@ namespace Jump_Bruteforcer
         Release = 8
     }
 
+    internal readonly record struct PlayerUpdateContext(
+        VineDistances Vines,
+        bool OnPlatformCollision,
+        CollisionType JumpCollision,
+        bool VineSpaceFree);
+
     public static class Player
     {
 
@@ -61,6 +67,31 @@ namespace Jump_Bruteforcer
 
         public static State? Update(State state, Input input, CollisionMap collisionMap)
         {
+            PlayerUpdateContext context = PrepareUpdateContext(state, collisionMap);
+            return Update(state, input, collisionMap, context);
+        }
+
+        internal static PlayerUpdateContext PrepareUpdateContext(State state, CollisionMap collisionMap)
+        {
+            bool globalGravInverted = (state.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            bool kidUpsidedown = (state.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity;
+            int onPlatformOffset = kidUpsidedown ? -4 : 4;
+            double checkOffset = globalGravInverted ? -1 : 1;
+            int vineOffset = globalGravInverted ? -1 : 1;
+
+            VineDistances vines = collisionMap.GetVineDistances(state.X, state.Y);
+            bool onPlatformCollision = (collisionMap.GetCollisionTypes(
+                state.X, state.Y + onPlatformOffset, kidUpsidedown) & CollisionType.Platform) != CollisionType.None;
+            CollisionType jumpCollision = collisionMap.GetCollisionTypes(
+                state.X, state.Y + checkOffset, kidUpsidedown);
+            bool vineSpaceFree = (collisionMap.GetCollisionTypes(
+                state.X, state.Y + vineOffset, globalGravInverted) & CollisionType.Solid) == CollisionType.None;
+
+            return new PlayerUpdateContext(vines, onPlatformCollision, jumpCollision, vineSpaceFree);
+        }
+
+        internal static State? Update(State state, Input input, CollisionMap collisionMap, PlayerUpdateContext context)
+        {
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
             (int xPrevious, double yPrevious) = (state.X, state.Y);
 
@@ -68,6 +99,7 @@ namespace Jump_Bruteforcer
             bool globalGravInverted = (flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
             bool kidUpsidedown = (state.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; //TODO replace with the correct calculation
+            bool usePreparedContext = true;
 
             // mutate state variables here:
             //step event:
@@ -75,8 +107,13 @@ namespace Jump_Bruteforcer
             int h = (input & Input.Left) == Input.Left ? -1 : 0;
             h = (input & Input.Right) == Input.Right ? 1 : h;
             //vines
-            VineDistance vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            VineDistance vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+            bool facingRight = (flags & Bools.FacingRight) == Bools.FacingRight;
+            VineDistance vineLDistanace = usePreparedContext
+                ? context.Vines.Left(facingRight)
+                : collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
+            VineDistance vineRDistance = usePreparedContext
+                ? context.Vines.Right(facingRight)
+                : collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
             if (h != 0)
             {
                 if (vineRDistance != VineDistance.EDGE && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
@@ -84,22 +121,32 @@ namespace Jump_Bruteforcer
                     flags = h == 1 ? Bools.FacingRight | flags : ~Bools.FacingRight & flags;
                 }
             }
-                
-            vineLDistanace = collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, (flags & Bools.FacingRight) == Bools.FacingRight);
-            vineRDistance = collisionMap.GetVineDistance(x, y, ObjectType.VineRight, (flags & Bools.FacingRight) == Bools.FacingRight);
+
+            facingRight = (flags & Bools.FacingRight) == Bools.FacingRight;
+            vineLDistanace = usePreparedContext
+                ? context.Vines.Left(facingRight)
+                : collisionMap.GetVineDistance(x, y, ObjectType.VineLeft, facingRight);
+            vineRDistance = usePreparedContext
+                ? context.Vines.Right(facingRight)
+                : collisionMap.GetVineDistance(x, y, ObjectType.VineRight, facingRight);
             if (h == -1 && vineRDistance != VineDistance.EDGE || h == 1 && (vineLDistanace == VineDistance.CORNER || vineLDistanace == VineDistance.FAR))
             {
                 hSpeed = h * PhysicsParams.WALKING_SPEED;
             }
             int onPlatformOffset = kidUpsidedown ? -4 : 4;
-            flags = PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap) ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
+            bool onPlatformCollision = usePreparedContext
+                ? context.OnPlatformCollision
+                : PlaceMeeting(x, y + onPlatformOffset, kidUpsidedown, CollisionType.Platform, collisionMap);
+            flags = onPlatformCollision ? flags | (flags & Bools.OnPlatform) : flags & ~Bools.OnPlatform;
             vSpeed = Math.Clamp(vSpeed, -PhysicsParams.MAX_VSPEED, PhysicsParams.MAX_VSPEED);
             //  playerJump
             int vspeedDirection = globalGravInverted ? -1 : 1;
             if ((input & Input.Jump) == Input.Jump)
             {
                 double checkOffset = globalGravInverted ? -1 : 1;
-                CollisionType jumpCollision = collisionMap.GetCollisionTypes(x, y + checkOffset, kidUpsidedown);
+                CollisionType jumpCollision = usePreparedContext
+                    ? context.JumpCollision
+                    : collisionMap.GetCollisionTypes(x, y + checkOffset, kidUpsidedown);
                 CollisionType singleJumpCollision = CollisionType.Solid | CollisionType.Water1 | CollisionType.Platform;
 
                 if ((jumpCollision & singleJumpCollision) != CollisionType.None || (flags & Bools.OnPlatform) == Bools.OnPlatform)
@@ -127,7 +174,8 @@ namespace Jump_Bruteforcer
             //more vines
             int vineOffset = globalGravInverted ? -1 : 1;
             int upsidedownKidVSpeedDirection = globalGravInverted ? -1 : 1;
-            if (vineLDistanace != VineDistance.FAR && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+            if (vineLDistanace != VineDistance.FAR &&
+                (usePreparedContext ? context.VineSpaceFree : PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap)))
             {
                 vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags |= Bools.FacingRight;
@@ -138,7 +186,8 @@ namespace Jump_Bruteforcer
                     hSpeed = 15;
                 }
             }
-            if (vineRDistance == VineDistance.EDGE && PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap))
+            if (vineRDistance == VineDistance.EDGE &&
+                (usePreparedContext ? context.VineSpaceFree : PlaceFree(x, y + vineOffset, globalGravInverted, collisionMap)))
             {
                 vSpeed = 2 * upsidedownKidVSpeedDirection;
                 flags &= ~Bools.FacingRight;
@@ -164,6 +213,7 @@ namespace Jump_Bruteforcer
                 Bools invertedGravity = Bools.InvertedGravity & flags;
                 flags = facingDirection | invertedGravity | Bools.CanDJump;
                 kidUpsidedown = true;
+                usePreparedContext = false;
                 goto beginningOfStepEvent;
             }
             if (!globalGravInverted & kidUpsidedown)

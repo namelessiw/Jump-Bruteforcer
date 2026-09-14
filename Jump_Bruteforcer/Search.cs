@@ -39,6 +39,9 @@ namespace Jump_Bruteforcer
         // Numeric timings exclude map loading and result rendering/export.
         public TimeSpan FloodFillElapsed { get; private set; }
         public TimeSpan SearchElapsed { get; private set; }
+        public int VisitedPlaneCount { get; private set; }
+        public long VisitedBitmapBytes { get; private set; }
+        public int VisitedOverflowCount { get; private set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -134,6 +137,9 @@ namespace Jump_Bruteforcer
             var startTime = Stopwatch.GetTimestamp();
             FloodFillElapsed = TimeSpan.Zero;
             SearchElapsed = TimeSpan.Zero;
+            VisitedPlaneCount = 0;
+            VisitedBitmapBytes = 0;
+            VisitedOverflowCount = 0;
             FloodFill();
             FloodFillElapsed = Stopwatch.GetElapsedTime(startTime);
             var searchStartTime = Stopwatch.GetTimestamp();
@@ -150,7 +156,7 @@ namespace Jump_Bruteforcer
 
             var nodeParentIndices = new List<int>();
             var nodeInputs = new List<Input>();
-            var visitedStateKeys = new HashSet<ulong>();
+            var visitedStateKeys = new VisitedStateSet();
             var neighborCandidates = new NeighborCandidate[PlayerNode.MaxNeighborCount];
             int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
             if (rootDistance != uint.MaxValue)
@@ -174,6 +180,7 @@ namespace Jump_Bruteforcer
                         VisualizeSearch.HeuristicMap(GoalDistance);
                         nodesVisited = visitedStateKeys.Count;
                         NodesVisited = nodesVisited.ToString();
+                        CaptureVisitedStorage(visitedStateKeys);
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
@@ -218,11 +225,19 @@ namespace Jump_Bruteforcer
             VisualizeSearch.HeuristicMap(GoalDistance);
             nodesVisited = visitedStateKeys.Count;
             NodesVisited = nodesVisited.ToString();
+            CaptureVisitedStorage(visitedStateKeys);
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
 
         private static ulong Priority(uint cost, uint timestamp) => ((ulong)cost << 32) | timestamp;
+
+        private void CaptureVisitedStorage(VisitedStateSet states)
+        {
+            VisitedPlaneCount = states.AllocatedPlaneCount;
+            VisitedBitmapBytes = states.BitmapBytes;
+            VisitedOverflowCount = states.OverflowCount;
+        }
     }
     public class SearchResult
     {

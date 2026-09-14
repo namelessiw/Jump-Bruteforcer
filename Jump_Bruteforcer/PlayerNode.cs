@@ -31,10 +31,14 @@ namespace Jump_Bruteforcer
 
 
     }
+
+    public readonly record struct NeighborCandidate(State State, Input Input, ulong Hash);
+
     public class PlayerNode : IEquatable<PlayerNode>
     {
         static XxHash64 hasher = new();
         const int epsilon = 10;
+        public const int MaxNeighborCount = 12;
         public State State { get; set; }
         public int NodeIndex { get; set; }
         public uint PathCost { get; set; }
@@ -66,10 +70,10 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public IEnumerable<(PlayerNode Node, Input Input, ulong Hash)> GetNeighbors(CollisionMap CollisionMap)
+        public int GetNeighborCandidates(CollisionMap CollisionMap, NeighborCandidate[] neighbors)
         {
-            var neighbors = new List<(PlayerNode Node, Input Input, ulong Hash)>();
-            fillNeighbors(CollisionMap, neighbors, inputs);
+            int neighborCount = 0;
+            fillNeighbors(CollisionMap, neighbors, inputs, ref neighborCount);
             //corresponds to global.grav = 1
             bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
@@ -78,25 +82,53 @@ namespace Jump_Bruteforcer
             double checkOffset = globalGravInverted ? -1 : 1;
             if (Math.Sign(State.VSpeed) == -checkOffset)
             {
-                fillNeighbors(CollisionMap, neighbors, inputsRelease);
+                fillNeighbors(CollisionMap, neighbors, inputsRelease, ref neighborCount);
             }
             
             if ((State.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown) | jumpables) != 0)
             {
-                fillNeighbors(CollisionMap, neighbors, inputsJump);
+                fillNeighbors(CollisionMap, neighbors, inputsJump, ref neighborCount);
             }
 
-            return neighbors.DistinctBy(n => n.Hash);
+            return neighborCount;
 
-            void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode Node, Input Input, ulong Hash)> neighbors, ImmutableArray<Input> inputs)
+            void fillNeighbors(CollisionMap collisionMap, NeighborCandidate[] candidates, ImmutableArray<Input> candidateInputs, ref int count)
             {
-                foreach (var (neighbor, input) in from Input input in inputs
-                                         let neighbor = NewState(input, CollisionMap)
-                                         where Player.IsAlive(neighbor)
-                                         select (neighbor, input))
+                foreach (Input input in candidateInputs)
                 {
-                    neighbors.Add((neighbor, input, neighbor.Hash()));
+                    State? nextState = Player.Update(State, input, collisionMap);
+                    if (nextState is not State state || !Player.IsAlive(state))
+                    {
+                        continue;
+                    }
+
+                    ulong hash = Hash(state);
+                    bool duplicate = false;
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (candidates[i].Hash == hash)
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!duplicate)
+                    {
+                        candidates[count++] = new NeighborCandidate(state, input, hash);
+                    }
                 }
+            }
+        }
+
+        public IEnumerable<(PlayerNode Node, Input Input, ulong Hash)> GetNeighbors(CollisionMap CollisionMap)
+        {
+            var candidates = new NeighborCandidate[MaxNeighborCount];
+            int count = GetNeighborCandidates(CollisionMap, candidates);
+            for (int i = 0; i < count; i++)
+            {
+                NeighborCandidate candidate = candidates[i];
+                yield return (new PlayerNode(candidate.State), candidate.Input, candidate.Hash);
             }
         }
 
@@ -109,7 +141,7 @@ namespace Jump_Bruteforcer
         public PlayerNode? NewState(Input input, CollisionMap CollisionMap)
         {
 
-            State? newState = Player.Update(this, input, CollisionMap);
+            State? newState = Player.Update(State, input, CollisionMap);
             if (newState != null)
             {
                 return new PlayerNode(newState.Value);
@@ -139,12 +171,13 @@ namespace Jump_Bruteforcer
         }
 
         public override int GetHashCode() => Hash().GetHashCode();
-        public ulong Hash()
+        public ulong Hash() => Hash(State);
+        public static ulong Hash(State state)
         {
-            int x = State.X;
-            double y = Quantize(State.Y);
-            double vspeed = Quantize(State.VSpeed);
-            byte flags = (byte)State.Flags;
+            int x = state.X;
+            double y = Quantize(state.Y);
+            double vspeed = Quantize(state.VSpeed);
+            byte flags = (byte)state.Flags;
 
             hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref x, 1)));
             hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref y, 1)));

@@ -66,9 +66,9 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public IEnumerable<(PlayerNode, Input)> GetNeighbors(CollisionMap CollisionMap)
+        public IEnumerable<(PlayerNode Node, Input Input, ulong Hash)> GetNeighbors(CollisionMap CollisionMap)
         {
-            var neighbors = new List<(PlayerNode, Input)>();
+            var neighbors = new List<(PlayerNode Node, Input Input, ulong Hash)>();
             fillNeighbors(CollisionMap, neighbors, inputs);
             //corresponds to global.grav = 1
             bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
@@ -86,16 +86,16 @@ namespace Jump_Bruteforcer
                 fillNeighbors(CollisionMap, neighbors, inputsJump);
             }
 
-            return neighbors.DistinctBy(n => n.Item1.Hash());
+            return neighbors.DistinctBy(n => n.Hash);
 
-            void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode, Input)> neighbors, ImmutableArray<Input> inputs)
+            void fillNeighbors(CollisionMap CollisionMap, List<(PlayerNode Node, Input Input, ulong Hash)> neighbors, ImmutableArray<Input> inputs)
             {
                 foreach (var (neighbor, input) in from Input input in inputs
                                          let neighbor = NewState(input, CollisionMap)
                                          where Player.IsAlive(neighbor)
                                          select (neighbor, input))
                 {
-                    neighbors.Add((neighbor, input));
+                    neighbors.Add((neighbor, input, neighbor.Hash()));
                 }
             }
         }

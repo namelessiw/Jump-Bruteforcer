@@ -139,7 +139,9 @@ namespace Jump_Bruteforcer
             int nodesVisited;
             uint timestamp = uint.MaxValue;
 
-            var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>();
+            // Search never queries the queue by value, so its internal item cache
+            // can use reference identity instead of recalculating the state hash.
+            var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>(ReferenceEqualityComparer.Instance);
             openSet.Enqueue(root, (Distance(root), timestamp));
 
             var nodeParentIndices = new List<int>();
@@ -148,6 +150,7 @@ namespace Jump_Bruteforcer
             int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
             if (Distance(root) != uint.MaxValue)
             {
+                bool rootVisited = false;
                 while (openSet.Count > 0)
                 {
                     PlayerNode v = openSet.Dequeue();
@@ -169,34 +172,32 @@ namespace Jump_Bruteforcer
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
-                    visitedNodeHashes.Add(v.Hash());
-                    foreach ((PlayerNode w, Input input) in v.GetNeighbors(CollisionMap))
+                    // Keep the original goal-at-root visited count while ensuring
+                    // the root is present before any of its neighbors are checked.
+                    if (!rootVisited)
                     {
-                        if (visitedNodeHashes.Contains(w.Hash()))
+                        visitedNodeHashes.Add(v.Hash());
+                        rootVisited = true;
+                    }
+
+                    foreach ((PlayerNode w, Input input, ulong hash) in v.GetNeighbors(CollisionMap))
+                    {
+                        // A state is marked discovered when it is first enqueued.
+                        // Consequently the old openSet.Contains/UpdatePriority
+                        // branch could never be reached for an equal state.
+                        if (!visitedNodeHashes.Add(hash))
                         {
                             continue;
                         }
 
                         uint newCost = v.PathCost + 1;
-                        if (!openSet.Contains(w) || newCost < w.PathCost)
-                        {
-                            closedStates[w.State.X, w.State.RoundedY] += 1;
-                            visitedNodeHashes.Add(w.Hash());
-                            w.PathCost = newCost;
-                            uint distance = (uint)Distance(w);
-                            w.NodeIndex = nodeInputs.Count;
-                            nodeInputs.Add(input);
-                            nodeParentIndices.Add(v.NodeIndex);
-                            if (openSet.Contains(w))
-                            {
-                                openSet.UpdatePriority(w, (newCost + distance, timestamp));
-                            }
-                            else
-                            {
-                                openSet.Enqueue(w, (newCost + distance, --timestamp));
-                            }
-                        }
-
+                        closedStates[w.State.X, w.State.RoundedY] += 1;
+                        w.PathCost = newCost;
+                        uint distance = Distance(w);
+                        w.NodeIndex = nodeInputs.Count;
+                        nodeInputs.Add(input);
+                        nodeParentIndices.Add(v.NodeIndex);
+                        openSet.Enqueue(w, (newCost + distance, --timestamp));
                     }
 
                 }

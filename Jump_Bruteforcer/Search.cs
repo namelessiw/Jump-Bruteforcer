@@ -31,6 +31,9 @@ namespace Jump_Bruteforcer
         public double StartingVSpeed { get { return startingVSpeed; } set { startingVSpeed = value; OnPropertyChanged(); } }
         public String TimeTaken { get { return timeTaken; } set { timeTaken = value; OnPropertyChanged(); } }
         public String Macro { get { return macro; } set { macro = value; } }
+        // Numeric timings exclude map loading and result rendering/export.
+        public TimeSpan FloodFillElapsed { get; private set; }
+        public TimeSpan SearchElapsed { get; private set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -124,7 +127,11 @@ namespace Jump_Bruteforcer
         public SearchResult RunAStar()
         {
             var startTime = Stopwatch.GetTimestamp();
+            FloodFillElapsed = TimeSpan.Zero;
+            SearchElapsed = TimeSpan.Zero;
             FloodFill();
+            FloodFillElapsed = Stopwatch.GetElapsedTime(startTime);
+            var searchStartTime = Stopwatch.GetTimestamp();
 
             PlayerNode root = new PlayerNode(start.x, start.y, startingVSpeed);
 
@@ -146,6 +153,7 @@ namespace Jump_Bruteforcer
                     PlayerNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
+                        SearchElapsed = Stopwatch.GetElapsedTime(searchStartTime);
                         (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
@@ -195,6 +203,7 @@ namespace Jump_Bruteforcer
             }
 
             
+            SearchElapsed = Stopwatch.GetElapsedTime(searchStartTime);
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedStates);
             VisualizeSearch.HeuristicMap(GoalDistance);

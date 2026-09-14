@@ -38,7 +38,8 @@ namespace Jump_Bruteforcer
                 path.Add(curr);
             }
             string states = string.Join<PlayerNode>("\n", path.ToArray());
-            string outputPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
+            string outputPath = Environment.GetEnvironmentVariable("JUMP_STATE_OUTPUT_DIRECTORY")
+                ?? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jump Bruteforcer macros");
             Directory.CreateDirectory(outputPath);
             File.WriteAllText(Path.Join(outputPath, $"states.txt"), states);
             return (inputs, new PointCollection(points));

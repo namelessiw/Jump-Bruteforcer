@@ -30,7 +30,12 @@ namespace Jump_Bruteforcer
             }
 
         }
-        public bool onWarp(int x, double y) => goalPixels.Contains((x, (int)Math.Round(y)));
+        public bool onWarp(int x, double y)
+        {
+            int yRounded = (int)Math.Round(y);
+            return (uint)x < Map.WIDTH && (uint)yRounded < Map.HEIGHT &&
+                (Collision[x, yRounded] & CollisionType.Warp) != CollisionType.None;
+        }
         public VineDistance GetVineDistance(int x, double y, ObjectType vine, bool facingRight)
         {
             int yRounded = (int)Math.Round(y);
@@ -98,11 +103,10 @@ namespace Jump_Bruteforcer
         /// <returns></returns>
         public CollisionType GetCollisionTypes(int x, double y, bool invertedGrav)
         {
-            if (invertedGrav)
-            {
-                return (uint)x < Map.WIDTH & (uint)Math.Round(y + 3) < Map.HEIGHT ? Collision[x, (int)Math.Round(y + 3)] : CollisionType.None;
-            }
-            return (uint)x >= 0 & (uint)x < Map.WIDTH & (uint)Math.Round(y) >= 0 & (uint)Math.Round(y) < Map.HEIGHT ? Collision[x, (int)Math.Round(y)] : CollisionType.None;
+            int yRounded = (int)Math.Round(y + (invertedGrav ? 3 : 0));
+            return (uint)x < Map.WIDTH && (uint)yRounded < Map.HEIGHT
+                ? Collision[x, yRounded]
+                : CollisionType.None;
         }
 
         /// <summary>

@@ -93,18 +93,20 @@ namespace Jump_Bruteforcer
             if ((input & Input.Jump) == Input.Jump)
             {
                 double checkOffset = globalGravInverted ? -1 : 1;
-                
-                if (PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Solid, collisionMap) || (flags & Bools.OnPlatform) == Bools.OnPlatform || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water1, collisionMap) || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Platform, collisionMap))
+                CollisionType jumpCollision = collisionMap.GetCollisionTypes(x, y + checkOffset, kidUpsidedown);
+                CollisionType singleJumpCollision = CollisionType.Solid | CollisionType.Water1 | CollisionType.Platform;
+
+                if ((jumpCollision & singleJumpCollision) != CollisionType.None || (flags & Bools.OnPlatform) == Bools.OnPlatform)
                 {
                     vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
                     flags |= Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water2, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || (jumpCollision & CollisionType.Water2) != CollisionType.None)
                 {
                     vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags &= ~Bools.CanDJump;
                 }
-                else if ((flags & Bools.CanDJump) == Bools.CanDJump || PlaceMeeting(x, y + checkOffset, kidUpsidedown, CollisionType.Water3, collisionMap))
+                else if ((flags & Bools.CanDJump) == Bools.CanDJump || (jumpCollision & CollisionType.Water3) != CollisionType.None)
                 {
                     vSpeed = vspeedDirection * PhysicsParams.DJUMP_VSPEED;
                     flags |= Bools.CanDJump;
@@ -179,7 +181,7 @@ namespace Jump_Bruteforcer
             var collisionTypes = collisionMap.GetCollisionTypes(x, y, kidUpsidedown);
             (var currentX, var currentY) = (x,  y);
             int minInstanceNum = 0;
-            CollisionType currentCollision = collisionMap.GetHighestPriorityCollisionType(x, y, kidUpsidedown);
+            CollisionType currentCollision = (CollisionType)CollisionMap.UnsetAllBitsExceptMSB((int)collisionTypes);
             while (currentCollision > CollisionType.None)
             {
                 switch (currentCollision)

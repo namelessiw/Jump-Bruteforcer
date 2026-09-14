@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Collections.Immutable;
 using System.Windows;
 using System.Runtime.InteropServices;
-using System.IO.Hashing;
+using System.Diagnostics;
 
 namespace Jump_Bruteforcer
 {
@@ -32,11 +32,10 @@ namespace Jump_Bruteforcer
 
     }
 
-    public readonly record struct NeighborCandidate(State State, Input Input, ulong Hash);
+    public readonly record struct NeighborCandidate(State State, Input Input, ulong Key);
 
     public class PlayerNode : IEquatable<PlayerNode>
     {
-        static XxHash64 hasher = new();
         const int epsilon = 10;
         public const int MaxNeighborCount = 12;
         public State State { get; set; }
@@ -70,22 +69,22 @@ namespace Jump_Bruteforcer
         /// states with fewer inputs are favored if two states are the same. States inside playerkillers are excluded.
         /// </summary>
         /// <returns>a Hashset of playerNodes</returns>
-        public int GetNeighborCandidates(CollisionMap CollisionMap, NeighborCandidate[] neighbors)
+        public static int GetNeighborCandidates(State currentState, CollisionMap CollisionMap, NeighborCandidate[] neighbors)
         {
             int neighborCount = 0;
             fillNeighbors(CollisionMap, neighbors, inputs, ref neighborCount);
             //corresponds to global.grav = 1
-            bool globalGravInverted = (State.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
+            bool globalGravInverted = (currentState.Flags & Bools.InvertedGravity) == Bools.InvertedGravity;
             //corresponds to the player being replaced with the player2 object, which is the upsidedown kid
-            bool kidUpsidedown = (this.State.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
+            bool kidUpsidedown = (currentState.Flags & Bools.ParentInvertedGravity) == Bools.ParentInvertedGravity; ; //todo replace with correct calculation
 
             double checkOffset = globalGravInverted ? -1 : 1;
-            if (Math.Sign(State.VSpeed) == -checkOffset)
+            if (Math.Sign(currentState.VSpeed) == -checkOffset)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsRelease, ref neighborCount);
             }
             
-            if ((State.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (CollisionMap.GetCollisionTypes(State.X, (int)Math.Round(State.Y + checkOffset), kidUpsidedown) | jumpables) != 0)
+            if ((currentState.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (CollisionMap.GetCollisionTypes(currentState.X, (int)Math.Round(currentState.Y + checkOffset), kidUpsidedown) | jumpables) != 0)
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump, ref neighborCount);
             }
@@ -96,17 +95,17 @@ namespace Jump_Bruteforcer
             {
                 foreach (Input input in candidateInputs)
                 {
-                    State? nextState = Player.Update(State, input, collisionMap);
+                    State? nextState = Player.Update(currentState, input, collisionMap);
                     if (nextState is not State state || !Player.IsAlive(state))
                     {
                         continue;
                     }
 
-                    ulong hash = Hash(state);
+                    ulong key = StateKey(state);
                     bool duplicate = false;
                     for (int i = 0; i < count; i++)
                     {
-                        if (candidates[i].Hash == hash)
+                        if (candidates[i].Key == key)
                         {
                             duplicate = true;
                             break;
@@ -115,7 +114,7 @@ namespace Jump_Bruteforcer
 
                     if (!duplicate)
                     {
-                        candidates[count++] = new NeighborCandidate(state, input, hash);
+                        candidates[count++] = new NeighborCandidate(state, input, key);
                     }
                 }
             }
@@ -124,11 +123,11 @@ namespace Jump_Bruteforcer
         public IEnumerable<(PlayerNode Node, Input Input, ulong Hash)> GetNeighbors(CollisionMap CollisionMap)
         {
             var candidates = new NeighborCandidate[MaxNeighborCount];
-            int count = GetNeighborCandidates(CollisionMap, candidates);
+            int count = GetNeighborCandidates(State, CollisionMap, candidates);
             for (int i = 0; i < count; i++)
             {
                 NeighborCandidate candidate = candidates[i];
-                yield return (new PlayerNode(candidate.State), candidate.Input, candidate.Hash);
+                yield return (new PlayerNode(candidate.State), candidate.Input, candidate.Key);
             }
         }
 
@@ -170,22 +169,21 @@ namespace Jump_Bruteforcer
             return Quantize(a) == Quantize(b);
         }
 
-        public override int GetHashCode() => Hash().GetHashCode();
-        public ulong Hash() => Hash(State);
-        public static ulong Hash(State state)
+        public override int GetHashCode() => StateKey(State).GetHashCode();
+        public ulong Hash() => StateKey(State);
+        public static ulong StateKey(State state)
         {
-            int x = state.X;
-            double y = Quantize(state.Y);
-            double vspeed = Quantize(state.VSpeed);
-            byte flags = (byte)state.Flags;
+            int quantizedY = (int)Quantize(state.Y);
+            int quantizedVSpeed = (int)Quantize(state.VSpeed);
 
-            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref x, 1)));
-            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref y, 1)));
-            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref vspeed, 1)));
-            hasher.Append(MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref flags, 1)));
-            ulong hash = hasher.GetCurrentHashAsUInt64();
-            hasher.Reset();
-            return hash;
+            // Search states are in bounds: X needs 10 bits and Y*10 needs
+            // 13 bits. VSpeed keeps its full signed 32-bit representation.
+            Debug.Assert((uint)state.X <= 0x3ff);
+            Debug.Assert((uint)quantizedY <= 0x1fff);
+            return ((ulong)(uint)state.X & 0x3ffUL)
+                | (((ulong)(uint)quantizedY & 0x1fffUL) << 10)
+                | ((ulong)(uint)quantizedVSpeed << 23)
+                | ((ulong)(byte)state.Flags << 55);
         }
         
         public override string ToString() => $"{{State: {JsonSerializer.Serialize(State)}}}";

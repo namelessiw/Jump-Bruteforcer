@@ -9,6 +9,11 @@ using System.Windows.Media;
 
 namespace Jump_Bruteforcer
 {
+    public readonly record struct SearchNode(State State, int NodeIndex, uint PathCost)
+    {
+        public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
+    }
+
     public class Search : INotifyPropertyChanged
     {
         private (int x, double y) start;
@@ -139,22 +144,21 @@ namespace Jump_Bruteforcer
             int nodesVisited;
             uint timestamp = uint.MaxValue;
 
-            // Search never queries the queue by value, so its internal item cache
-            // can use reference identity instead of recalculating the state hash.
-            var openSet = new SimplePriorityQueue<PlayerNode, (uint, uint)>(ReferenceEqualityComparer.Instance);
-            openSet.Enqueue(root, (Distance(root), timestamp));
+            uint rootDistance = Distance(root);
+            var openSet = new PriorityQueue<SearchNode, ulong>();
+            openSet.Enqueue(new SearchNode(root.State, root.NodeIndex, root.PathCost), Priority(rootDistance, timestamp));
 
             var nodeParentIndices = new List<int>();
             var nodeInputs = new List<Input>();
-            var visitedNodeHashes = new HashSet<ulong>();
+            var visitedStateKeys = new HashSet<ulong>();
             var neighborCandidates = new NeighborCandidate[PlayerNode.MaxNeighborCount];
             int[,] closedStates = new int[Map.WIDTH, Map.HEIGHT];
-            if (Distance(root) != uint.MaxValue)
+            if (rootDistance != uint.MaxValue)
             {
                 bool rootVisited = false;
                 while (openSet.Count > 0)
                 {
-                    PlayerNode v = openSet.Dequeue();
+                    SearchNode v = openSet.Dequeue();
                     if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
                     {
                         SearchElapsed = Stopwatch.GetElapsedTime(searchStartTime);
@@ -168,7 +172,7 @@ namespace Jump_Bruteforcer
                         (GoalX, GoalY) = ((int)Math.Round(optimalGoal.X), (int)Math.Round(optimalGoal.Y));
                         VisualizeSearch.CountStates(openSet, closedStates);
                         VisualizeSearch.HeuristicMap(GoalDistance);
-                        nodesVisited = visitedNodeHashes.Count;
+                        nodesVisited = visitedStateKeys.Count;
                         NodesVisited = nodesVisited.ToString();
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
@@ -177,18 +181,18 @@ namespace Jump_Bruteforcer
                     // the root is present before any of its neighbors are checked.
                     if (!rootVisited)
                     {
-                        visitedNodeHashes.Add(v.Hash());
+                        visitedStateKeys.Add(PlayerNode.StateKey(v.State));
                         rootVisited = true;
                     }
 
-                    int neighborCount = v.GetNeighborCandidates(CollisionMap, neighborCandidates);
+                    int neighborCount = PlayerNode.GetNeighborCandidates(v.State, CollisionMap, neighborCandidates);
                     for (int i = 0; i < neighborCount; i++)
                     {
                         NeighborCandidate candidate = neighborCandidates[i];
                         // A state is marked discovered when it is first enqueued.
                         // Consequently the old openSet.Contains/UpdatePriority
                         // branch could never be reached for an equal state.
-                        if (!visitedNodeHashes.Add(candidate.Hash))
+                        if (!visitedStateKeys.Add(candidate.Key))
                         {
                             continue;
                         }
@@ -196,13 +200,12 @@ namespace Jump_Bruteforcer
                         uint newCost = v.PathCost + 1;
                         int roundedY = candidate.State.RoundedY;
                         closedStates[candidate.State.X, roundedY] += 1;
-                        PlayerNode w = new(candidate.State);
-                        w.PathCost = newCost;
                         uint distance = GoalDistance[candidate.State.X, roundedY];
-                        w.NodeIndex = nodeInputs.Count;
+                        int nodeIndex = nodeInputs.Count;
                         nodeInputs.Add(candidate.Input);
                         nodeParentIndices.Add(v.NodeIndex);
-                        openSet.Enqueue(w, (newCost + distance, --timestamp));
+                        SearchNode w = new(candidate.State, nodeIndex, newCost);
+                        openSet.Enqueue(w, Priority(newCost + distance, --timestamp));
                     }
 
                 }
@@ -213,11 +216,13 @@ namespace Jump_Bruteforcer
             Strat = "SEARCH FAILURE";
             VisualizeSearch.CountStates(openSet, closedStates);
             VisualizeSearch.HeuristicMap(GoalDistance);
-            nodesVisited = visitedNodeHashes.Count;
+            nodesVisited = visitedStateKeys.Count;
             NodesVisited = nodesVisited.ToString();
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
+
+        private static ulong Priority(uint cost, uint timestamp) => ((ulong)cost << 32) | timestamp;
     }
     public class SearchResult
     {

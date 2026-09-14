@@ -45,7 +45,6 @@ namespace Jump_Bruteforcer
         public static readonly ImmutableArray<Input> inputs = ImmutableArray.Create(Input.Neutral, Input.Left, Input.Right);
         public static readonly ImmutableArray<Input> inputsJump = ImmutableArray.Create(Input.Jump, Input.Left | Input.Jump, Input.Right | Input.Jump, Input.Jump | Input.Release, Input.Left | Input.Jump | Input.Release, Input.Right | Input.Jump | Input.Release);
         public static readonly ImmutableArray<Input> inputsRelease = ImmutableArray.Create(Input.Release, Input.Left | Input.Release, Input.Right | Input.Release);
-        private static readonly CollisionType jumpables = CollisionType.Solid | CollisionType.Platform | CollisionType.Water1 | CollisionType.Water2 | CollisionType.Water3;
         public PlayerNode(int x, double y, double vSpeed, Bools flags = Bools.CanDJump | Bools.FacingRight, Input? action = null, int nodeIndex = 0) =>
             (State, NodeIndex, PathCost) = (new State() { X = x, Y = y, VSpeed = vSpeed, Flags = flags }, nodeIndex, uint.MaxValue);
 
@@ -83,7 +82,9 @@ namespace Jump_Bruteforcer
                 fillNeighbors(CollisionMap, neighbors, inputsRelease, ref neighborCount);
             }
             
-            if ((currentState.Flags & (Bools.OnPlatform | Bools.CanDJump)) != Bools.None || (updateContext.JumpCollision | jumpables) != 0)
+            // When Jump cannot mutate this state, all six Jump variants produce
+            // states already emitted by the normal or Release groups above.
+            if (Player.JumpCanChangeState(currentState, updateContext))
             {
                 fillNeighbors(CollisionMap, neighbors, inputsJump, ref neighborCount);
             }

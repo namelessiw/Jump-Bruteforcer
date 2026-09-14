@@ -20,6 +20,10 @@ namespace Jump_Bruteforcer
 
     public static class Player
     {
+        private const CollisionType SingleJumpCollisions =
+            CollisionType.Solid | CollisionType.Water1 | CollisionType.Platform;
+        private const CollisionType AnyJumpCollisions =
+            SingleJumpCollisions | CollisionType.Water2 | CollisionType.Water3;
 
         /// <summary>
         /// Checks the CollisionMap for collision of "type" at (x, y). If there is, return true, else false.
@@ -90,6 +94,25 @@ namespace Jump_Bruteforcer
             return new PlayerUpdateContext(vines, onPlatformCollision, jumpCollision, vineSpaceFree);
         }
 
+        internal static bool JumpCanChangeState(State state, PlayerUpdateContext context)
+        {
+            bool globalGravInverted = (state.Flags & Bools.InvertedGravity) != Bools.None;
+            bool kidUpsidedown = (state.Flags & Bools.ParentInvertedGravity) != Bools.None;
+
+            // Turning upside down repeats the step event after restoring CanDJump,
+            // so Jump can become effective even when it did nothing on the first pass.
+            if (globalGravInverted && !kidUpsidedown)
+            {
+                return true;
+            }
+
+            bool keepsOnPlatform = context.OnPlatformCollision &&
+                (state.Flags & Bools.OnPlatform) != Bools.None;
+            return keepsOnPlatform ||
+                (state.Flags & Bools.CanDJump) != Bools.None ||
+                (context.JumpCollision & AnyJumpCollisions) != CollisionType.None;
+        }
+
         internal static State? Update(State state, Input input, CollisionMap collisionMap, PlayerUpdateContext context)
         {
             (int x, double y, double vSpeed, double hSpeed, Bools flags) = (state.X, state.Y, state.VSpeed, 0, state.Flags);
@@ -147,9 +170,8 @@ namespace Jump_Bruteforcer
                 CollisionType jumpCollision = usePreparedContext
                     ? context.JumpCollision
                     : collisionMap.GetCollisionTypes(x, y + checkOffset, kidUpsidedown);
-                CollisionType singleJumpCollision = CollisionType.Solid | CollisionType.Water1 | CollisionType.Platform;
 
-                if ((jumpCollision & singleJumpCollision) != CollisionType.None || (flags & Bools.OnPlatform) == Bools.OnPlatform)
+                if ((jumpCollision & SingleJumpCollisions) != CollisionType.None || (flags & Bools.OnPlatform) == Bools.OnPlatform)
                 {
                     vSpeed = vspeedDirection * PhysicsParams.SJUMP_VSPEED;
                     flags |= Bools.CanDJump;

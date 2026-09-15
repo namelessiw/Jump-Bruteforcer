@@ -12,7 +12,7 @@ namespace Jump_Bruteforcer
         /// For a given PlayerNode, writes to a file the states of all nodes on the path through the game space ending at the current node
         /// </summary>
         /// <returns>a tuple containing the list of inputs and a PointCollection representing the path</returns>
-        public static (List<Input> Inputs, PointCollection Points) GetPath(PlayerNode root, int endNode, List<int> nodeParentIndices, List<Input> nodeInputs, CollisionMap collisionMap)
+        public static (List<Input> Inputs, PointCollection Points) GetPath(PlayerNode root, int endNode, PathLinkStore pathLinks, CollisionMap collisionMap)
         {
             List<Input> inputs = new List<Input>();
             List<Point> points = new List<Point>();
@@ -23,9 +23,10 @@ namespace Jump_Bruteforcer
 
             while (currentNodeIndex != 0)
             {
-                currentInput = nodeInputs[currentNodeIndex];
+                PathLink link = pathLinks[currentNodeIndex];
+                currentInput = link.Input;
                 inputs.Add(currentInput);
-                currentNodeIndex = nodeParentIndices[currentNodeIndex];
+                currentNodeIndex = link.ParentIndex;
             }
             inputs.Reverse();
             PlayerNode curr = root;

@@ -3,15 +3,43 @@ using System.Collections;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
 
 namespace Jump_Bruteforcer
 {
-    public readonly record struct SearchNode(State State, int NodeIndex, uint PathCost)
+    [StructLayout(LayoutKind.Sequential)]
+    public readonly struct SearchNode
     {
-        public bool IsGoal((int x, int y) goal) => Math.Abs(State.X - goal.x) <= 1 & State.RoundedY == goal.y;
+        private const int XMask = 0x3ff;
+        private const int FlagsShift = 10;
+
+        private readonly double y;
+        private readonly double vSpeed;
+        private readonly int packedXAndFlags;
+        private readonly int nodeIndex;
+
+        public SearchNode(State state, int nodeIndex)
+        {
+            Debug.Assert((uint)state.X <= XMask);
+            y = state.Y;
+            vSpeed = state.VSpeed;
+            packedXAndFlags = state.X | ((int)(byte)state.Flags << FlagsShift);
+            this.nodeIndex = nodeIndex;
+        }
+
+        public int X => packedXAndFlags & XMask;
+        public double Y => y;
+        public int RoundedY => (int)Math.Round(y);
+        public Bools Flags => (Bools)(byte)(packedXAndFlags >> FlagsShift);
+        public int NodeIndex => nodeIndex;
+        public State State => new() { X = X, Y = y, VSpeed = vSpeed, Flags = Flags };
+
+        public bool IsGoal((int x, int y) goal) => Math.Abs(X - goal.x) <= 1 & RoundedY == goal.y;
+        internal static uint DecodePathCost(ulong priority, uint distance) =>
+            unchecked((uint)(priority >> 32) - distance);
     }
 
     public class Search : INotifyPropertyChanged
@@ -42,6 +70,11 @@ namespace Jump_Bruteforcer
         public int VisitedPlaneCount { get; private set; }
         public long VisitedBitmapBytes { get; private set; }
         public int VisitedOverflowCount { get; private set; }
+        public int PathLinkCount { get; private set; }
+        public long PathLinkPackedBytes { get; private set; }
+        public int PathLinkWideCount { get; private set; }
+        public long PathLinkWideBytes { get; private set; }
+        public long PathLinkTotalBytes { get; private set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
@@ -144,6 +177,11 @@ namespace Jump_Bruteforcer
             VisitedPlaneCount = 0;
             VisitedBitmapBytes = 0;
             VisitedOverflowCount = 0;
+            PathLinkCount = 0;
+            PathLinkPackedBytes = 0;
+            PathLinkWideCount = 0;
+            PathLinkWideBytes = 0;
+            PathLinkTotalBytes = 0;
             FloodFill();
             FloodFillElapsed = Stopwatch.GetElapsedTime(startTime);
             var searchStartTime = Stopwatch.GetTimestamp();
@@ -156,23 +194,22 @@ namespace Jump_Bruteforcer
 
             uint rootDistance = Distance(root);
             var openSet = new PriorityQueue<SearchNode, ulong>();
-            openSet.Enqueue(new SearchNode(root.State, root.NodeIndex, root.PathCost), Priority(rootDistance, timestamp));
+            openSet.Enqueue(new SearchNode(root.State, root.NodeIndex), Priority(rootDistance, timestamp));
 
-            var nodeParentIndices = new List<int>();
-            var nodeInputs = new List<Input>();
+            var pathLinks = new PathLinkStore();
             var visitedStateKeys = new VisitedStateSet();
             var neighborCandidates = new NeighborCandidate[PlayerNode.MaxNeighborCount];
             int[] closedStates = new int[Map.WIDTH * Map.HEIGHT];
             if (rootDistance != uint.MaxValue)
             {
                 bool rootVisited = false;
-                while (openSet.Count > 0)
+                while (openSet.TryDequeue(out SearchNode v, out ulong vPriority))
                 {
-                    SearchNode v = openSet.Dequeue();
-                    if (v.IsGoal(goal) || CollisionMap.onWarp(v.State.X, v.State.Y))
+                    State vState = v.State;
+                    if (v.IsGoal(goal) || CollisionMap.onWarp(v.X, v.Y))
                     {
                         SearchElapsed = Stopwatch.GetElapsedTime(searchStartTime);
-                        (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
+                        (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root, v.NodeIndex, pathLinks, CollisionMap);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
                         Strat = SearchOutput.GetInputString(inputs);
@@ -185,6 +222,7 @@ namespace Jump_Bruteforcer
                         nodesVisited = visitedStateKeys.Count;
                         NodesVisited = nodesVisited.ToString();
                         CaptureVisitedStorage(visitedStateKeys);
+                        CapturePathStorage(pathLinks);
 
                         return new SearchResult(Strat, macro, true, nodesVisited);
                     }
@@ -192,11 +230,13 @@ namespace Jump_Bruteforcer
                     // the root is present before any of its neighbors are checked.
                     if (!rootVisited)
                     {
-                        visitedStateKeys.Add(PlayerNode.StateKey(v.State));
+                        visitedStateKeys.Add(PlayerNode.StateKey(vState));
                         rootVisited = true;
                     }
 
-                    int neighborCount = PlayerNode.GetNeighborCandidates(v.State, CollisionMap, neighborCandidates);
+                    int currentPixelIndex = PixelIndex(v.X, v.RoundedY);
+                    uint currentPathCost = SearchNode.DecodePathCost(vPriority, goalDistanceCells[currentPixelIndex]);
+                    int neighborCount = PlayerNode.GetNeighborCandidates(vState, CollisionMap, neighborCandidates);
                     for (int i = 0; i < neighborCount; i++)
                     {
                         NeighborCandidate candidate = neighborCandidates[i];
@@ -208,15 +248,13 @@ namespace Jump_Bruteforcer
                             continue;
                         }
 
-                        uint newCost = v.PathCost + 1;
+                        uint newCost = currentPathCost + 1;
                         int roundedY = candidate.State.RoundedY;
                         int pixelIndex = PixelIndex(candidate.State.X, roundedY);
                         closedStates[pixelIndex] += 1;
                         uint distance = goalDistanceCells[pixelIndex];
-                        int nodeIndex = nodeInputs.Count;
-                        nodeInputs.Add(candidate.Input);
-                        nodeParentIndices.Add(v.NodeIndex);
-                        SearchNode w = new(candidate.State, nodeIndex, newCost);
+                        int nodeIndex = pathLinks.Add(v.NodeIndex, candidate.Input);
+                        SearchNode w = new(candidate.State, nodeIndex);
                         openSet.Enqueue(w, Priority(newCost + distance, --timestamp));
                     }
 
@@ -231,6 +269,7 @@ namespace Jump_Bruteforcer
             nodesVisited = visitedStateKeys.Count;
             NodesVisited = nodesVisited.ToString();
             CaptureVisitedStorage(visitedStateKeys);
+            CapturePathStorage(pathLinks);
             TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"hh\:mm\:ss\.ff");
             return new SearchResult(Strat, "", false, nodesVisited);
         }
@@ -243,6 +282,15 @@ namespace Jump_Bruteforcer
             VisitedPlaneCount = states.AllocatedPlaneCount;
             VisitedBitmapBytes = states.BitmapBytes;
             VisitedOverflowCount = states.OverflowCount;
+        }
+
+        private void CapturePathStorage(PathLinkStore links)
+        {
+            PathLinkCount = links.Count;
+            PathLinkPackedBytes = links.PackedBytes;
+            PathLinkWideCount = links.WideCount;
+            PathLinkWideBytes = links.WideBytes;
+            PathLinkTotalBytes = links.TotalBytes;
         }
     }
     public class SearchResult

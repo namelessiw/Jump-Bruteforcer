@@ -47,7 +47,7 @@ namespace Jump_Bruteforcer
             foreach (var item in openSet.UnorderedItems)
             {
                 SearchNode node = item.Element;
-                openStates[node.State.X, node.State.RoundedY] += 1;
+                openStates[node.X, node.RoundedY] += 1;
             }
 
             StateMap(closedSet, openStates);
@@ -59,7 +59,7 @@ namespace Jump_Bruteforcer
             foreach (var item in openSet.UnorderedItems)
             {
                 SearchNode node = item.Element;
-                openStates[node.State.RoundedY * Map.WIDTH + node.State.X] += 1;
+                openStates[node.RoundedY * Map.WIDTH + node.X] += 1;
             }
 
             StateMap(closedSet, openStates);

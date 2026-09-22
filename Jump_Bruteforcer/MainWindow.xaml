@@ -60,7 +60,7 @@
         </Path>
         <Button Content="Start Search" Click="ButtonStartSearch_Click" Height="28" Canvas.Left="276" Canvas.Top="5" Width="89" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-        <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="600"  Width="229" Content="{Binding Strat}"/>
+        <ScrollViewer Canvas.Left="872"  Canvas.Top="104" Height="544"  Width="256" Content="{Binding Strat}" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto"/>
         <Button x:Name="CopyMacroButton" Content="Copy Macro" Canvas.Left="1060" Canvas.Top="10" Click="CopyMacroButton_Click"/>
         <Button Content="Bruteforce Project" Height="19" Canvas.Left="870" Canvas.Top="61" Width="100" Click="BruteforceProjectButton_Click"/>
     </Canvas>

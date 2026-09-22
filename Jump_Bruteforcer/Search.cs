@@ -149,7 +149,7 @@ namespace Jump_Bruteforcer
                         (List<Input> inputs, PointCollection points) = SearchOutput.GetPath(root ,v.NodeIndex, nodeParentIndices, nodeInputs, CollisionMap);
                         TimeTaken = Stopwatch.GetElapsedTime(startTime).ToString(@"dd\:hh\:mm\:ss\.ff");
                         Macro = SearchOutput.GetMacro(inputs);
-                        Strat = SearchOutput.GetInputString(inputs);
+                        Strat = $"Frames: {inputs.Count}\n\nVertical inputs:\n{SearchOutput.GetVerticalInputString(inputs, true)}\n\nHorizontal inputs:\n{SearchOutput.GetHorizontalInputString(inputs)}\n\nInputs per frame:\n{SearchOutput.GetInputString(inputs)}";
                         PlayerPath = points;
 
                         var optimalGoal = points.Last();

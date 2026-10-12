@@ -240,8 +240,13 @@ namespace Jump_Bruteforcer
         }
 
         private static readonly Dictionary<ObjectType, HashSet<(int x, int y)>> toHitbox;
+
+        // intialize hitboxes, this happens exactly once when the first map gets loaded
         static Map()
         {
+            // pixel offsets relative to the player origin, requires the player hitbox image to be present
+            // TODO: less hardcode-y (and weird) paths
+            // TODO: origins per object, ideally read dynamically from a text file or similar
             HashSet<(int x, int y)> PlayerHitboxDilationOffsets = GetPlayerHitbox(new System.Drawing.Bitmap($@"../../../hitboxes/player.png"));
 
             toHitbox = new Dictionary<ObjectType, HashSet<(int x, int y)>>();
@@ -249,6 +254,8 @@ namespace Jump_Bruteforcer
             {
                 string path = $@"../../../hitboxes/{e.ToLower()}.png";
 
+                // skip nonexistant sprites since this includes types like Unknown, Player, Save, ...
+                // TODO: possibly give warnings for missing sprites?
                 if (!File.Exists(path))
                 {
                     continue;
@@ -256,6 +263,7 @@ namespace Jump_Bruteforcer
 
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
 
+                // load sprite and generate the dilated hitbox
                 System.Drawing.Bitmap img = new System.Drawing.Bitmap(path);
                 toHitbox.Add(o, GetDilatedHitbox(PlayerHitboxDilationOffsets, img));
             }
@@ -269,11 +277,13 @@ namespace Jump_Bruteforcer
             {
                 for (int x = 0; x < img.Width; x++)
                 {
+                    // TODO: alpha tolerance per object?
                     if (img.GetPixel(x, y).A == 0)
                     {
                         continue;
                     }
 
+                    // TODO: dynamic object origins
                     (int x, int y) dilationOffset = (PLAYER_ORIGIN_X - x, PLAYER_ORIGIN_Y - y);
                     hitbox.Add(dilationOffset);
                 }
@@ -291,6 +301,7 @@ namespace Jump_Bruteforcer
             {
                 for (int y = 0; y < otherHitbox.Height; y++)
                 {
+                    // TODO: alpha tolerance per object?
                     if (otherHitbox.GetPixel(x, y).A == 0)
                     {
                         continue;

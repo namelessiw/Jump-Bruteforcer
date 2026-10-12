@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -149,11 +150,9 @@ namespace Jump_Bruteforcer
             var query = from o in Objects
                          where o.CollisionType != CollisionType.None
                          let hitbox = toHitbox[o.ObjectType]
-                         from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
-                         from spriteY in Enumerable.Range(0, hitbox.GetLength(1))
-                         where hitbox[spriteX, spriteY]
-                         let x = o.X + spriteX - 5
-                         let y = o.Y + spriteY - 8
+                         from coords in hitbox
+                         let x = o.X + coords.x
+                         let y = o.Y + coords.y
                          where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                          group new { x, y, o } by (x, y) into pixel
                          select pixel;
@@ -240,53 +239,71 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
+        private static readonly Dictionary<ObjectType, HashSet<(int x, int y)>> toHitbox;
         static Map()
         {
-            toHitbox = new Dictionary<ObjectType, bool[,]>();
+            HashSet<(int x, int y)> PlayerHitboxDilationOffsets = GetPlayerHitbox(new System.Drawing.Bitmap($@"../../../hitboxes/player.png"));
+
+            toHitbox = new Dictionary<ObjectType, HashSet<(int x, int y)>>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
-                ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
-                BitmapSource img = GetImage(e.ToLower());
+                string path = $@"../../../hitboxes/{e.ToLower()}.png";
 
-                toHitbox.Add(o, GetHitbox(img));
+                if (!File.Exists(path))
+                {
+                    continue;
+                }
+
+                ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
+
+                System.Drawing.Bitmap img = new System.Drawing.Bitmap(path);
+                toHitbox.Add(o, GetDilatedHitbox(PlayerHitboxDilationOffsets, img));
             }
         }
 
-        private static bool[,] GetHitbox(BitmapSource img)
+        private static HashSet<(int x, int y)> GetPlayerHitbox(System.Drawing.Bitmap img)
         {
-            var hitbox = new bool[img.PixelWidth, img.PixelHeight];
+            HashSet<(int x, int y)> hitbox = [];
 
-            int[] argbValues = new int[img.PixelHeight * img.PixelWidth];
-            var stride = img.PixelWidth * img.Format.BitsPerPixel / 8;
-            img.CopyPixels(argbValues, stride, 0);
-
-            var query = from x in Enumerable.Range(0, img.PixelWidth)
-                        from y in Enumerable.Range(0, img.PixelHeight)
-                        where (argbValues[y * img.PixelWidth + x] & 0xff000000) != 0
-                        select (x, y);
-            foreach ((int x, int y) in query)
+            for (int y = 0; y < img.Height; y++)
             {
-                hitbox[x, y] = true;
+                for (int x = 0; x < img.Width; x++)
+                {
+                    if (img.GetPixel(x, y).A == 0)
+                    {
+                        continue;
+                    }
+
+                    (int x, int y) dilationOffset = (PLAYER_ORIGIN_X - x, PLAYER_ORIGIN_Y - y);
+                    hitbox.Add(dilationOffset);
+                }
             }
 
             return hitbox;
         }
 
-        private static BitmapSource GetImage(string fileName)
+        const int PLAYER_ORIGIN_X = 17, PLAYER_ORIGIN_Y = 23; // TODO: make this and other object origins a setting
+        private static HashSet<(int x, int y)> GetDilatedHitbox(HashSet<(int x, int y)> playerHitbox, System.Drawing.Bitmap otherHitbox)
         {
-            try
+            HashSet<(int, int)> DilatedObjectHitbox = [];
+
+            for (int x = 0; x < otherHitbox.Width; x++)
             {
+                for (int y = 0; y < otherHitbox.Height; y++)
+                {
+                    if (otherHitbox.GetPixel(x, y).A == 0)
+                    {
+                        continue;
+                    }
 
-                Uri path = new Uri(@$"pack://application:,,,/Jump Bruteforcer;component/images/{fileName}.png", UriKind.Absolute);
-                return new BitmapImage(path);
+                    foreach ((int xOffset, int yOffset) in playerHitbox)
+                    {
+                        DilatedObjectHitbox.Add((x + xOffset, y + yOffset));
+                    }
+                }
             }
-            catch
-            {
 
-                return BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0, 0, 0, 0 }, 4);
-            }
-
+            return DilatedObjectHitbox;
         }
     }
 }

@@ -247,12 +247,12 @@ namespace Jump_Bruteforcer
             // pixel offsets relative to the player origin, requires the player hitbox image to be present
             // TODO: less hardcode-y (and weird) paths
             // TODO: origins per object, ideally read dynamically from a text file or similar
-            HashSet<(int x, int y)> PlayerHitboxDilationOffsets = GetPlayerHitbox(new System.Drawing.Bitmap($@"../../../hitboxes/player.png"));
+            HashSet<(int x, int y)> PlayerHitboxDilationOffsets = GetPlayerHitbox(new System.Drawing.Bitmap($@"hitboxes/player.png"));
 
             toHitbox = new Dictionary<ObjectType, HashSet<(int x, int y)>>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
-                string path = $@"../../../hitboxes/{e.ToLower()}.png";
+                string path = $@"hitboxes/{e.ToLower()}.png";
 
                 // skip nonexistant sprites since this includes types like Unknown, Player, Save, ...
                 // TODO: possibly give warnings for missing sprites?

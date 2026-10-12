@@ -69,8 +69,8 @@ namespace Jump_Bruteforcer
             {(CollisionType.Water2, Color.FromRgb(0, 127, 255))},
             {(CollisionType.Water3, Color.FromRgb(0, 255, 255))},
             {(CollisionType.CatharsisWater, Color.FromRgb(195, 195, 195))},
-            {(CollisionType.GravityArrowUp, Color.FromRgb(195, 0, 0))},
-            {(CollisionType.GravityArrowDown, Color.FromRgb(0, 0, 195))},
+            {(CollisionType.GravityArrowUp, Color.FromRgb(255, 63, 63))},
+            {(CollisionType.GravityArrowDown, Color.FromRgb(63, 63, 255))},
         };
         private BitmapImage GenerateCollisionImage()
         {

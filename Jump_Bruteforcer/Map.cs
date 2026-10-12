@@ -31,18 +31,18 @@ namespace Jump_Bruteforcer
         public (int, int) PlayerStart { get; init; }
         public bool hasWarp { get; init; } = false;
         public (int, int) Warp { get; init; }
-        
+
 
 
         public Map(List<Object> objects)
         {
-            List<Object> platforms = new();
+            List<Object> platforms = [];
             foreach (Object obj in objects) {
                 if (obj.ObjectType == ObjectType.PlayerStart) {
                     PlayerStart = (obj.X + 17, obj.Y + 23);
                     hasPlayerStart = true;
                 }
-                if(obj.ObjectType == ObjectType.Warp)
+                if (obj.ObjectType == ObjectType.Warp)
                 {
                     Warp = (obj.X + 16, obj.Y + 16);
                     hasWarp = true;
@@ -53,40 +53,100 @@ namespace Jump_Bruteforcer
                 }
             }
             objects.Sort(Comparer<Object>.Create((o1, o2) => o1.CollisionType.CompareTo(o2.CollisionType)));
-            Objects = ImmutableArray.CreateRange(objects);
-            Bmp = GenerateCollisionImage();
+            Objects = [.. objects];
             (var cmap, var vineDistance) = GenerateCollisionMap();
             CollisionMap = new(cmap, platforms, vineDistance);
+            Bmp = GenerateCollisionImage();
         }
 
-        private ImageSource GenerateCollisionImage()
+        static readonly List<(CollisionType, Color)> CollisionTypeColors = new()
         {
-            DrawingGroup drawingGroup = new DrawingGroup();
-            
-            var mapBounds = new RectangleGeometry(new Rect(0, 0, WIDTH, HEIGHT));
-            drawingGroup.Children.Add(new GeometryDrawing(Brushes.Transparent, new Pen(), mapBounds));
+            {(CollisionType.Solid, Color.FromRgb(0, 0, 0))},
+            {(CollisionType.Killer, Color.FromRgb(255, 0, 0))},
+            {(CollisionType.Warp, Color.FromRgb(0, 255, 0))},
+            {(CollisionType.Platform, Color.FromRgb(63, 63, 0))},
+            {(CollisionType.Water1, Color.FromRgb(0, 0, 255))},
+            {(CollisionType.Water2, Color.FromRgb(0, 127, 255))},
+            {(CollisionType.Water3, Color.FromRgb(0, 255, 255))},
+            {(CollisionType.CatharsisWater, Color.FromRgb(195, 195, 195))},
+            {(CollisionType.GravityArrowUp, Color.FromRgb(195, 0, 0))},
+            {(CollisionType.GravityArrowDown, Color.FromRgb(0, 0, 195))},
+        };
+        private BitmapImage GenerateCollisionImage()
+        {
+            // using a bitmap for now just because idk how id do this otherwise
+            System.Drawing.Bitmap bitmap = new(WIDTH, HEIGHT);
 
-            var query = from o in Objects
-                        where o.CollisionType != CollisionType.None
-                        select o;
-            foreach (Object o in query)
+            for (int y = 0; y < HEIGHT; y++)
             {
-                BitmapSource img = toImage[o.ObjectType];
-                Rect rect = new Rect(o.X - 5, o.Y - 8, img.Width, img.Height);
-                drawingGroup.Children.Add(new ImageDrawing(img, rect));
-                
-            }
-            drawingGroup.ClipGeometry = mapBounds;
-            DrawingImage drawingImage = new DrawingImage(drawingGroup);
-            drawingImage.Freeze();
+                for (int x = 0; x < WIDTH; x++)
+                {
+                    CollisionType type = CollisionMap.Collision[x, y];
 
-            return drawingImage;
+                    int colors = 0;
+                    int r = 0, g = 0, b = 0;
+
+                    // add colors for each collision type present
+                    foreach ((CollisionType t, Color c) in CollisionTypeColors)
+                    {
+                        if (type.HasFlag(t))
+                        {
+                            colors++;
+                            r += c.R;
+                            g += c.G;
+                            b += c.B;
+                        }
+                    }
+
+                    // need to draw vines separately as they are handled separately
+                    if (CollisionMap.GetVineDistance(x, y, ObjectType.VineLeft, true) == VineDistance.INSIDE)
+                    {
+                        colors++;
+                        r += 0;
+                        g += 195;
+                        b += 0;
+                    }
+
+                    if (CollisionMap.GetVineDistance(x, y, ObjectType.VineRight, true) == VineDistance.INSIDE)
+                    {
+                        colors++;
+                        r += 0;
+                        g += 195;
+                        b += 0;
+                    }
+
+                    // average over all colors or use white if no collision on this pixel
+                    if (colors == 0)
+                    {
+                        r = g = b = 255;
+                    }
+                    else
+                    {
+                        r /= colors;
+                        g /= colors;
+                        b /= colors;
+                    }
+
+                    bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(255, r, g, b));
+                }
+            }
+
+            // need to convert to a BitmapImage instead and idk so
+            // taken from https://stackoverflow.com/questions/26260654/wpf-converting-bitmap-to-imagesource
+            MemoryStream ms = new();
+            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            BitmapImage image = new();
+            image.BeginInit();
+            ms.Seek(0, SeekOrigin.Begin);
+            image.StreamSource = ms;
+            image.EndInit();
+            return image;
         }
 
         private (CollisionType[,], VineDistance[,,]) GenerateCollisionMap()
         {
 
-            var query = (from o in Objects
+            var query = from o in Objects
                          where o.CollisionType != CollisionType.None
                          let hitbox = toHitbox[o.ObjectType]
                          from spriteX in Enumerable.Range(0, hitbox.GetLength(0))
@@ -96,7 +156,7 @@ namespace Jump_Bruteforcer
                          let y = o.Y + spriteY - 8
                          where 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT
                          group new { x, y, o } by (x, y) into pixel
-                         select pixel);
+                         select pixel;
             var collision = new CollisionType[WIDTH, HEIGHT];
             for (int i = 0; i < WIDTH; i++)
             {
@@ -168,7 +228,7 @@ namespace Jump_Bruteforcer
 
         public override string ToString()
         {
-            StringBuilder sb = new("");
+            StringBuilder sb = new();
 
             sb.Append($"\nObjects ({Objects.Length}):");
 
@@ -224,7 +284,7 @@ namespace Jump_Bruteforcer
                 Uri path = new Uri(@$"pack://application:,,,/Jump Bruteforcer;component/images/{fileName}.png", UriKind.Absolute);
                 return new BitmapImage(path);
             }
-            catch (IOException e)
+            catch
             {
 
                 return BitmapSource.Create(1, 1, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0, 0, 0, 0 }, 4);

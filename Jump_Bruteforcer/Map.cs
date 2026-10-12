@@ -240,18 +240,15 @@ namespace Jump_Bruteforcer
             return sb.ToString();
         }
 
-        private static readonly Dictionary<ObjectType, BitmapSource> toImage;
         private static readonly Dictionary<ObjectType, bool[,]> toHitbox;
         static Map()
         {
-            toImage = new Dictionary<ObjectType, BitmapSource>();
             toHitbox = new Dictionary<ObjectType, bool[,]>();
             foreach (string e in Enum.GetNames(typeof(ObjectType)))
             {
                 ObjectType o = (ObjectType)Enum.Parse(typeof(ObjectType), e);
                 BitmapSource img = GetImage(e.ToLower());
 
-                toImage.Add(o, img);
                 toHitbox.Add(o, GetHitbox(img));
             }
         }

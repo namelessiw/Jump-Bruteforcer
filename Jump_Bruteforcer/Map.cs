@@ -64,7 +64,7 @@ namespace Jump_Bruteforcer
             {(CollisionType.Solid, Color.FromRgb(0, 0, 0))},
             {(CollisionType.Killer, Color.FromRgb(255, 0, 0))},
             {(CollisionType.Warp, Color.FromRgb(0, 255, 0))},
-            {(CollisionType.Platform, Color.FromRgb(63, 63, 0))},
+            {(CollisionType.Platform, Color.FromRgb(81, 43, 0))},
             {(CollisionType.Water1, Color.FromRgb(0, 0, 255))},
             {(CollisionType.Water2, Color.FromRgb(0, 127, 255))},
             {(CollisionType.Water3, Color.FromRgb(0, 255, 255))},

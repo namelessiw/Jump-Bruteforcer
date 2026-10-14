@@ -25,6 +25,9 @@ namespace Jump_Bruteforcer
         {
             InitializeComponent();
 
+            // used to force initialize hitboxes, a bit hacky for now but it's fine
+            Map _ = new([]);
+
             s = new Search((200, 200), (300, 300), new CollisionMap(new Dictionary<(int, int), CollisionType>(), null));
             DataContext = s;
         }

@@ -40,6 +40,8 @@ namespace Jump_Bruteforcer
             }
 
             this.packedNodeLimit = packedNodeLimit;
+
+            Add(0, Input.Neutral); // dummy node, ensures the first proper node does not have id (index?) 0 to avoid ambiguity in the search output
         }
 
         public int Add(int parentIndex, Input input)

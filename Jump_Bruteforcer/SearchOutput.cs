@@ -29,13 +29,6 @@ namespace Jump_Bruteforcer
                 currentNodeIndex = link.ParentIndex;
             }
 
-            if (pathLinks[0].Input == Input.Left)
-            {
-                // include first input
-                currentInput = pathLinks[0].Input;
-                inputs.Add(currentInput);
-            }
-
             inputs.Reverse();
             PlayerNode curr = root;
             points.Add(new Point(curr.State.X, curr.State.RoundedY));
